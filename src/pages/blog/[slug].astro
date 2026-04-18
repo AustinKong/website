@@ -1,0 +1,272 @@
+---
+import { getCollection } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts
+		.filter((post) => !post.data.draft)
+		.map((post) => ({
+			params: { slug: post.id.replace(/\.md$/, '') },
+			props: { post },
+		}));
+}
+
+interface Props {
+	post: any;
+}
+
+const { post } = Astro.props;
+
+// The post object should have a body property with the compiled HTML
+const htmlContent = post.body;
+
+// Find adjacent posts for navigation
+const allPosts = await getCollection('blog');
+const publishedPosts = allPosts
+	.filter((p) => !p.data.draft)
+	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const postId = post.id.replace(/\.md$/, '');
+const currentIndex = publishedPosts.findIndex(
+	(p) => p.id.replace(/\.md$/, '') === postId
+);
+const previousPost = currentIndex > 0 ? publishedPosts[currentIndex - 1] : null;
+const nextPost =
+	currentIndex < publishedPosts.length - 1
+		? publishedPosts[currentIndex + 1]
+		: null;
+---
+
+<BlogLayout title={post.data.title} description={post.data.description}>
+	<div class="blog-post__header">
+		<h1 class="blog-post__title">{post.data.title}</h1>
+		<div class="blog-post__meta">
+			<time datetime={post.data.date.toISOString()}>
+				{
+					post.data.date.toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric',
+					})
+				}
+			</time>
+			{post.data.author && <span>By {post.data.author}</span>}
+			{post.data.readingTime && <span>{post.data.readingTime}</span>}
+		</div>
+		{
+			post.data.tags && post.data.tags.length > 0 && (
+				<div class="blog-post__tags">
+					{post.data.tags.map((tag: string) => (
+						<span class="blog-post__tag">{tag}</span>
+					))}
+				</div>
+			)
+		}
+	</div>
+
+	<div class="blog-post__content" set:html={htmlContent} />
+
+	{/* Navigation to next/previous posts */}
+	<div class="blog-post__navigation">
+		<div class="blog-post__nav-grid">
+			<div>
+				{
+					previousPost ? (
+						<a
+							href={`/blog/${previousPost.id.replace(/\.md$/, '')}`}
+							class="blog-post__nav-link"
+						>
+							<span class="blog-post__nav-label">← Previous</span>
+							<h3 class="blog-post__nav-title">{previousPost.data.title}</h3>
+						</a>
+					) : (
+						<div />
+					)
+				}
+			</div>
+			<div class="blog-post__next-column">
+				{
+					nextPost ? (
+						<a
+							href={`/blog/${nextPost.id.replace(/\.md$/, '')}`}
+							class="blog-post__nav-link"
+						>
+							<span class="blog-post__nav-label">Next →</span>
+							<h3 class="blog-post__nav-title">{nextPost.data.title}</h3>
+						</a>
+					) : (
+						<div />
+					)
+				}
+			</div>
+		</div>
+
+		{/* Back to blog link */}
+		<div class="blog-post__back-link-wrap">
+			<a href="/blog" class="blog-post__back-link"> ← Back to blog </a>
+		</div>
+	</div>
+</BlogLayout>
+
+<style>
+	.blog-post__header {
+		margin-bottom: 2rem;
+		padding-bottom: 2rem;
+		border-bottom: 1px solid rgb(229 231 235);
+	}
+
+	.blog-post__title {
+		margin: 0;
+		font-size: 2.25rem;
+		font-weight: 700;
+		color: rgb(17 24 39);
+	}
+
+	.blog-post__meta {
+		margin-top: 1rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		font-size: 0.875rem;
+		color: rgb(107 114 128);
+	}
+
+	.blog-post__tags {
+		margin-top: 1rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.blog-post__tag {
+		display: inline-block;
+		border-radius: 9999px;
+		background-color: rgb(229 231 235);
+		padding: 0.25rem 0.75rem;
+		font-size: 0.875rem;
+		color: rgb(31 41 55);
+	}
+
+	.blog-post__content {
+		font-size: 1.125rem;
+		line-height: 1.8;
+		color: rgb(31 41 55);
+	}
+
+	.blog-post__content :global(h1),
+	.blog-post__content :global(h2),
+	.blog-post__content :global(h3),
+	.blog-post__content :global(h4) {
+		margin-top: 2rem;
+		margin-bottom: 1rem;
+		line-height: 1.2;
+		color: rgb(17 24 39);
+	}
+
+	.blog-post__content :global(p),
+	.blog-post__content :global(ul),
+	.blog-post__content :global(ol),
+	.blog-post__content :global(blockquote),
+	.blog-post__content :global(pre) {
+		margin: 1rem 0;
+	}
+
+	.blog-post__content :global(a) {
+		color: inherit;
+		text-underline-offset: 3px;
+	}
+
+	.blog-post__navigation {
+		margin-top: 3rem;
+		padding-top: 2rem;
+		border-top: 1px solid rgb(229 231 235);
+	}
+
+	.blog-post__nav-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 2rem;
+	}
+
+	.blog-post__next-column {
+		text-align: right;
+	}
+
+	.blog-post__nav-link {
+		display: block;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.blog-post__nav-label {
+		font-size: 0.875rem;
+		color: rgb(107 114 128);
+	}
+
+	.blog-post__nav-title {
+		margin: 0.5rem 0 0;
+		font-size: 1.125rem;
+		font-weight: 600;
+		color: rgb(17 24 39);
+		transition: color 200ms ease;
+	}
+
+	.blog-post__nav-link:hover .blog-post__nav-title {
+		color: rgb(75 85 99);
+	}
+
+	.blog-post__back-link-wrap {
+		margin-top: 2rem;
+	}
+
+	.blog-post__back-link {
+		color: rgb(75 85 99);
+		text-decoration: none;
+		transition: color 200ms ease;
+	}
+
+	.blog-post__back-link:hover {
+		color: rgb(17 24 39);
+	}
+
+	:global(html.dark) .blog-post__header,
+	:global(html.dark) .blog-post__navigation {
+		border-color: rgb(75 85 99);
+	}
+
+	:global(html.dark) .blog-post__title,
+	:global(html.dark) .blog-post__nav-title,
+	:global(html.dark) .blog-post__content :global(h1),
+	:global(html.dark) .blog-post__content :global(h2),
+	:global(html.dark) .blog-post__content :global(h3),
+	:global(html.dark) .blog-post__content :global(h4),
+	:global(html.dark) .blog-post__back-link:hover {
+		color: rgb(243 244 246);
+	}
+
+	:global(html.dark) .blog-post__meta,
+	:global(html.dark) .blog-post__nav-label,
+	:global(html.dark) .blog-post__back-link {
+		color: rgb(209 213 219);
+	}
+
+	:global(html.dark) .blog-post__content {
+		color: rgb(229 231 235);
+	}
+
+	:global(html.dark) .blog-post__tag {
+		background-color: rgb(55 65 81);
+		color: rgb(243 244 246);
+	}
+
+	@media (max-width: 700px) {
+		.blog-post__nav-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.blog-post__next-column {
+			text-align: left;
+		}
+	}
+</style>

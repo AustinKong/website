@@ -1,0 +1,56 @@
+---
+import Layout from './Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+	<div class="blog-layout-shell">
+		<Navbar />
+		<article class="blog-layout-content">
+			<div class="blog-layout-container">
+				<slot />
+			</div>
+		</article>
+	</div>
+</Layout>
+
+<style>
+	.blog-layout-shell {
+		display: flex;
+		height: 100vh;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.blog-layout-content {
+		flex: 1;
+		overflow-y: auto;
+	}
+
+	.blog-layout-container {
+		margin-inline: auto;
+		width: 100%;
+		max-width: 42rem;
+		padding: 3rem 1rem;
+	}
+
+	@media (min-width: 640px) {
+		.blog-layout-container {
+			padding-inline: 1.5rem;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.blog-layout-container {
+			padding-inline: 2rem;
+		}
+	}
+</style>

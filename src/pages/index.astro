@@ -1,0 +1,12 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Hero from '../components/home-page/hero/index.astro';
+import RecommendedReads from '../components/RecommendedReads.astro';
+import About from '../components/home-page/About.astro';
+---
+
+<MainLayout title="Home" description="Welcome to my website" showNavbar={false}>
+	<Hero />
+	<RecommendedReads />
+	<About />
+</MainLayout>

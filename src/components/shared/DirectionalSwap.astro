@@ -1,0 +1,146 @@
+---
+interface Props {
+	class?: string;
+	direction?:
+		| 'right'
+		| 'left'
+		| 'up'
+		| 'down'
+		| 'up-right'
+		| 'up-left'
+		| 'down-right'
+		| 'down-left';
+	distance?: string;
+	durationMs?: number;
+	itemPadding?: string;
+	trigger?: 'self' | 'parent' | 'none';
+	ariaHidden?: boolean;
+}
+
+const {
+	class: className = '',
+	direction = 'right',
+	distance = '110%',
+	durationMs = 420,
+	itemPadding = '0',
+	trigger = 'self',
+	ariaHidden = true,
+} = Astro.props;
+
+const vectors: Record<string, [number, number]> = {
+	right: [1, 0],
+	left: [-1, 0],
+	up: [0, -1],
+	down: [0, 1],
+	'up-right': [0.8, -0.8],
+	'up-left': [-0.8, -0.8],
+	'down-right': [0.8, 0.8],
+	'down-left': [-0.8, 0.8],
+};
+
+const [vectorX, vectorY] = vectors[direction] ?? vectors.right;
+---
+
+<!-- Can this not auto "Dupe" the slot for me? -->
+<span
+	class:list={['motion-swap', className]}
+	data-trigger={trigger}
+	aria-hidden={ariaHidden ? 'true' : undefined}
+	style={`--motion-swap-distance:${distance};--motion-swap-duration:${durationMs}ms;--motion-swap-x:${vectorX};--motion-swap-y:${vectorY};--motion-swap-item-padding:${itemPadding};`}
+>
+	<span class="motion-swap__sizer">
+		<slot name="primary" />
+	</span>
+	<span class="motion-swap__layer motion-swap__primary">
+		<slot name="primary" />
+	</span>
+	<span class="motion-swap__layer motion-swap__secondary">
+		<slot name="secondary" />
+	</span>
+</span>
+
+<style is:global>
+	.motion-swap {
+		position: relative;
+		display: inline-grid;
+		place-items: center;
+		overflow: hidden;
+	}
+
+	.motion-swap__sizer {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: var(--motion-swap-item-padding);
+		box-sizing: border-box;
+		visibility: hidden;
+		pointer-events: none;
+	}
+
+	.motion-swap__layer {
+		position: absolute;
+		inset: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: var(--motion-swap-item-padding);
+		box-sizing: border-box;
+	}
+
+	.motion-swap__primary {
+		transform: translate(0, 0);
+	}
+
+	.motion-swap__secondary {
+		transform: translate(
+			calc(var(--motion-swap-distance) * var(--motion-swap-x) * -1),
+			calc(var(--motion-swap-distance) * var(--motion-swap-y) * -1)
+		);
+	}
+
+	.motion-swap[data-trigger='self']:hover .motion-swap__primary {
+		animation: motion-swap-out var(--motion-swap-duration) ease forwards;
+	}
+
+	.motion-swap[data-trigger='self']:hover .motion-swap__secondary {
+		animation: motion-swap-in var(--motion-swap-duration) ease forwards;
+	}
+
+	.motion-parent:hover
+		.motion-swap[data-trigger='parent']
+		.motion-swap__primary {
+		animation: motion-swap-out var(--motion-swap-duration) ease forwards;
+	}
+
+	.motion-parent:hover
+		.motion-swap[data-trigger='parent']
+		.motion-swap__secondary {
+		animation: motion-swap-in var(--motion-swap-duration) ease forwards;
+	}
+
+	@keyframes motion-swap-out {
+		from {
+			transform: translate(0, 0);
+		}
+
+		to {
+			transform: translate(
+				calc(var(--motion-swap-distance) * var(--motion-swap-x)),
+				calc(var(--motion-swap-distance) * var(--motion-swap-y))
+			);
+		}
+	}
+
+	@keyframes motion-swap-in {
+		from {
+			transform: translate(
+				calc(var(--motion-swap-distance) * var(--motion-swap-x) * -1),
+				calc(var(--motion-swap-distance) * var(--motion-swap-y) * -1)
+			);
+		}
+
+		to {
+			transform: translate(0, 0);
+		}
+	}
+</style>

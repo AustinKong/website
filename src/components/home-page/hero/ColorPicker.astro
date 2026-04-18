@@ -1,0 +1,85 @@
+<div class="color-picker" aria-hidden="true">
+	<span class="color-chip color-chip--1"></span>
+	<span class="color-chip color-chip--2"></span>
+	<span class="color-chip color-chip--3"></span>
+	<span class="color-chip color-chip--4"></span>
+	<span class="color-chip color-chip--5"></span>
+	<span class="color-chip color-chip--6"></span>
+	<span class="color-chip color-chip--7"></span>
+</div>
+
+<style>
+	.color-picker {
+		display: flex;
+		align-items: stretch;
+		height: 1.5rem;
+		width: 100%;
+		min-width: 16rem;
+		border: 2px solid #221f1d;
+	}
+
+	.color-chip {
+		flex: 1;
+		height: 100%;
+	}
+
+	.color-chip--1 {
+		background: #221f1d;
+	}
+
+	.color-chip--2 {
+		background: #6a2055;
+	}
+
+	.color-chip--3 {
+		background: #bb223e;
+	}
+
+	.color-chip--4 {
+		background: #f0202e;
+	}
+
+	.color-chip--5 {
+		background: #ff642c;
+	}
+
+	.color-chip--6 {
+		background: #fdb525;
+	}
+
+	.color-chip--7 {
+		background: #eae2d5;
+	}
+
+	:global(html.dark) .color-picker {
+		border-color: rgb(34 31 29 / 0.65);
+	}
+
+	:global(html.dark) .color-chip--1 {
+		background: #eae2d5;
+	}
+
+	:global(html.dark) .color-chip--2 {
+		background: #fdb525;
+	}
+
+	:global(html.dark) .color-chip--3 {
+		background: #ff642c;
+	}
+
+	:global(html.dark) .color-chip--4 {
+		background: #f0202e;
+	}
+
+	:global(html.dark) .color-chip--5 {
+		background: #bb223e;
+	}
+
+	:global(html.dark) .color-chip--6 {
+		background: #6a2055;
+	}
+
+	:global(html.dark) .color-chip--7 {
+		background: #221f1d;
+	}
+</style>

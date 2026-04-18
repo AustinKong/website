@@ -1,0 +1,107 @@
+---
+import Barcode from '../../../assets/barcode.svg';
+import Github from '../../../assets/github.svg';
+import Globe from '../../../assets/globe.svg';
+import Gplus from '../../../assets/gplus.svg';
+import Linkedin from '../../../assets/linkedin.svg';
+---
+
+<footer class="hero-footer">
+	<div class="hero-footer__left">
+		<figure aria-hidden="true" class="hero-footer__barcode-wrap">
+			<Barcode class="barcode-svg" />
+		</figure>
+
+		<figure aria-hidden="true" class="hero-footer__globe-wrap">
+			<Globe class="globe-svg" />
+		</figure>
+	</div>
+
+	<div class="spacer"></div>
+
+	<div class="hero-footer__socials" aria-label="Social links">
+		<a
+			href="#"
+			class="hero-footer__social-link"
+			aria-label="Google Plus profile"
+		>
+			<Gplus class="hero-footer__social-icon" />
+		</a>
+		<a href="#" class="hero-footer__social-link" aria-label="LinkedIn profile">
+			<Linkedin class="hero-footer__social-icon" />
+		</a>
+		<a href="#" class="hero-footer__social-link" aria-label="GitHub profile">
+			<Github class="hero-footer__social-icon" />
+		</a>
+	</div>
+</footer>
+
+<style>
+	.hero-footer {
+		margin-top: auto;
+		display: flex;
+		height: calc(2 * var(--hero-bar-height));
+		align-items: center;
+		gap: 1rem;
+		color: #221f1d;
+		padding: 1rem;
+		box-sizing: border-box;
+	}
+
+	.hero-footer__left {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		height: 100%;
+	}
+
+	.hero-footer__barcode-wrap,
+	.hero-footer__globe-wrap {
+		height: 100%;
+		min-height: 0;
+		overflow: hidden;
+		margin: 0;
+		box-sizing: border-box;
+	}
+
+	.barcode-svg,
+	.globe-svg {
+		height: 100%;
+		width: auto;
+	}
+
+	.hero-footer__socials {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		height: 100%;
+	}
+
+	.hero-footer__social-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		width: auto;
+		overflow: hidden;
+		flex: 0 0 auto;
+	}
+
+	:global(.hero-footer__social-icon) {
+		display: block;
+		height: 100%;
+		width: auto;
+		max-height: 100%;
+	}
+
+	.hero-footer__social-link :global(svg) {
+		display: block;
+		height: 100%;
+		width: auto;
+		max-height: 100%;
+	}
+
+	:global(html.dark) .hero-footer {
+		color: #eae2d5;
+	}
+</style>

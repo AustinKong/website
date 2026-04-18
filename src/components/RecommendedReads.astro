@@ -1,0 +1,225 @@
+---
+import { getCollection } from 'astro:content';
+import SplitSection from './SplitSection.astro';
+import ArrowTopRight from '../assets/arrow-top-right.svg';
+import DirectionalSwap from './shared/DirectionalSwap.astro';
+
+const allPosts = await getCollection('blog');
+const reads = allPosts
+	.filter((post) => !post.data.draft && post.data.image)
+	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+	.slice(0, 3)
+	.map((post) => ({
+		href: `/blog/${post.id.replace(/\.md$/, '')}`,
+		image: post.data.image,
+		imageAlt: post.data.imageAlt || post.data.title,
+		tag: post.data.tags?.[0] || 'Blog',
+		date: post.data.date.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		}),
+		title: post.data.title,
+		description: post.data.description || '',
+	}));
+---
+
+<SplitSection id="reads" eyebrow="Recommended Reads" title="Latest blog posts">
+	<div class="reads-grid">
+		{
+			reads.map((read) => (
+				<a
+					class="reads-card motion-parent"
+					href={read.href}
+					aria-label={`Read ${read.title}`}
+				>
+					<div class="reads-card__image-frame">
+						<img
+							class="reads-card__image"
+							src={read.image}
+							alt={read.imageAlt}
+							loading="lazy"
+						/>
+					</div>
+					<div class="reads-card__body">
+						<div class="reads-card__header">
+							<div class="reads-card__heading">
+								<p class="reads-card__meta">
+									<span>{read.tag}</span>
+									<span aria-hidden="true">&middot;</span>
+									<span>{read.date}</span>
+								</p>
+								<h3 class="reads-card__title">{read.title}</h3>
+							</div>
+							<span class="reads-card__arrow" aria-hidden="true">
+								<DirectionalSwap
+									class="reads-card__arrow-motion"
+									direction="up-right"
+									distance="115%"
+									durationMs={420}
+									itemPadding="0.12rem"
+									trigger="parent"
+								>
+									<span slot="primary" class="reads-card__arrow-item">
+										<ArrowTopRight class="reads-card__arrow-icon" />
+									</span>
+									<span slot="secondary" class="reads-card__arrow-item">
+										<ArrowTopRight class="reads-card__arrow-icon" />
+									</span>
+								</DirectionalSwap>
+							</span>
+						</div>
+						<p class="reads-card__description">{read.description}</p>
+					</div>
+				</a>
+			))
+		}
+	</div>
+</SplitSection>
+
+<style>
+	.reads-grid {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+	}
+
+	.reads-card {
+		display: grid;
+		gap: 0;
+		border-radius: 0;
+		background: var(--site-bg);
+		padding: 0;
+		overflow: hidden;
+		color: inherit;
+		text-decoration: none;
+		transition: background-color 180ms ease;
+	}
+
+	.reads-card:hover {
+		background: var(--surface-subtle);
+	}
+
+	.reads-card__image-frame {
+		overflow: hidden;
+		aspect-ratio: 1 / 1;
+		border-radius: 0;
+		background: var(--surface-subtle);
+	}
+
+	.reads-card__image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		transform: scale(1.04);
+		transition: transform 220ms ease;
+		will-change: transform;
+	}
+
+	.reads-card:hover .reads-card__image {
+		transform: scale(1);
+	}
+
+	.reads-card__body {
+		display: grid;
+		gap: 0.75rem;
+		padding: 0rem;
+		margin-top: 1rem;
+	}
+
+	.reads-card__header {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 1rem;
+		min-height: 5.5rem;
+	}
+
+	.reads-card__heading {
+		min-width: 0;
+	}
+
+	.reads-card__meta {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		margin: 0;
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--text-soft);
+	}
+
+	.reads-card__title {
+		margin: 0.35rem 0 0;
+		color: var(--site-fg);
+		font-size: 1.4rem;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.1;
+	}
+
+	.reads-card__arrow {
+		display: inline-flex;
+		align-items: flex-start;
+		justify-content: flex-end;
+		flex: 0 0 auto;
+		width: 2.25rem;
+		height: 2.25rem;
+		padding: 0.25rem 0.25rem 0 0;
+		color: var(--site-fg);
+	}
+
+	.reads-card__arrow-motion {
+		width: 100%;
+		height: 100%;
+	}
+
+	.reads-card__arrow-item {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+	}
+
+	.reads-card__arrow-icon {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.reads-card__description {
+		margin: 0;
+		color: var(--text-muted);
+		font-size: 0.95rem;
+		line-height: 1.6;
+	}
+
+	:global(html.dark) .reads-card {
+		background: rgb(31 31 31 / 0.8);
+	}
+
+	:global(html.dark) .reads-card:hover {
+		background: rgb(255 255 255 / 0.03);
+	}
+
+	:global(html.dark) .reads-card__image {
+		background: rgb(255 255 255 / 0.04);
+	}
+
+	@media (min-width: 768px) {
+		.reads-grid {
+			grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+		}
+	}
+
+	@media (min-width: 1280px) {
+		.reads-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+</style>

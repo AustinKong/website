@@ -1,0 +1,77 @@
+* {
+	/* outline: 1px solid red; */
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+svg {
+	display: block;
+	fill: currentColor;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.spacer {
+	flex: 1;
+}
+
+:root {
+	color-scheme: light;
+	--site-bg: #eae2d5;
+	--site-fg: #0a0a0a;
+	--text-muted: rgb(10 10 10 / 0.7);
+	--text-soft: rgb(10 10 10 / 0.55);
+	--text-inverted: #ffffff;
+	--text-inverted-muted: rgb(255 255 255 / 0.75);
+	--surface-subtle: rgb(10 10 10 / 0.04);
+	--surface-inverted: #0a0a0a;
+	--border-subtle: rgb(10 10 10 / 0.12);
+	--nav-bg: var(--site-bg);
+	--nav-fg: var(--site-fg);
+	--nav-border: var(--border-subtle);
+}
+
+html.dark {
+	color-scheme: dark;
+	--site-bg: #221f1d;
+	--site-fg: #f5f5f5;
+	--text-muted: rgb(245 245 245 / 0.78);
+	--text-soft: rgb(245 245 245 / 0.58);
+	--text-inverted: #000000;
+	--text-inverted-muted: rgb(0 0 0 / 0.75);
+	--surface-subtle: rgb(245 245 245 / 0.05);
+	--surface-inverted: #f5f5f5;
+	--border-subtle: rgb(245 245 245 / 0.12);
+	--nav-bg: var(--site-bg);
+	--nav-fg: var(--site-fg);
+	--nav-border: var(--border-subtle);
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background-color: var(--site-bg);
+	color: var(--site-fg);
+	font-family: 'Archivo', sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: 'League Spartan', sans-serif;
+	font-optical-sizing: auto;
+	font-style: normal;
+}

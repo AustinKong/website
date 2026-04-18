@@ -1,0 +1,285 @@
+---
+import ThemeIcon from './ThemeIcon.astro';
+
+interface NavItem {
+	label: string;
+	href: string;
+}
+
+const navItems: NavItem[] = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Recommended Reads', href: '#reads' },
+	{ label: 'About', href: '#about' },
+	{ label: 'Blog', href: '/blog' },
+];
+
+const siteName = 'Austin Kong';
+---
+
+<nav class="site-nav" data-over-hero="false">
+	<div class="site-nav__inner">
+		<div class="site-nav__grid">
+			<div class="nav-panel">
+				<a href="/" class="nav-panel__icon" aria-label="Home">
+					<svg
+						aria-hidden="true"
+						viewBox="0 0 24 24"
+						class="nav-panel__mark"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M12 3v18M3 12h18M5 5l14 14M19 5L5 19"
+							stroke="currentColor"
+							stroke-width="2.75"
+							stroke-linecap="square"></path>
+					</svg>
+				</a>
+				<div class="nav-panel__brand">
+					<span class="nav-panel__copyright" aria-hidden="true">©</span>
+					<a href="/" class="nav-panel__brand-link">{siteName}</a>
+				</div>
+				<div class="nav-panel__wifi">W W W</div>
+			</div>
+
+			<div class="nav-space" aria-hidden="true"></div>
+
+			<div class="site-nav__actions">
+				{
+					navItems.map((item) => (
+						<a href={item.href} class="site-nav__button">
+							{item.label}
+						</a>
+					))
+				}
+				<ThemeIcon />
+			</div>
+		</div>
+	</div>
+
+	<script is:inline>
+		const nav = document.currentScript?.parentElement;
+
+		if (nav) {
+			const updateState = (isOverHero) => {
+				nav.dataset.overHero = isOverHero ? 'true' : 'false';
+			};
+
+			const setupHeroObserver = () => {
+				const hero = document.getElementById('hero');
+				if (!hero) {
+					updateState(false);
+					return;
+				}
+
+				const updateFromScroll = () => {
+					const navHeight = nav.getBoundingClientRect().height;
+					const heroBottom = hero.getBoundingClientRect().bottom;
+					updateState(heroBottom > navHeight);
+				};
+
+				updateFromScroll();
+				window.addEventListener('scroll', updateFromScroll, { passive: true });
+				window.addEventListener('resize', updateFromScroll);
+			};
+
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', setupHeroObserver, {
+					once: true,
+				});
+			} else {
+				setupHeroObserver();
+			}
+		}
+	</script>
+</nav>
+
+<style>
+	.site-nav {
+		position: fixed;
+		inset-inline: 0;
+		top: 0;
+		z-index: 50;
+		background-color: transparent;
+		color: var(--site-fg);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		transition:
+			background-color 200ms ease,
+			color 200ms ease,
+			border-color 200ms ease;
+	}
+
+	.site-nav[data-over-hero='false'] {
+		background-color: var(--site-bg);
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+	}
+
+	.site-nav__inner {
+		width: 100%;
+		padding: 0.5rem 0.5rem 0;
+	}
+
+	.site-nav__grid {
+		display: grid;
+		width: 100%;
+		grid-template-columns: max-content 1fr max-content;
+		align-items: stretch;
+		gap: 1rem;
+	}
+
+	.site-nav a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.nav-space {
+		min-width: 1rem;
+	}
+
+	.nav-panel {
+		display: grid;
+		grid-template-columns: 4rem max-content max-content;
+		align-items: stretch;
+		width: max-content;
+		min-height: 3.5rem;
+		border: 2px solid #000000;
+		background-color: transparent;
+		transition:
+			background-color 200ms ease,
+			color 200ms ease,
+			border-color 200ms ease;
+	}
+
+	.nav-panel__icon {
+		display: grid;
+		place-items: center;
+		border-right: 2px solid #000000;
+	}
+
+	.nav-panel__mark {
+		width: 2rem;
+		height: 2rem;
+	}
+
+	.nav-panel__brand {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.2rem;
+		padding-inline: 0.55rem;
+		font-size: 1.45rem;
+		font-weight: 400;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		white-space: nowrap;
+		border-inline: 2px solid #000000;
+	}
+
+	.nav-panel__copyright {
+		font-size: 1.1em;
+		font-weight: 700;
+		line-height: 1;
+	}
+
+	.nav-panel__wifi {
+		display: grid;
+		place-items: center;
+		padding-inline: 0.55rem;
+		font-family:
+			ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+			'Courier New', monospace;
+		font-size: 1.45rem;
+		font-weight: 700;
+		letter-spacing: 0.2em;
+		white-space: nowrap;
+		border-left: 2px solid #000000;
+	}
+
+	.site-nav__actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: stretch;
+		justify-self: end;
+		gap: 0.75rem;
+	}
+
+	.site-nav__button,
+	.site-nav__actions :global(.theme-toggle) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 3.5rem;
+		border: 2px solid #000000;
+		background-color: #000000;
+		padding: 0.85rem;
+		font-size: 0.9rem;
+		font-weight: 700;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: #ffffff;
+		transition:
+			background-color 200ms ease,
+			color 200ms ease,
+			transform 200ms ease;
+	}
+
+	.site-nav__button:hover,
+	.site-nav__actions :global(.theme-toggle:hover) {
+		transform: translateY(-1px);
+	}
+
+	.site-nav[data-over-hero='true'] .nav-panel__icon,
+	.site-nav[data-over-hero='true'] .nav-panel__wifi {
+		background-color: #ffffff;
+		color: #000000;
+	}
+
+	.site-nav[data-over-hero='true'] .nav-panel__brand {
+		background-color: #000000;
+		color: #ffffff;
+	}
+
+	.site-nav[data-over-hero='true'] .site-nav__button,
+	.site-nav[data-over-hero='true'] .site-nav__actions :global(.theme-toggle) {
+		background-color: #000000;
+		color: #ffffff;
+	}
+
+	.site-nav[data-over-hero='false'] .nav-panel__icon,
+	.site-nav[data-over-hero='false'] .nav-panel__wifi {
+		background-color: #000000;
+		color: #ffffff;
+	}
+
+	.site-nav[data-over-hero='false'] .nav-panel__brand {
+		background-color: #ffffff;
+		color: #000000;
+	}
+
+	.site-nav[data-over-hero='false'] .nav-panel,
+	.site-nav[data-over-hero='false'] .nav-panel__icon,
+	.site-nav[data-over-hero='false'] .nav-panel__brand,
+	.site-nav[data-over-hero='false'] .nav-panel__wifi {
+		border-color: var(--site-fg);
+	}
+
+	.site-nav[data-over-hero='false'] .site-nav__button,
+	.site-nav[data-over-hero='false'] .site-nav__actions :global(.theme-toggle) {
+		background-color: #ffffff;
+		color: #000000;
+	}
+
+	@media (min-width: 640px) {
+		.site-nav__inner {
+			padding-inline: 0.75rem;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.site-nav__inner {
+			padding-inline: 1rem;
+		}
+	}
+</style>

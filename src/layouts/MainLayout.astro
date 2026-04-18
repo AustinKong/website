@@ -1,0 +1,28 @@
+---
+import Layout from './Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description?: string;
+	showNavbar?: boolean;
+}
+
+const { title, description, showNavbar = true } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+	<div class="page-shell">
+		{showNavbar && <Navbar />}
+		<main>
+			<slot />
+		</main>
+	</div>
+</Layout>
+
+<style>
+	.page-shell {
+		min-height: 100vh;
+	}
+</style>

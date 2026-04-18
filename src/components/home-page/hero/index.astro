@@ -1,0 +1,136 @@
+---
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+---
+
+<style>
+	:global(:root) {
+		--hero-bar-height: 4vh;
+	}
+
+	.hero-gradient {
+		position: relative;
+		isolation: isolate;
+		background: linear-gradient(
+			to bottom,
+			#221f1d 0%,
+			#221f1d calc(100% - (6 * var(--hero-bar-height))),
+			#6a2055 calc(100% - (6 * var(--hero-bar-height))),
+			#6a2055 calc(100% - (5 * var(--hero-bar-height))),
+			#bb223e calc(100% - (5 * var(--hero-bar-height))),
+			#bb223e calc(100% - (4 * var(--hero-bar-height))),
+			#f0202e calc(100% - (4 * var(--hero-bar-height))),
+			#f0202e calc(100% - (3 * var(--hero-bar-height))),
+			#ff642c calc(100% - (3 * var(--hero-bar-height))),
+			#ff642c calc(100% - (2 * var(--hero-bar-height))),
+			#fdb525 calc(100% - (2 * var(--hero-bar-height))),
+			#fdb525 calc(100% - var(--hero-bar-height)),
+			#eae2d5 calc(100% - var(--hero-bar-height)),
+			#eae2d5 100%
+		);
+	}
+
+	:global(html.dark) .hero-gradient {
+		background: linear-gradient(
+			to bottom,
+			#eae2d5 0%,
+			#eae2d5 calc(100% - (6 * var(--hero-bar-height))),
+			#fdb525 calc(100% - (6 * var(--hero-bar-height))),
+			#fdb525 calc(100% - (5 * var(--hero-bar-height))),
+			#ff642c calc(100% - (5 * var(--hero-bar-height))),
+			#ff642c calc(100% - (4 * var(--hero-bar-height))),
+			#f0202e calc(100% - (4 * var(--hero-bar-height))),
+			#f0202e calc(100% - (3 * var(--hero-bar-height))),
+			#bb223e calc(100% - (3 * var(--hero-bar-height))),
+			#bb223e calc(100% - (2 * var(--hero-bar-height))),
+			#6a2055 calc(100% - (2 * var(--hero-bar-height))),
+			#6a2055 calc(100% - var(--hero-bar-height)),
+			#221f1d calc(100% - var(--hero-bar-height)),
+			#221f1d 100%
+		);
+	}
+
+	.hero {
+		position: relative;
+		display: flex;
+		min-height: 100vh;
+		flex-direction: column;
+		overflow: visible;
+	}
+
+	.hero-header-layer,
+	.hero-footer-layer {
+		position: relative;
+		z-index: 5;
+	}
+
+	/* TODO: Chosoe a better noise or smtg */
+	.hero-noise-layer {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		opacity: 0.15;
+		mix-blend-mode: color-burn;
+		z-index: 0;
+	}
+
+	.hero-noise-layer rect {
+		width: 100%;
+		height: 100%;
+		filter: url(#heroNoiseFilter);
+	}
+
+	.hero-text {
+		position: relative;
+		z-index: 20;
+		margin-top: auto;
+		margin-bottom: auto;
+		padding: 2rem;
+		color: #221f1d;
+	}
+
+	.hero-text h1 {
+		font-size: 10rem;
+		text-transform: uppercase;
+	}
+
+	.hero-text p {
+		z-index: 1;
+		font-size: 3rem;
+		font-weight: 600;
+		font-style: italic;
+	}
+</style>
+
+<section id="hero" class="hero hero-gradient">
+	<svg
+		aria-hidden="true"
+		class="hero-noise-layer"
+		focusable="false"
+		preserveAspectRatio="none"
+		viewBox="0 0 100 100"
+	>
+		<filter id="heroNoiseFilter">
+			<feTurbulence
+				type="fractalNoise"
+				baseFrequency="0.85"
+				numOctaves="3"
+				stitchTiles="stitch"></feTurbulence>
+		</filter>
+		<rect x="0" y="0" width="100" height="100" fill="#ffffff"></rect>
+	</svg>
+
+	<div class="hero-header-layer">
+		<Header />
+	</div>
+	<div class="hero-text">
+		<h1>Exploring the world Bit by Bit</h1>
+		<p>I'm a full-stack software engineer from Singapore.</p>
+	</div>
+	<div class="hero-footer-layer">
+		<Footer />
+	</div>
+</section>

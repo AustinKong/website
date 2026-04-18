@@ -1,0 +1,387 @@
+---
+const owner = 'AustinKong';
+const maxCommits = 30;
+---
+
+<div
+	class="github-commits"
+	data-owner={owner}
+	data-max-commits={String(maxCommits)}
+	aria-live="polite"
+>
+	<div class="github-commits__viewport">
+		<div class="github-commits__rows">Loading...</div>
+	</div>
+</div>
+
+<style>
+	.github-commits {
+		--commit-row-height: 1.1rem;
+		--commit-row-gap: 0.25rem;
+		--commit-tick-duration: 280ms;
+		position: relative;
+		z-index: 12;
+		pointer-events: none;
+		color: #221f1d;
+	}
+
+	.github-commits__viewport {
+		display: flex;
+		flex-direction: column;
+		gap: var(--commit-row-gap);
+		width: fit-content;
+		max-width: 30rem;
+		height: var(--commit-row-height);
+		overflow: hidden;
+	}
+
+	.github-commits__rows {
+		display: flex;
+		flex-direction: column;
+		gap: var(--commit-row-gap);
+		will-change: transform;
+	}
+
+	.github-commits__rows.is-ticking {
+		transition: transform var(--commit-tick-duration) linear;
+	}
+
+	.github-commits__rows.is-ticking.tick-up {
+		transform: translateY(
+			calc(-1 * (var(--commit-row-height) + var(--commit-row-gap)))
+		);
+	}
+
+	.github-commits__row {
+		font-size: 0.9rem;
+		font-weight: 700;
+		text-transform: none;
+		letter-spacing: 0.02em;
+		line-height: var(--commit-row-height);
+		color: #221f1d;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		height: var(--commit-row-height);
+		display: block;
+		pointer-events: none;
+	}
+
+	:global(html.dark) .github-commits__row {
+		color: #221f1d;
+	}
+</style>
+
+<script>
+	// @ts-nocheck
+
+	const CACHE_PREFIX = 'github-commits-cache-v1';
+	const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+	const TICK_MS = 5000;
+	const VISIBLE_ROWS = 1;
+	const TICK_DURATION_MS = 280;
+	const MESSAGE_MAX_LENGTH = 100;
+
+	function truncateMessage(message) {
+		if (message.length <= MESSAGE_MAX_LENGTH) {
+			return message;
+		}
+		return `${message.slice(0, MESSAGE_MAX_LENGTH - 1).trimEnd()}…`;
+	}
+
+	function formatCommitDate(isoDate) {
+		const date = new Date(isoDate);
+		if (!Number.isFinite(date.getTime())) {
+			return '??/??/???? ??:??';
+		}
+
+		const formatter = new Intl.DateTimeFormat('en-GB', {
+			timeZone: 'Asia/Singapore',
+			day: '2-digit',
+			month: '2-digit',
+			year: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: false,
+		});
+
+		const parts = formatter.formatToParts(date);
+		const day = parts.find((part) => part.type === 'day')?.value || '??';
+		const month = parts.find((part) => part.type === 'month')?.value || '??';
+		const year = parts.find((part) => part.type === 'year')?.value || '????';
+		const hour = parts.find((part) => part.type === 'hour')?.value || '??';
+		const minute = parts.find((part) => part.type === 'minute')?.value || '??';
+
+		return `${day}/${month} ${hour}:${minute}`;
+	}
+
+	function normalizeMessage(rawMessage) {
+		if (!rawMessage) {
+			return 'no commit message';
+		}
+		return rawMessage.split('\n')[0].trim() || 'no commit message';
+	}
+
+	function extractRepoFromUrl(url) {
+		try {
+			const parsedUrl = new URL(url);
+			const parts = parsedUrl.pathname.split('/').filter(Boolean);
+			if (parts.length >= 2) {
+				return `${parts[0]}/${parts[1]}`;
+			}
+		} catch (_error) {
+			return '';
+		}
+		return '';
+	}
+
+	function mapSearchCommit(item) {
+		const committedAt =
+			item?.commit?.author?.date || item?.commit?.committer?.date || '';
+		const message = normalizeMessage(item?.commit?.message || '');
+		const sha = item?.sha || '';
+		const htmlUrl = item?.html_url || '';
+
+		if (!sha || !committedAt || !htmlUrl) {
+			return null;
+		}
+
+		return { message, committedAt, htmlUrl, sha };
+	}
+
+	function mapEventCommits(event) {
+		if (
+			event?.type !== 'PushEvent' ||
+			!Array.isArray(event?.payload?.commits)
+		) {
+			return [];
+		}
+
+		const repoName = event?.repo?.name;
+		if (!repoName) {
+			return [];
+		}
+
+		return event.payload.commits
+			.map((commit) => {
+				if (!commit?.sha) {
+					return null;
+				}
+
+				const htmlUrl = `https://github.com/${repoName}/commit/${commit.sha}`;
+
+				return {
+					message: normalizeMessage(commit.message || ''),
+					committedAt: event.created_at || '',
+					htmlUrl,
+					sha: commit.sha,
+				};
+			})
+			.filter(Boolean);
+	}
+
+	function dedupeAndTrim(commits, maxCommits) {
+		const seenShas = new Set();
+		const result = [];
+
+		for (const commit of commits) {
+			if (!commit?.sha || seenShas.has(commit.sha)) {
+				continue;
+			}
+
+			seenShas.add(commit.sha);
+			result.push(commit);
+
+			if (result.length >= maxCommits) {
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	async function fetchCommits(owner, maxCommits) {
+		const searchUrl = `https://api.github.com/search/commits?q=author:${encodeURIComponent(owner)}&sort=author-date&order=desc&per_page=${maxCommits}`;
+
+		try {
+			const searchResponse = await fetch(searchUrl, {
+				headers: {
+					Accept: 'application/vnd.github+json',
+					'X-GitHub-Api-Version': '2022-11-28',
+				},
+			});
+
+			if (searchResponse.ok) {
+				const payload = await searchResponse.json();
+				const mapped = Array.isArray(payload?.items)
+					? payload.items.map(mapSearchCommit).filter(Boolean)
+					: [];
+
+				const commits = dedupeAndTrim(mapped, maxCommits);
+				if (commits.length > 0) {
+					return commits;
+				}
+			}
+		} catch (_error) {
+			// Fallback
+		}
+
+		const eventsUrl = `https://api.github.com/users/${encodeURIComponent(owner)}/events/public?per_page=100`;
+		try {
+			const eventsResponse = await fetch(eventsUrl, {
+				headers: {
+					Accept: 'application/vnd.github+json',
+					'X-GitHub-Api-Version': '2022-11-28',
+				},
+			});
+
+			if (eventsResponse.ok) {
+				const eventsPayload = await eventsResponse.json();
+				const commitsFromEvents = Array.isArray(eventsPayload)
+					? eventsPayload.flatMap((event) => mapEventCommits(event))
+					: [];
+
+				return dedupeAndTrim(commitsFromEvents, maxCommits);
+			}
+		} catch (_error) {
+			// Handle error
+		}
+
+		throw new Error('Failed to fetch commits');
+	}
+
+	function readCache(cacheKey) {
+		try {
+			const raw = localStorage.getItem(cacheKey);
+			if (!raw) return null;
+
+			const parsed = JSON.parse(raw);
+			if (!parsed || typeof parsed !== 'object') return null;
+
+			if (
+				typeof parsed.timestamp !== 'number' ||
+				!Array.isArray(parsed.commits)
+			)
+				return null;
+
+			if (Date.now() - parsed.timestamp > ONE_DAY_MS) return null;
+
+			return parsed.commits;
+		} catch (_error) {
+			return null;
+		}
+	}
+
+	function writeCache(cacheKey, commits) {
+		try {
+			localStorage.setItem(
+				cacheKey,
+				JSON.stringify({
+					timestamp: Date.now(),
+					commits,
+				})
+			);
+		} catch (_error) {
+			// Ignore
+		}
+	}
+
+	function createCommitLine(commit) {
+		const formattedDate = formatCommitDate(commit.committedAt);
+		return `[${formattedDate}] ${truncateMessage(commit.message)}`;
+	}
+
+	for (const root of document.querySelectorAll('.github-commits')) {
+		const owner = root.getAttribute('data-owner') || 'AustinKong';
+		const maxCommits = Number(root.getAttribute('data-max-commits') || '30');
+		const cacheKey = `${CACHE_PREFIX}-${owner.toLowerCase()}`;
+
+		const rowsRoot = root.querySelector('.github-commits__rows');
+		if (!rowsRoot) {
+			continue;
+		}
+
+		let commits = [];
+		let currentStart = 0;
+		let tickerInterval = null;
+		let isTicking = false;
+
+		const renderWindow = (rowCount = VISIBLE_ROWS) => {
+			if (commits.length === 0) {
+				rowsRoot.textContent = '[??/??/???? ??:??] no recent commits found';
+				return;
+			}
+
+			rowsRoot.innerHTML = '';
+			const totalRows = Math.min(rowCount, commits.length);
+			for (let offset = 0; offset < totalRows; offset += 1) {
+				const commitIndex = (currentStart + offset) % commits.length;
+				const commit = commits[commitIndex];
+
+				const row = document.createElement('div');
+				row.className = 'github-commits__row';
+				row.textContent = createCommitLine(commit);
+				rowsRoot.appendChild(row);
+			}
+		};
+
+		const animateTick = () => {
+			if (isTicking || commits.length <= 1) {
+				return;
+			}
+
+			isTicking = true;
+			renderWindow(VISIBLE_ROWS + 1);
+			rowsRoot.classList.add('is-ticking');
+
+			requestAnimationFrame(() => {
+				rowsRoot.classList.add('tick-up');
+			});
+
+			setTimeout(() => {
+				currentStart = (currentStart + 1) % commits.length;
+				rowsRoot.classList.remove('tick-up', 'is-ticking');
+				renderWindow(VISIBLE_ROWS);
+				isTicking = false;
+			}, TICK_DURATION_MS);
+		};
+
+		const startTicker = () => {
+			if (tickerInterval) {
+				clearInterval(tickerInterval);
+				tickerInterval = null;
+			}
+
+			if (commits.length <= 1) {
+				return;
+			}
+
+			tickerInterval = setInterval(() => {
+				animateTick();
+			}, TICK_MS);
+		};
+
+		(async () => {
+			const cached = readCache(cacheKey);
+			if (cached && cached.length > 0) {
+				commits = cached.slice(0, maxCommits);
+				renderWindow();
+				startTicker();
+				return;
+			}
+
+			try {
+				const fresh = await fetchCommits(owner, maxCommits);
+				commits = fresh.slice(0, maxCommits);
+				if (commits.length > 0) {
+					writeCache(cacheKey, commits);
+				}
+				renderWindow();
+				startTicker();
+			} catch (_error) {
+				rowsRoot.textContent =
+					'[??/??/???? ??:??] could not load github activity';
+			}
+		})();
+	}
+</script>

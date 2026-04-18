@@ -1,0 +1,27 @@
+{
+	"files.exclude": {
+		"**/node_modules": true,
+		"**/.astro": true,
+		"**/dist": true,
+		"**/.vscode": true,
+		"package-lock.json": true,
+		"astro.config.mjs": true,
+		"postcss.config.mjs": true,
+		"tailwind.config.mjs": true,
+		"tsconfig.json": true,
+		".prettierrc": true
+	},
+	"editor.formatOnSave": true,
+	"[astro]": {
+		"editor.defaultFormatter": "astro-build.astro-vscode"
+	},
+	"[markdown]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"editor.quickSuggestions": {
+		"strings": true
+	}
+}
