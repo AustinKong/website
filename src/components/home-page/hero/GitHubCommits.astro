@@ -23,6 +23,10 @@ const maxCommits = 30;
 		z-index: 12;
 		pointer-events: none;
 		color: #221f1d;
+		font-size: 0.9rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		line-height: 1.2;
 	}
 
 	.github-commits__viewport {
@@ -40,6 +44,7 @@ const maxCommits = 30;
 		flex-direction: column;
 		gap: var(--commit-row-gap);
 		will-change: transform;
+		max-width: inherit;
 	}
 
 	.github-commits__rows.is-ticking {
@@ -53,11 +58,6 @@ const maxCommits = 30;
 	}
 
 	.github-commits__row {
-		font-size: 0.9rem;
-		font-weight: 700;
-		text-transform: none;
-		letter-spacing: 0.02em;
-		line-height: var(--commit-row-height);
 		color: #221f1d;
 		white-space: nowrap;
 		overflow: hidden;

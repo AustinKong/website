@@ -85,62 +85,52 @@ const [vectorX, vectorY] = vectors[direction] ?? vectors.right;
 		justify-content: center;
 		padding: var(--motion-swap-item-padding);
 		box-sizing: border-box;
+		transition: transform var(--motion-swap-duration)
+			cubic-bezier(0.22, 1, 0.36, 1);
+		will-change: transform;
 	}
 
 	.motion-swap__primary {
-		transform: translate(0, 0);
+		transform: translate3d(0, 0, 0);
 	}
 
 	.motion-swap__secondary {
-		transform: translate(
+		transform: translate3d(
 			calc(var(--motion-swap-distance) * var(--motion-swap-x) * -1),
-			calc(var(--motion-swap-distance) * var(--motion-swap-y) * -1)
+			calc(var(--motion-swap-distance) * var(--motion-swap-y) * -1),
+			0
 		);
 	}
 
-	.motion-swap[data-trigger='self']:hover .motion-swap__primary {
-		animation: motion-swap-out var(--motion-swap-duration) ease forwards;
-	}
-
-	.motion-swap[data-trigger='self']:hover .motion-swap__secondary {
-		animation: motion-swap-in var(--motion-swap-duration) ease forwards;
-	}
-
+	.motion-swap[data-trigger='self']:hover .motion-swap__primary,
+	.motion-swap[data-trigger='self']:focus-within .motion-swap__primary,
 	.motion-parent:hover
+		.motion-swap[data-trigger='parent']
+		.motion-swap__primary,
+	.motion-parent:focus-within
 		.motion-swap[data-trigger='parent']
 		.motion-swap__primary {
-		animation: motion-swap-out var(--motion-swap-duration) ease forwards;
+		transform: translate3d(
+			calc(var(--motion-swap-distance) * var(--motion-swap-x)),
+			calc(var(--motion-swap-distance) * var(--motion-swap-y)),
+			0
+		);
 	}
 
+	.motion-swap[data-trigger='self']:hover .motion-swap__secondary,
+	.motion-swap[data-trigger='self']:focus-within .motion-swap__secondary,
 	.motion-parent:hover
 		.motion-swap[data-trigger='parent']
+		.motion-swap__secondary,
+	.motion-parent:focus-within
+		.motion-swap[data-trigger='parent']
 		.motion-swap__secondary {
-		animation: motion-swap-in var(--motion-swap-duration) ease forwards;
+		transform: translate3d(0, 0, 0);
 	}
 
-	@keyframes motion-swap-out {
-		from {
-			transform: translate(0, 0);
-		}
-
-		to {
-			transform: translate(
-				calc(var(--motion-swap-distance) * var(--motion-swap-x)),
-				calc(var(--motion-swap-distance) * var(--motion-swap-y))
-			);
-		}
-	}
-
-	@keyframes motion-swap-in {
-		from {
-			transform: translate(
-				calc(var(--motion-swap-distance) * var(--motion-swap-x) * -1),
-				calc(var(--motion-swap-distance) * var(--motion-swap-y) * -1)
-			);
-		}
-
-		to {
-			transform: translate(0, 0);
+	@media (prefers-reduced-motion: reduce) {
+		.motion-swap__layer {
+			transition-duration: 0ms;
 		}
 	}
 </style>

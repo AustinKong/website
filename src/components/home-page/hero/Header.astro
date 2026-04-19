@@ -3,6 +3,7 @@ import ThemeIcon from '../../ThemeIcon.astro';
 import ColorPicker from './ColorPicker.astro';
 import GitHubCommits from './GitHubCommits.astro';
 import SingaporeWeatherTime from './SingaporeWeatherTime.astro';
+import DirectionalSwap from '../../shared/DirectionalSwap.astro';
 import Globe from '../../../assets/globe.svg';
 
 interface NavItem {
@@ -124,6 +125,24 @@ const siteName = 'Austin Kong';
 		display: flex;
 		align-items: center;
 	}
+
+	.nav-item .motion-swap {
+		height: 100%;
+		display: flex;
+		align-items: center;
+	}
+
+	.nav-item-swap {
+		font-size: 1.5rem;
+	}
+
+	.nav-item-swap [slot='primary'],
+	.nav-item-swap [slot='secondary'] {
+		font-size: 1.5rem;
+		font-weight: inherit;
+		display: flex;
+		align-items: center;
+	}
 </style>
 
 <nav class="hero-nav" aria-label="Primary">
@@ -139,8 +158,18 @@ const siteName = 'Austin Kong';
 	<div class="hero-nav__spacer"></div>
 	{
 		navItems.map((item) => (
-			<a href={item.href} class="nav-item">
-				<p>{item.label}</p>
+			<a href={item.href} class="nav-item motion-parent">
+				<DirectionalSwap
+					class="nav-item-swap"
+					direction="down"
+					distance="100%"
+					durationMs={420}
+					trigger="parent"
+					ariaHidden={false}
+				>
+					<span slot="primary">{item.label}</span>
+					<span slot="secondary">{item.label}</span>
+				</DirectionalSwap>
 			</a>
 		))
 	}

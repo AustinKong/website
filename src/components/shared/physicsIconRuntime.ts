@@ -1,4 +1,5 @@
 import type { Body, Engine, Mouse, MouseConstraint, Runner } from 'matter-js';
+import pacmanGif from '../../assets/pac-man.gif';
 
 type MatterModule = typeof import('matter-js');
 
@@ -10,6 +11,10 @@ interface PhysicsSprite {
 
 const MAX_ACTIVE_ICONS = 15;
 const WALL_THICKNESS = 120;
+const LOCK_SETTLE_MS = 260;
+const PACMAN_SWEEP_MS = 5000;
+const BOTTOM_LOCK_OFFSET = 26;
+const ICON_COLLISION_GROUP = -1337;
 
 class PhysicsIconManager {
 	private matterPromise: Promise<MatterModule> | null = null;
@@ -21,6 +26,7 @@ class PhysicsIconManager {
 	private boundaries: Body[] = [];
 	private sprites = new Map<number, PhysicsSprite>();
 	private insertionOrder: number[] = [];
+	private cleanupInProgress = false;
 
 	private readonly handleViewportChange = () => {
 		this.syncSceneBounds();
@@ -170,6 +176,118 @@ class PhysicsIconManager {
 		return Math.random() * (max - min) + min;
 	}
 
+	private wait(durationMs: number): Promise<void> {
+		return new Promise((resolve) => {
+			window.setTimeout(resolve, durationMs);
+		});
+	}
+
+	private lockSpritesNearBottom(): number {
+		if (!this.matter || !this.sprites.size) {
+			return window.scrollY + window.innerHeight - BOTTOM_LOCK_OFFSET;
+		}
+
+		const width = this.getDocumentWidth();
+		const viewportBottom = window.scrollY + window.innerHeight;
+
+		for (const id of this.insertionOrder) {
+			const sprite = this.sprites.get(id);
+			if (!sprite) {
+				continue;
+			}
+
+			const minX = sprite.size / 2 + 8;
+			const maxX = width - sprite.size / 2 - 8;
+			const targetX = Math.min(maxX, Math.max(minX, sprite.body.position.x));
+			const targetY = viewportBottom - BOTTOM_LOCK_OFFSET - sprite.size / 2;
+
+			sprite.element.style.pointerEvents = 'none';
+			sprite.element.style.transition =
+				'transform 260ms cubic-bezier(0.22, 1, 0.36, 1)';
+
+			sprite.body.collisionFilter.group = ICON_COLLISION_GROUP;
+			this.matter.Body.setVelocity(sprite.body, { x: 0, y: 0 });
+			this.matter.Body.setAngularVelocity(sprite.body, 0);
+			this.matter.Body.setStatic(sprite.body, true);
+			this.matter.Body.setPosition(sprite.body, {
+				x: targetX,
+				y: targetY,
+			});
+		}
+
+		this.syncSpritesToDom();
+		return viewportBottom - BOTTOM_LOCK_OFFSET - 22;
+	}
+
+	private async runPacmanSweep(centerY: number): Promise<void> {
+		if (!this.layer || this.sprites.size === 0) {
+			return;
+		}
+
+		const pacman = document.createElement('img');
+		pacman.className = 'physics-icon-pacman';
+		pacman.src = pacmanGif.src;
+		pacman.alt = '';
+		pacman.draggable = false;
+
+		const pacmanSize = Math.max(32, Math.min(48, window.innerWidth * 0.1));
+		pacman.style.width = `${pacmanSize}px`;
+		pacman.style.height = `${pacmanSize}px`;
+		this.layer.append(pacman);
+
+		const width = this.getDocumentWidth();
+		const startX = -pacmanSize * 1.2;
+		const endX = width + pacmanSize * 1.2;
+		const totalDistance = endX - startX;
+		const iconIds = new Set(this.insertionOrder);
+		const topY = centerY - pacmanSize / 2;
+
+		await new Promise<void>((resolve) => {
+			const startedAt = performance.now();
+
+			const frame = (now: number) => {
+				const progress = Math.min(1, (now - startedAt) / PACMAN_SWEEP_MS);
+				const x = startX + totalDistance * progress;
+
+				const renderX = Math.round(x);
+				const renderY = Math.round(topY);
+				pacman.style.transform = `translate3d(${renderX}px, ${renderY}px, 0)`;
+
+				const biteCenterX = x + pacmanSize * 0.72;
+				const biteCenterY = topY + pacmanSize / 2;
+				const biteReachX = pacmanSize * 0.34;
+				const biteReachY = pacmanSize * 0.32;
+
+				for (const id of Array.from(iconIds)) {
+					const sprite = this.sprites.get(id);
+					if (!sprite) {
+						iconIds.delete(id);
+						continue;
+					}
+
+					const deltaX = Math.abs(sprite.body.position.x - biteCenterX);
+					const deltaY = Math.abs(sprite.body.position.y - biteCenterY);
+
+					if (deltaX <= biteReachX && deltaY <= biteReachY) {
+						this.removeSprite(id);
+						iconIds.delete(id);
+					}
+				}
+
+				if (progress >= 1) {
+					resolve();
+					return;
+				}
+
+				window.requestAnimationFrame(frame);
+			};
+
+			window.requestAnimationFrame(frame);
+		});
+
+		pacman.remove();
+	}
+
 	private async ensureReady(): Promise<void> {
 		if (this.engine) {
 			return;
@@ -215,6 +333,10 @@ class PhysicsIconManager {
 	}
 
 	public async spawnFromTrigger(triggerEl: HTMLElement): Promise<void> {
+		if (this.cleanupInProgress) {
+			return;
+		}
+
 		await this.ensureReady();
 
 		if (!this.matter || !this.engine || !this.layer) {
@@ -276,6 +398,37 @@ class PhysicsIconManager {
 		this.enforceBodyLimit();
 		this.syncSpritesToDom();
 	}
+
+	public async runCleanupSequence(): Promise<void> {
+		if (this.cleanupInProgress) {
+			return;
+		}
+
+		if (!this.engine && this.sprites.size === 0) {
+			return;
+		}
+
+		await this.ensureReady();
+
+		if (this.sprites.size === 0) {
+			return;
+		}
+
+		this.cleanupInProgress = true;
+
+		try {
+			this.syncSceneBounds();
+			const pacmanCenterY = this.lockSpritesNearBottom();
+			await this.wait(LOCK_SETTLE_MS + 30);
+			await this.runPacmanSweep(pacmanCenterY);
+
+			for (const id of [...this.insertionOrder]) {
+				this.removeSprite(id);
+			}
+		} finally {
+			this.cleanupInProgress = false;
+		}
+	}
 }
 
 declare global {
@@ -328,4 +481,12 @@ export const registerPhysicsIconBindings = (): void => {
 				activate();
 			});
 		});
+};
+
+export const triggerPhysicsIconCleanup = (): void => {
+	if (typeof window === 'undefined') {
+		return;
+	}
+
+	void getPhysicsIconManager().runCleanupSequence();
 };
