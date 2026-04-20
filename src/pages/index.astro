@@ -3,10 +3,12 @@ import MainLayout from '../layouts/MainLayout.astro';
 import Hero from '../components/home-page/hero/index.astro';
 import RecommendedReads from '../components/RecommendedReads.astro';
 import About from '../components/home-page/About.astro';
+import WorkInProgress from '../components/shared/WorkInProgress.astro';
 ---
 
 <MainLayout title="Home" description="Welcome to my website" showNavbar={false}>
 	<Hero />
+	<WorkInProgress />
 	<RecommendedReads />
 	<About />
 </MainLayout>

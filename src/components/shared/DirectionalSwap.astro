@@ -107,7 +107,7 @@ const [vectorX, vectorY] = vectors[direction] ?? vectors.right;
 	.motion-parent:hover
 		.motion-swap[data-trigger='parent']
 		.motion-swap__primary,
-	.motion-parent:focus-within
+	.motion-parent:focus-visible
 		.motion-swap[data-trigger='parent']
 		.motion-swap__primary {
 		transform: translate3d(
@@ -122,7 +122,7 @@ const [vectorX, vectorY] = vectors[direction] ?? vectors.right;
 	.motion-parent:hover
 		.motion-swap[data-trigger='parent']
 		.motion-swap__secondary,
-	.motion-parent:focus-within
+	.motion-parent:focus-visible
 		.motion-swap[data-trigger='parent']
 		.motion-swap__secondary {
 		transform: translate3d(0, 0, 0);

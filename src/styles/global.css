@@ -12,6 +12,18 @@ svg {
 
 html {
 	scroll-behavior: smooth;
+	overflow-x: clip;
+}
+
+body {
+	overflow-x: clip;
+}
+
+@supports not (overflow: clip) {
+	html,
+	body {
+		overflow-x: hidden;
+	}
 }
 
 a {

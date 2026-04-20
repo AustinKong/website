@@ -1,0 +1,126 @@
+---
+interface Props {
+	class?: string;
+	text?: string;
+	tiltDeg?: number;
+	speedSeconds?: number;
+	barHeight?: string;
+}
+
+const {
+	class: className = '',
+	text = 'WORK IN PROGRESS',
+	tiltDeg = -3.5,
+	speedSeconds = 60,
+	barHeight = '3.4rem',
+} = Astro.props;
+
+const repeatedText = Array.from({ length: 10 }, () => text).join('   •   ');
+const tiltAbsDeg = Math.abs(tiltDeg);
+---
+
+<div class="wip-shell">
+	<div
+		class:list={['wip-banner', className]}
+		style={`--wip-tilt:${tiltDeg}deg;--wip-tilt-abs-num:${tiltAbsDeg};--wip-speed:${speedSeconds}s;--wip-height:${barHeight};`}
+	>
+		<div class="wip-stripe wip-stripe--top" aria-hidden="true"></div>
+		<div class="wip-marquee" role="status" aria-live="polite" aria-label={text}>
+			<div class="wip-track">
+				<span class="wip-copy">{repeatedText}</span>
+				<span class="wip-copy" aria-hidden="true">{repeatedText}</span>
+			</div>
+		</div>
+		<div class="wip-stripe wip-stripe--bottom" aria-hidden="true"></div>
+	</div>
+</div>
+
+<style>
+	.wip-shell {
+		position: relative;
+		left: 50%;
+		width: 100vw;
+		margin-left: -50vw;
+		/* Approximate value that should ideally scale with tilt angle, but rn its calibrated to be just nice for my defined tilt of -3.5deg */
+		/* This works and scales properly because length scales linearly with vw and height also scales linearly */
+		padding: 4vw 0;
+		overflow-x: clip;
+		z-index: 3;
+	}
+
+	.wip-banner {
+		--wip-bg: #f5d23a;
+		--wip-fg: #121212;
+		--wip-stripe-a: #121212;
+		--wip-stripe-b: #f5d23a;
+		--wip-stripe-size: 14px;
+		--wip-stripe-thickness: 0.45rem;
+
+		position: relative;
+		width: 102%;
+		margin-left: -1%;
+		transform: rotate(var(--wip-tilt));
+		transform-origin: center;
+		overflow: hidden;
+	}
+
+	.wip-marquee {
+		height: var(--wip-height);
+		display: flex;
+		align-items: center;
+		background: var(--wip-bg);
+		color: var(--wip-fg);
+		border-top: 2px solid var(--wip-fg);
+		border-bottom: 2px solid var(--wip-fg);
+	}
+
+	.wip-track {
+		display: flex;
+		width: max-content;
+		align-items: center;
+		white-space: nowrap;
+		animation: wip-scroll var(--wip-speed) linear infinite;
+	}
+
+	.wip-copy {
+		display: inline-flex;
+		align-items: center;
+		padding-right: 1.75rem;
+		font-family: 'League Spartan', sans-serif;
+		font-size: clamp(1.1rem, 2.5vw, 1.75rem);
+		font-weight: 800;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		line-height: 1;
+	}
+
+	.wip-stripe {
+		height: var(--wip-stripe-thickness);
+		background: repeating-linear-gradient(
+			-45deg,
+			var(--wip-stripe-a),
+			var(--wip-stripe-a) calc(var(--wip-stripe-size) / 2),
+			var(--wip-stripe-b) calc(var(--wip-stripe-size) / 2),
+			var(--wip-stripe-b) var(--wip-stripe-size)
+		);
+	}
+
+	@keyframes wip-scroll {
+		0% {
+			transform: translateX(0);
+		}
+		100% {
+			transform: translateX(-50%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.wip-track {
+			animation: none;
+		}
+
+		.wip-marquee {
+			justify-content: center;
+		}
+	}
+</style>
