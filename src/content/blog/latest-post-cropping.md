@@ -9,8 +9,6 @@ imageAlt: A moody photograph with strong composition and negative space
 draft: false
 ---
 
-# Cropping Images Without Surprises
-
 Image sizes drift over time. The component should not.
 
 ## The rule

@@ -9,8 +9,6 @@ imageAlt: A clean abstract workspace image with light and texture
 draft: false
 ---
 
-# Building with Astro and Tailwind
-
 Astro and Tailwind CSS make a powerful combination for building modern, fast websites.
 
 ## Why Astro?

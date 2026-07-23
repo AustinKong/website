@@ -4,7 +4,8 @@ interface Props {
 	description?: string;
 }
 
-const { title, description = 'Custom website' } = Astro.props;
+const { title, description = 'Austin Kong — software engineer in Singapore.' } =
+	Astro.props;
 ---
 
 <!doctype html>
@@ -12,23 +13,6 @@ const { title, description = 'Custom website' } = Astro.props;
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=League+Spartan:wght@100..900&display=swap"
-			rel="stylesheet"
-		/>
-		<script is:inline>
-			(() => {
-				const localStorageTheme = localStorage?.getItem('theme') ?? '';
-				const theme = ['dark', 'light'].includes(localStorageTheme)
-					? localStorageTheme
-					: window.matchMedia('(prefers-color-scheme: dark)').matches
-						? 'dark'
-						: 'light';
-				document.documentElement.classList.toggle('dark', theme === 'dark');
-			})();
-		</script>
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />

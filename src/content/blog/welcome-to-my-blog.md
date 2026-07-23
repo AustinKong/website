@@ -9,8 +9,6 @@ imageAlt: A soft editorial scene with books and warm light
 draft: false
 ---
 
-# Welcome to my Blog
-
 This is the first post on my new blog. I'm excited to share my thoughts, experiences, and insights with you.
 
 ## What to Expect

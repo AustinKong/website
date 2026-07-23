@@ -1,0 +1,73 @@
+---
+interface Props {
+	src: string;
+	label: string;
+}
+
+const { src, label } = Astro.props;
+---
+
+<span
+	class="tech-tag"
+	data-physics-icon
+	data-physics-shape="rectangle"
+	data-physics-activation="click"
+	role="button"
+	tabindex="0"
+	aria-label={`Drop ${label} tag`}
+>
+	<span class="tech-tag__body" data-physics-icon-template>
+		<span class="tech-tag__content">
+			<img src={src} alt="" />
+			{label}
+		</span>
+	</span>
+</span>
+
+<script>
+	import { registerPhysicsIconBindings } from './physicsIconRuntime';
+
+	registerPhysicsIconBindings();
+</script>
+
+<style>
+	.tech-tag {
+		display: inline-flex;
+		cursor: pointer;
+	}
+
+	.tech-tag,
+	.tech-tag__body {
+		user-select: none;
+	}
+
+	.tech-tag__body,
+	.tech-tag__content {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.45rem 0.7rem;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		background: #fff;
+		line-height: 1;
+		white-space: nowrap;
+	}
+
+	.tech-tag__content {
+		padding: 0;
+		border: 0;
+		background: transparent;
+	}
+
+	.tech-tag img,
+	:global(.physics-icon-body .tech-tag__content img) {
+		width: 1em;
+		height: 1em;
+		object-fit: contain;
+	}
+
+	.tech-tag[data-activated='true'] > * {
+		visibility: hidden;
+	}
+</style>

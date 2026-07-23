@@ -1,10 +1,11 @@
 ---
 interface Props {
+	label: string;
 	class?: string;
-	iconSize?: string;
+	size?: string;
 }
 
-const { class: className = '', iconSize = '8.05em' } = Astro.props;
+const { label, class: className = '', size = '1em' } = Astro.props;
 ---
 
 <span
@@ -12,17 +13,11 @@ const { class: className = '', iconSize = '8.05em' } = Astro.props;
 	data-physics-icon
 	role="button"
 	tabindex="0"
-	style={`--physics-icon-size:${iconSize};`}
+	aria-label={`Drop ${label}`}
+	style={`--physics-icon-size:${size}`}
 >
-	<span class="physics-icon__text">
+	<span data-physics-icon-template aria-hidden="true">
 		<slot />
-	</span>
-	<span
-		class="physics-icon__template"
-		data-physics-icon-template
-		aria-hidden="true"
-	>
-		<slot name="icon" />
 	</span>
 </span>
 
@@ -31,103 +26,3 @@ const { class: className = '', iconSize = '8.05em' } = Astro.props;
 
 	registerPhysicsIconBindings();
 </script>
-
-<style is:global>
-	.physics-icon {
-		position: relative;
-		display: inline;
-		font: inherit;
-		line-height: inherit;
-		color: inherit;
-		cursor: pointer;
-		text-decoration: underline;
-		text-decoration-thickness: 0.085em;
-		text-underline-offset: 0.12em;
-		user-select: none;
-	}
-
-	.physics-icon__text {
-		font: inherit;
-		line-height: inherit;
-	}
-
-	.physics-icon:focus-visible {
-		outline: 2px solid color-mix(in srgb, var(--site-fg) 60%, transparent);
-		outline-offset: 2px;
-		border-radius: 0.2em;
-	}
-
-	.physics-icon__template {
-		position: absolute;
-		left: 0;
-		top: 0;
-		display: inline-block;
-		width: var(--physics-icon-size);
-		height: var(--physics-icon-size);
-		visibility: hidden;
-		pointer-events: none;
-	}
-
-	.physics-icon__template > * {
-		display: block;
-		width: 100%;
-		height: 100%;
-	}
-
-	.physics-icon__template :is(svg, img) {
-		display: block;
-		width: 100%;
-		height: 100%;
-	}
-
-	.physics-icon-layer {
-		position: absolute;
-		inset: 0 auto auto 0;
-		max-width: 100%;
-		pointer-events: none;
-		z-index: 45;
-		overflow: hidden;
-	}
-
-	.physics-icon-body {
-		position: absolute;
-		left: 0;
-		top: 0;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		pointer-events: auto;
-		touch-action: none;
-		user-select: none;
-		will-change: transform;
-		cursor: grab;
-	}
-
-	.physics-icon-body:active {
-		cursor: grabbing;
-	}
-
-	.physics-icon-body > * {
-		display: block;
-		width: 100%;
-		height: 100%;
-	}
-
-	.physics-icon-body :is(svg, img) {
-		display: block;
-		width: 100%;
-		height: 100%;
-	}
-
-	.physics-icon-pacman {
-		position: absolute;
-		left: 0;
-		top: 0;
-		display: block;
-		object-fit: contain;
-		image-rendering: pixelated;
-		image-rendering: crisp-edges;
-		pointer-events: none;
-		z-index: 65;
-	}
-</style>

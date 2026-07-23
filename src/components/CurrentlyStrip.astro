@@ -1,0 +1,89 @@
+---
+interface Photo {
+	src: string;
+	alt: string;
+	caption: string;
+	link?: {
+		text: string;
+		href: string;
+	};
+}
+
+interface Props {
+	photos: Photo[];
+}
+
+const { photos } = Astro.props;
+const angles = ['-3deg', '3deg', '-2deg'];
+---
+
+<div class="currently-strip" aria-label="What I am currently doing">
+	{
+		photos.map((photo, index) => (
+			<figure class="currently-item">
+				<img
+					src={photo.src}
+					alt={photo.alt}
+					loading="lazy"
+					style={`--angle:${angles[index % angles.length]}`}
+				/>
+				<figcaption>
+					{photo.caption}
+					{photo.link && (
+						<>
+							{' '}
+							<a href={photo.link.href}>{photo.link.text}</a>
+						</>
+					)}
+				</figcaption>
+			</figure>
+		))
+	}
+</div>
+
+<style>
+	.currently-strip {
+		display: grid;
+		margin-top: 5rem;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		align-items: end;
+		gap: clamp(1rem, 4vw, 4rem);
+	}
+
+	.currently-item {
+		min-width: 0;
+		margin: 0;
+	}
+
+	.currently-item img {
+		display: block;
+		width: 100%;
+		height: auto;
+		max-height: 22rem;
+		object-fit: contain;
+		filter: drop-shadow(0 1rem 0.75rem rgb(0 0 0 / 0.2));
+		transform: rotate(var(--angle));
+		transition: transform 180ms ease;
+	}
+
+	.currently-item:hover img {
+		transform: translateY(-0.25rem) rotate(calc(var(--angle) + 1.5deg));
+	}
+
+	.currently-item figcaption {
+		margin-top: 1rem;
+		text-align: center;
+	}
+
+	@media (max-width: 600px) {
+		.currently-strip {
+			gap: 0.75rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.currently-item img {
+			transition: none;
+		}
+	}
+</style>

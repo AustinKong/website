@@ -9,8 +9,6 @@ imageAlt: A minimal workspace scene with strong contrast and texture
 draft: false
 ---
 
-# Writing Posts That Read Quickly
-
 Short posts are easier to scan, easier to maintain, and easier to keep visually balanced in a card grid.
 
 ## Structure

@@ -1,89 +1,210 @@
-* {
-	/* outline: 1px solid red; */
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
+:root {
+	color-scheme: light;
+	--background: #f7f7f5;
+	--foreground: #292927;
+	--muted: #9b9b97;
+	--line: #ddddda;
+	--surface: #ececea;
+	--font-size-h1: clamp(2.25rem, 4vw, 2.618rem);
+	--font-size-h2: clamp(1.15rem, 2vw, 1.272rem);
+	--font-size-h3: 1.125rem;
+	--font-size-h4: 1rem;
+	font-synthesis: none;
 }
 
-svg {
-	display: block;
-	fill: currentColor;
+* {
+	box-sizing: border-box;
 }
 
 html {
+	background: var(--background);
+	color: var(--foreground);
 	scroll-behavior: smooth;
-	overflow-x: clip;
-}
-
-body {
-	overflow-x: clip;
-}
-
-@supports not (overflow: clip) {
-	html,
-	body {
-		overflow-x: hidden;
-	}
-}
-
-a {
-	text-decoration: none;
-	color: inherit;
-}
-
-.spacer {
-	flex: 1;
-}
-
-:root {
-	color-scheme: light;
-	--site-bg: #eae2d5;
-	--site-fg: #0a0a0a;
-	--text-muted: rgb(10 10 10 / 0.7);
-	--text-soft: rgb(10 10 10 / 0.55);
-	--text-inverted: #ffffff;
-	--text-inverted-muted: rgb(255 255 255 / 0.75);
-	--surface-subtle: rgb(10 10 10 / 0.04);
-	--surface-inverted: #0a0a0a;
-	--border-subtle: rgb(10 10 10 / 0.12);
-	--nav-bg: var(--site-bg);
-	--nav-fg: var(--site-fg);
-	--nav-border: var(--border-subtle);
-}
-
-html.dark {
-	color-scheme: dark;
-	--site-bg: #221f1d;
-	--site-fg: #f5f5f5;
-	--text-muted: rgb(245 245 245 / 0.78);
-	--text-soft: rgb(245 245 245 / 0.58);
-	--text-inverted: #000000;
-	--text-inverted-muted: rgb(0 0 0 / 0.75);
-	--surface-subtle: rgb(245 245 245 / 0.05);
-	--surface-inverted: #f5f5f5;
-	--border-subtle: rgb(245 245 245 / 0.12);
-	--nav-bg: var(--site-bg);
-	--nav-fg: var(--site-fg);
-	--nav-border: var(--border-subtle);
 }
 
 body {
 	margin: 0;
-	padding: 0;
-	background-color: var(--site-bg);
-	color: var(--site-fg);
-	font-family: 'Archivo', sans-serif;
-	font-optical-sizing: auto;
-	font-weight: 400;
+	min-width: 320px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1rem;
+	line-height: 1.3;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-family: 'League Spartan', sans-serif;
-	font-optical-sizing: auto;
-	font-style: normal;
+:is(h1, h2, h3, h4) {
+	margin: 0 0 0.5em;
+	font-weight: 400;
+	letter-spacing: -0.035em;
+	line-height: 1;
+}
+
+h1 {
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: var(--font-size-h1);
+}
+
+h2 {
+	font-size: var(--font-size-h2);
+}
+
+h3 {
+	font-size: var(--font-size-h3);
+}
+
+h4 {
+	font-size: var(--font-size-h4);
+	font-weight: 700;
+}
+
+p {
+	margin: 0 0 1rem;
+}
+
+a {
+	color: inherit;
+	text-underline-offset: 0.18em;
+}
+
+button,
+input,
+textarea,
+select {
+	font: inherit;
+}
+
+::selection {
+	background: var(--foreground);
+	color: var(--background);
+}
+
+.site-shell {
+	display: grid;
+	width: 100%;
+	max-width: 82rem;
+	min-height: 100vh;
+	margin-inline: auto;
+	grid-template-columns: 17rem 1fr;
+}
+
+.site-main {
+	position: relative;
+	min-width: 0;
+	padding: 4rem 1.5rem 8rem clamp(1.5rem, 4vw, 3rem);
+}
+
+.physics-icon {
+	display: inline-flex;
+	width: var(--physics-icon-size);
+	height: var(--physics-icon-size);
+	vertical-align: -0.12em;
+	cursor: pointer;
+}
+
+.physics-icon > *,
+.physics-icon :is(svg, img) {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.physics-icon[data-activated='true'] > * {
+	visibility: hidden;
+}
+
+.physics-icon-layer {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	pointer-events: none;
+	z-index: 10;
+}
+
+.physics-icon-body {
+	position: absolute;
+	inset: 0 auto auto 0;
+	display: grid;
+	place-items: center;
+	pointer-events: auto;
+	touch-action: none;
+	cursor: grab;
+	will-change: transform;
+}
+
+.physics-icon-body:active {
+	cursor: grabbing;
+}
+
+.physics-icon-body > *,
+.physics-icon-body :is(svg, img) {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.section--narrow {
+	width: 100%;
+	max-width: 80ch;
+}
+
+.section--wide {
+	width: 100%;
+}
+
+.home-section {
+	scroll-margin-top: 2rem;
+}
+
+.home-section + .home-section {
+	margin-top: 8rem;
+}
+
+.post-meta {
+	color: var(--muted);
+	font-size: 0.9rem;
+}
+
+.post-header {
+	margin-bottom: 4rem;
+}
+
+.prose :is(h2, h3, h4) {
+	margin-top: 2em;
+}
+
+.prose :is(p, ul, ol, blockquote, pre) {
+	margin: 0 0 1.2em;
+}
+
+.prose img {
+	max-width: 100%;
+	height: auto;
+}
+
+.prose pre {
+	overflow-x: auto;
+	padding: 1rem;
+	background: var(--surface);
+	font-family: monospace;
+	font-size: 0.8em;
+}
+
+.post-back {
+	display: inline-block;
+	margin-top: 4rem;
+}
+
+@media (max-width: 900px) {
+	.site-shell {
+		grid-template-columns: 1fr;
+	}
+
+	.site-main {
+		padding: 1.5rem 1.25rem 5rem;
+	}
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
 }

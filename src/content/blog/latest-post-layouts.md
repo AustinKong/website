@@ -9,8 +9,6 @@ imageAlt: Editorial image with layered shapes and a warm palette
 draft: false
 ---
 
-# Designing Cards That Breathe
-
 Cards work best when they don’t feel like boxes trying to prove a point. The layout should do the hard work so the content can stay calm.
 
 ## What changed
