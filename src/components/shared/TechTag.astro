@@ -9,31 +9,69 @@ const { src, label } = Astro.props;
 
 <span
 	class="tech-tag"
-	data-physics-icon
-	data-physics-shape="rectangle"
-	data-physics-activation="click"
+	data-physics-object
 	role="button"
 	tabindex="0"
 	aria-label={`Drop ${label} tag`}
 >
-	<span class="tech-tag__body" data-physics-icon-template>
-		<span class="tech-tag__content">
-			<img src={src} alt="" />
-			{label}
-		</span>
+	<span class="tech-tag__body" data-physics-template>
+		<img src={src} alt="" draggable="false" />
+		{label}
 	</span>
 </span>
 
 <script>
-	import { registerPhysicsIconBindings } from './physicsIconRuntime';
+	import { registerPhysicsBindings } from './physicsRuntime';
 
-	registerPhysicsIconBindings();
+	registerPhysicsBindings();
 </script>
 
 <style>
+	:global(.physics-object-layer) {
+		position: absolute;
+		z-index: 10;
+		inset: 0;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	:global(.physics-object-body) {
+		position: absolute;
+		inset: 0 auto auto 0;
+		display: grid;
+		place-items: center;
+		pointer-events: auto;
+		touch-action: none;
+		cursor: grab;
+		will-change: transform;
+	}
+
+	:global(.physics-object-body:active) {
+		cursor: grabbing;
+	}
+
+	:global(.physics-object-body > *) {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
 	.tech-tag {
 		display: inline-flex;
 		cursor: pointer;
+		transition: transform var(--transition);
+	}
+
+	.tech-tag:nth-child(3n + 1):hover {
+		transform: translateY(-0.15rem) rotate(-2deg);
+	}
+
+	.tech-tag:nth-child(3n + 2):hover {
+		transform: translateY(-0.2rem) rotate(1.5deg);
+	}
+
+	.tech-tag:nth-child(3n):hover {
+		transform: translateY(-0.1rem) rotate(-1deg);
 	}
 
 	.tech-tag,
@@ -41,33 +79,33 @@ const { src, label } = Astro.props;
 		user-select: none;
 	}
 
-	.tech-tag__body,
-	.tech-tag__content {
+	.tech-tag__body {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.4rem;
 		padding: 0.45rem 0.7rem;
-		border: 1px solid var(--line);
-		border-radius: 999px;
-		background: #fff;
+		border: 1px solid var(--muted);
+		border-radius: var(--radius-pill);
+		background: var(--white);
 		line-height: 1;
 		white-space: nowrap;
 	}
 
-	.tech-tag__content {
-		padding: 0;
-		border: 0;
-		background: transparent;
-	}
-
 	.tech-tag img,
-	:global(.physics-icon-body .tech-tag__content img) {
+	:global(.physics-object-body .tech-tag__body img) {
 		width: 1em;
 		height: 1em;
 		object-fit: contain;
+		-webkit-user-drag: none;
 	}
 
 	.tech-tag[data-activated='true'] > * {
 		visibility: hidden;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.tech-tag {
+			transition: none;
+		}
 	}
 </style>

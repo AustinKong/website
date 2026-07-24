@@ -5,9 +5,9 @@ over adding a class.
 
 ## Typography
 
-- Body copy, interface text, and `h2`–`h4` use the sans-serif stack defined on
-  `body`.
-- Only `h1` uses the serif stack.
+- Body copy, interface text, and article `h2`–`h4` use the sans-serif stack
+  defined on `body`.
+- Page titles and homepage section titles use the serif stack.
 - Shared heading sizes live in `--font-size-h1` through `--font-size-h4`.
 - The hierarchy uses the Fibonacci/golden-ratio steps where they matter most:
   - `h1`: `2.618rem`
@@ -20,8 +20,8 @@ over adding a class.
 
 ## Heading rules
 
-- Use exactly one `h1` per page for the page or article title.
-- Use `h2` for major sections.
+- Use one `h1` for the page title.
+- Use `h2` for named homepage sections and article sections.
 - Use `h3` for a subsection within an `h2`.
 - Use `h4` only when a third nested level is genuinely necessary.
 - Do not use `h5` or `h6`. Simplify the content hierarchy instead.
@@ -47,45 +47,41 @@ with the inherited sans-serif font.
 
 - The base spacing unit is `1rem`.
 - Prefer multiples of `1rem`; use `0.5rem` only for tight relationships.
-- Text lines should remain near `65ch` for comfortable reading.
+- Text lines should remain below `80ch` for comfortable reading.
 - Use normal body text for introductions. Do not create display-copy classes.
 - The complete sidebar and content shell is capped at `82rem` and centered.
 - Classes are for layout or exceptional emphasis, not typography duplication.
 - Sections have only two width modes:
   - `.section--narrow`: `80ch` for About, Experience, and individual articles.
-  - `.section--wide`: the full main column for Projects, Blog grids, and Contact.
+  - Full width is the default for Projects, Blog grids, and Contact.
 - About, Experience, Projects, and Contact are sections on the homepage and use
   native anchor navigation.
 
 ## Colour and interaction
 
-- Use the variables in `global.css`: `--background`, `--foreground`, `--muted`,
-  and `--line`.
+- Use the colour variables in `global.css`; do not add component-local colour
+  literals.
 - Text must retain readable contrast against the light background.
 - Links stay recognizable through underlines or their navigation context.
 - Keyboard focus must remain visible; do not remove browser focus outlines.
 
 ## Project cards
 
-- Projects and blog posts use the same `ContentGrid` presentation.
+- Projects and blog posts use the shared `ContentGrid` presentation.
 - Card media uses a `9 / 10` aspect ratio.
 - Media corners use a `0.5rem` radius.
 - Desktop project grids use three equal columns with a `1rem` gutter.
-- Project titles use `h3`; descriptions use normal body text.
+- Blog card titles use `h2`; project card titles use `h3`.
+- Descriptions use normal body text.
 
-## Inline physics icons
+## Components
 
-Use `PhysicsIcon.astro` inside a paragraph when an icon should behave like an
-inline emoji:
+- Homepage sections live in `components/sections` and own their content.
+- Reusable presentation lives in `components/shared`.
+- `PhotoStrip` accepts any number of captioned photos; it is not tied to the
+  About section's “currently” content.
 
-```astro
-<PhysicsIcon label="spark">
-	<svg viewBox="0 0 24 24" aria-hidden="true">...</svg>
-</PhysicsIcon>
-```
+## Physics tags
 
-- Supply a short accessible `label`.
-- Supply one SVG or image child.
-- Keep the default `1em` size unless the surrounding text requires otherwise.
-- Hover, touch, Enter, or Space activates the icon once.
-- Activated icons are confined to `.site-main` and can be grabbed and thrown.
+`TechTag` is ordinary HTML until activated. Clicking it once creates a Matter.js
+body confined to `main`; activated tags can then be grabbed and thrown.

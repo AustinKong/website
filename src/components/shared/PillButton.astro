@@ -8,7 +8,14 @@ interface Props {
 	rel?: string;
 }
 
-const { text, href, active = false, inverted = false, target, rel } = Astro.props;
+const {
+	text,
+	href,
+	active = false,
+	inverted = false,
+	target,
+	rel,
+} = Astro.props;
 const hasIcon = Astro.slots.has('icon');
 ---
 
@@ -35,10 +42,11 @@ const hasIcon = Astro.slots.has('icon');
 		align-items: center;
 		gap: 0.5rem;
 		padding: 0.5rem 1rem;
-		border: 1px solid var(--line);
-		border-radius: 999px;
+		border: 1px solid var(--muted);
+		border-radius: var(--radius-pill);
+		background: var(--white);
 		text-decoration: none;
-		transition: border-color 160ms ease;
+		transition: border-color var(--transition);
 		white-space: nowrap;
 	}
 

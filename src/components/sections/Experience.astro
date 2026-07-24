@@ -1,0 +1,170 @@
+---
+import arrowIcon from '../../assets/arrow-top-right.svg?raw';
+import azure from '../../assets/icons/azure.svg';
+import csharp from '../../assets/icons/csharp.svg';
+import docker from '../../assets/icons/docker.svg';
+import dotnet from '../../assets/icons/dotnet.svg';
+import express from '../../assets/icons/express.svg';
+import fastapi from '../../assets/icons/fastapi.svg';
+import java from '../../assets/icons/java.svg';
+import kubernetes from '../../assets/icons/kubernetes.svg';
+import python from '../../assets/icons/python.svg';
+import react from '../../assets/icons/react.svg';
+import sql from '../../assets/icons/sql.svg';
+import typescript from '../../assets/icons/typescript.svg';
+import unity from '../../assets/icons/unity.svg';
+import PillButton from '../shared/PillButton.astro';
+import TechTag from '../shared/TechTag.astro';
+---
+
+<section id="experience" class="home-section section--narrow">
+	<h2>Experience</h2>
+	<PillButton
+		text="View my resume"
+		href="/Kong_Hoi_Tec_Resume.pdf"
+		inverted
+		target="_blank"
+		rel="noopener"
+	>
+		<span slot="icon" set:html={arrowIcon} />
+	</PillButton>
+
+	<div class="timeline" aria-label="Work experience">
+		<article>
+			<h3>GIC, Public Equities Technology</h3>
+			<p class="experience-meta">
+				<span>Full-Stack Software Engineer Intern</span>
+				<span>Jan 2026 – Jun 2026</span>
+			</p>
+			<p>
+				I built production features for a public-equities analytics platform,
+				designed fault-tolerant workflows that reduced manual effort by about
+				93%, built a portfolio-metadata system saving more than 900 staff-hours
+				each year, and automated compliance alerts for over 2,000 annual notices
+				across 11 teams.
+			</p>
+			<div class="tech-tags" aria-label="Technologies used">
+				<TechTag src={react.src} label="React" />
+				<TechTag src={typescript.src} label="TypeScript" />
+				<TechTag src={express.src} label="Express" />
+				<TechTag src={python.src} label="Python" />
+				<TechTag src={fastapi.src} label="FastAPI" />
+				<TechTag src={dotnet.src} label=".NET" />
+				<TechTag src={csharp.src} label="C#" />
+				<TechTag src={sql.src} label="SQL" />
+				<TechTag src={kubernetes.src} label="Kubernetes" />
+			</div>
+		</article>
+
+		<article>
+			<h3>NUS</h3>
+			<p class="experience-meta">
+				<span>Software Engineer</span>
+				<span>Aug 2024 – Dec 2025</span>
+			</p>
+			<p>
+				I built a touch-friendly interactive simulation for NUS Open House 2026
+				and reduced its browser build from 150MB to 30MB.
+			</p>
+			<div class="tech-tags" aria-label="Technologies used">
+				<TechTag src={unity.src} label="Unity" />
+				<TechTag src={csharp.src} label="C#" />
+			</div>
+		</article>
+
+		<article>
+			<h3>NUS, CS2040 Data Structures and Algorithms</h3>
+			<p class="experience-meta">
+				<span>Teaching Assistant</span>
+				<span>Aug 2025 – Nov 2025</span>
+			</p>
+			<p>
+				I led weekly programming labs for 26 students, graded assignments, and
+				coached algorithmic problem-solving.
+			</p>
+			<div class="tech-tags" aria-label="Technologies used">
+				<TechTag src={java.src} label="Java" />
+			</div>
+		</article>
+
+		<article>
+			<h3>PSA Singapore</h3>
+			<p class="experience-meta">
+				<span>Software Engineer Intern</span>
+				<span>May 2025 – Aug 2025</span>
+			</p>
+			<p>
+				I built and deployed enterprise AI chatbot and RAG platforms, then
+				developed evaluation pipelines to benchmark more than five LLMs for
+				capability, quality, and safety.
+			</p>
+			<div class="tech-tags" aria-label="Technologies used">
+				<TechTag src={react.src} label="React" />
+				<TechTag src={express.src} label="Express" />
+				<TechTag src={docker.src} label="Docker" />
+				<TechTag src={azure.src} label="Azure" />
+				<TechTag src={python.src} label="Python" />
+			</div>
+		</article>
+	</div>
+</section>
+
+<style>
+	.timeline {
+		position: relative;
+		display: grid;
+		gap: 3rem;
+		margin-top: 2.5rem;
+		counter-reset: experience;
+	}
+
+	.timeline::before {
+		position: absolute;
+		top: 1rem;
+		bottom: 1rem;
+		left: 1.1rem;
+		border-left: 1px solid var(--muted);
+		content: '';
+	}
+
+	.timeline article {
+		position: relative;
+		padding-left: 3.5rem;
+		counter-increment: experience;
+	}
+
+	.timeline article::before {
+		position: absolute;
+		z-index: 1;
+		top: 0;
+		left: 0;
+		display: grid;
+		width: 2.25rem;
+		height: 2.25rem;
+		place-items: center;
+		border: 1px solid var(--muted);
+		border-radius: 50%;
+		background: var(--white);
+		content: counter(experience);
+	}
+
+	.timeline h3 {
+		margin-bottom: 0.35rem;
+	}
+
+	.experience-meta {
+		display: flex;
+		margin-bottom: 0.75rem;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 0.25rem 1rem;
+		color: var(--muted);
+	}
+
+	.tech-tags {
+		display: flex;
+		margin-top: 0.75rem;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+</style>

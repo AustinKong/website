@@ -17,8 +17,6 @@
 	},
 	"devDependencies": {
 		"@types/matter-js": "^0.20.2",
-		"autoprefixer": "^10.5.0",
-		"postcss": "^8.5.9",
 		"prettier": "^3.8.3",
 		"prettier-plugin-astro": "^0.14.1"
 	}

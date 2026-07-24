@@ -1,0 +1,60 @@
+---
+import ArrowRight from '../assets/arrow-right.svg';
+import PillButton from '../components/shared/PillButton.astro';
+import MainLayout from './MainLayout.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+	navItems: {
+		label: string;
+		href: string;
+	}[];
+	backHref: string;
+	backLabel: string;
+}
+
+const { title, description, navItems, backHref, backLabel } = Astro.props;
+---
+
+<MainLayout title={`${title} — Austin Kong`} {description} {navItems}>
+	<article class="section--narrow">
+		<header>
+			<h1>{title}</h1>
+			<PillButton text={backLabel} href={backHref} inverted>
+				<ArrowRight slot="icon" />
+			</PillButton>
+		</header>
+
+		<div class="prose">
+			<slot />
+		</div>
+	</article>
+</MainLayout>
+
+<style>
+	article > header {
+		margin-bottom: 4rem;
+	}
+
+	.prose :global(:is(h2, h3, h4)) {
+		margin-top: 2em;
+	}
+
+	.prose :global(:is(p, ul, ol, blockquote, pre)) {
+		margin: 0 0 1.2em;
+	}
+
+	.prose :global(img) {
+		max-width: 100%;
+		height: auto;
+	}
+
+	.prose :global(pre) {
+		overflow-x: auto;
+		padding: 1rem;
+		background: var(--surface);
+		font-family: monospace;
+		font-size: 0.8em;
+	}
+</style>

@@ -11,7 +11,14 @@ interface Sprite {
 
 const WALL_SIZE = 100;
 
-class PhysicsIconManager {
+type MatterMouse = Mouse & {
+	mousedown: EventListener;
+	mousemove: EventListener;
+	mouseup: EventListener;
+	mousewheel: EventListener;
+};
+
+class PhysicsManager {
 	private matter: MatterModule | null = null;
 	private engine: Engine | null = null;
 	private main: HTMLElement | null = null;
@@ -19,14 +26,24 @@ class PhysicsIconManager {
 	private boundaries: Body[] = [];
 	private sprites: Sprite[] = [];
 
-	// Matter binds a canvas-oriented wheel handler that blocks page scrolling.
-	private unbindMouseWheelListeners(mouse: Mouse): void {
-		const wheelHandler = (
-			mouse as Mouse & { mousewheel: EventListener }
-		).mousewheel;
+	private preservePageInput(mouse: Mouse, physicsLayer: HTMLElement): void {
+		const handlers = mouse as MatterMouse;
 
-		mouse.element.removeEventListener('wheel', wheelHandler);
-		mouse.element.removeEventListener('DOMMouseScroll', wheelHandler);
+		mouse.element.removeEventListener('wheel', handlers.mousewheel);
+		mouse.element.removeEventListener('DOMMouseScroll', handlers.mousewheel);
+		mouse.element.removeEventListener('touchmove', handlers.mousemove);
+		mouse.element.removeEventListener('touchstart', handlers.mousedown);
+		mouse.element.removeEventListener('touchend', handlers.mouseup);
+
+		physicsLayer.addEventListener('touchmove', handlers.mousemove, {
+			passive: false,
+		});
+		physicsLayer.addEventListener('touchstart', handlers.mousedown, {
+			passive: false,
+		});
+		physicsLayer.addEventListener('touchend', handlers.mouseup, {
+			passive: false,
+		});
 	}
 
 	private syncBounds = (): void => {
@@ -87,7 +104,7 @@ class PhysicsIconManager {
 		const runner = Matter.Runner.create();
 		const layer = document.createElement('div');
 
-		layer.className = 'physics-icon-layer';
+		layer.className = 'physics-object-layer';
 		main.append(layer);
 
 		this.matter = Matter;
@@ -96,7 +113,7 @@ class PhysicsIconManager {
 		this.layer = layer;
 
 		const mouse = Matter.Mouse.create(main);
-		this.unbindMouseWheelListeners(mouse);
+		this.preservePageInput(mouse, layer);
 		const mouseConstraint = Matter.MouseConstraint.create(engine, {
 			mouse,
 			constraint: {
@@ -114,15 +131,11 @@ class PhysicsIconManager {
 	}
 
 	public async activate(trigger: HTMLElement): Promise<void> {
-		const main = trigger.closest<HTMLElement>('.site-main');
+		const main = trigger.closest<HTMLElement>('main');
 		const template = trigger.querySelector<HTMLElement>(
-			'[data-physics-icon-template]'
+			'[data-physics-template]'
 		);
-		const icon =
-			trigger.dataset.physicsShape === 'rectangle'
-				? template
-				: template?.firstElementChild;
-		if (!main || !template || !icon) return;
+		if (!main || !template) return;
 
 		await this.ensureReady(main);
 		if (!this.matter || !this.engine || !this.layer || !this.main) return;
@@ -136,30 +149,22 @@ class PhysicsIconManager {
 			friction: 0.2,
 			frictionAir: 0.01,
 		};
-		const body =
-			trigger.dataset.physicsShape === 'rectangle'
-				? this.matter.Bodies.rectangle(
-						x,
-						y,
-						iconRect.width,
-						iconRect.height,
-						{
-							...options,
-							chamfer: { radius: iconRect.height / 2 },
-						}
-					)
-				: this.matter.Bodies.circle(
-						x,
-						y,
-						Math.max(iconRect.width, iconRect.height) / 2,
-						options
-					);
+		const body = this.matter.Bodies.rectangle(
+			x,
+			y,
+			iconRect.width,
+			iconRect.height,
+			{
+				...options,
+				chamfer: { radius: iconRect.height / 2 },
+			}
+		);
 		const element = document.createElement('span');
 
-		element.className = 'physics-icon-body';
+		element.className = 'physics-object-body';
 		element.style.width = `${iconRect.width}px`;
 		element.style.height = `${iconRect.height}px`;
-		element.append(icon.cloneNode(true));
+		element.append(template.cloneNode(true));
 		this.layer.append(element);
 		const sprite = {
 			body,
@@ -179,35 +184,30 @@ class PhysicsIconManager {
 
 declare global {
 	interface Window {
-		__physicsIconManager?: PhysicsIconManager;
+		__physicsManager?: PhysicsManager;
 	}
 }
 
-function manager(): PhysicsIconManager {
-	return (window.__physicsIconManager ??= new PhysicsIconManager());
+function manager(): PhysicsManager {
+	return (window.__physicsManager ??= new PhysicsManager());
 }
 
-export function registerPhysicsIconBindings(): void {
+export function registerPhysicsBindings(): void {
 	document
-		.querySelectorAll<HTMLElement>('[data-physics-icon]')
-		.forEach((icon) => {
-			if (icon.dataset.physicsIconBound === 'true') return;
-			icon.dataset.physicsIconBound = 'true';
+		.querySelectorAll<HTMLElement>('[data-physics-object]')
+		.forEach((object) => {
+			if (object.dataset.physicsBound === 'true') return;
+			object.dataset.physicsBound = 'true';
 			let activated = false;
 
 			const activate = () => {
 				if (activated) return;
 				activated = true;
-				void manager().activate(icon);
+				void manager().activate(object);
 			};
 
-			if (icon.dataset.physicsActivation === 'click') {
-				icon.addEventListener('click', activate, { once: true });
-			} else {
-				icon.addEventListener('pointerenter', activate, { once: true });
-				icon.addEventListener('pointerdown', activate, { once: true });
-			}
-			icon.addEventListener('keydown', (event) => {
+			object.addEventListener('click', activate, { once: true });
+			object.addEventListener('keydown', (event) => {
 				if (event.key !== 'Enter' && event.key !== ' ') return;
 				event.preventDefault();
 				activate();

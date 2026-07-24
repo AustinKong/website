@@ -1,7 +1,7 @@
 ---
-import ArrowTopRight from '../assets/arrow-top-right.svg';
-import ArrowRight from '../assets/arrow-right.svg';
-import PillButton from './PillButton.astro';
+import ArrowTopRight from '../../assets/arrow-top-right.svg';
+import ArrowRight from '../../assets/arrow-right.svg';
+import PillButton from '../shared/PillButton.astro';
 
 const socials = [
 	{
@@ -19,12 +19,12 @@ const socials = [
 ];
 ---
 
-<section id="contact" class="contact home-section section--wide">
-	<h1>Contact</h1>
+<section id="contact" class="home-section">
+	<h2>Contact</h2>
 
 	<div class="contact__grid">
 		<section>
-			<h2>Socials</h2>
+			<h3>Socials</h3>
 			<ul class="contact__links">
 				{
 					socials.map((social) => (
@@ -49,7 +49,7 @@ const socials = [
 		</section>
 
 		<section>
-			<h2>Email</h2>
+			<h3>Email</h3>
 			<p>
 				For work, collaborations and recruiters, reach me at
 				<a href="mailto:konghoitec@u.nus.edu">konghoitec@u.nus.edu</a>.

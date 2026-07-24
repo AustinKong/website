@@ -8,15 +8,23 @@ const blog = defineCollection({
 		title: z.string(),
 		description: z.string().optional(),
 		date: z.date(),
-		author: z.string().optional(),
-		tags: z.array(z.string()).optional(),
 		image: z.string().url(),
 		imageAlt: z.string(),
 		draft: z.boolean().optional().default(false),
-		readingTime: z.string().optional(),
+	}),
+});
+
+const projects = defineCollection({
+	loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string(),
+		order: z.number(),
+		draft: z.boolean().optional().default(false),
 	}),
 });
 
 export const collections = {
 	blog,
+	projects,
 };

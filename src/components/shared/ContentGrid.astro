@@ -1,0 +1,106 @@
+---
+interface Item {
+	title: string;
+	href: string;
+	description?: string;
+	image?: string;
+	imageAlt?: string;
+	label?: string;
+	color?: string;
+}
+
+interface Props {
+	title: string;
+	items: Item[];
+	id?: string;
+	class?: string;
+	headingLevel?: 1 | 2;
+}
+
+const { title, items, id, class: className, headingLevel = 1 } = Astro.props;
+const Heading = headingLevel === 1 ? 'h1' : 'h2';
+const CardHeading = headingLevel === 1 ? 'h2' : 'h3';
+---
+
+<section id={id} class={className}>
+	<Heading>{title}</Heading>
+
+	<div class="content-grid">
+		{
+			items.map((item) => (
+				<article class="content-card">
+					<a class="content-card__link" href={item.href}>
+						<div
+							class="content-card__media"
+							style={`--card-color:${item.color ?? 'var(--surface)'}`}
+						>
+							{item.image ? (
+								<img
+									src={item.image}
+									alt={item.imageAlt ?? ''}
+									loading="lazy"
+								/>
+							) : (
+								<span>{item.label}</span>
+							)}
+						</div>
+
+						<CardHeading>{item.title}</CardHeading>
+						{item.description && <p>{item.description}</p>}
+					</a>
+				</article>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.content-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+		gap: 3.5rem 1rem;
+	}
+
+	.content-card__media {
+		display: grid;
+		aspect-ratio: 9 / 10;
+		margin-bottom: 1rem;
+		place-items: center;
+		overflow: hidden;
+		border-radius: var(--radius-card);
+		background: var(--card-color);
+	}
+
+	.content-card__link {
+		display: block;
+		text-decoration: none;
+	}
+
+	.content-card__media img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.content-card__media span {
+		color: var(--placeholder);
+		font-size: var(--font-size-h1);
+	}
+
+	.content-card :is(h2, h3) {
+		margin-bottom: 0.25rem;
+		text-decoration: underline;
+		text-decoration-color: transparent;
+		text-underline-offset: 0.18em;
+		transition: text-decoration-color var(--transition);
+	}
+
+	.content-card__link:hover :is(h2, h3),
+	.content-card__link:focus-visible :is(h2, h3) {
+		text-decoration-color: currentColor;
+	}
+
+	.content-card p {
+		margin: 0;
+	}
+</style>

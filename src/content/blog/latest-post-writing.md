@@ -2,8 +2,6 @@
 title: Writing Posts That Read Quickly
 description: A lightweight format for blog posts that get to the point without feeling sparse.
 date: 2026-04-16
-author: Austin
-tags: [writing, blog, process]
 image: https://i.pinimg.com/736x/1c/96/dd/1c96dd4cd84c3c4c34f3c9af4dadd6f0.jpg
 imageAlt: A minimal workspace scene with strong contrast and texture
 draft: false

@@ -3,8 +3,15 @@
 	--background: #f7f7f5;
 	--foreground: #292927;
 	--muted: #9b9b97;
-	--line: #ddddda;
 	--surface: #ececea;
+	--white: #fff;
+	--accent-blue: #b8d4ee;
+	--accent-yellow: #f3d374;
+	--placeholder: color-mix(in srgb, var(--foreground) 35%, transparent);
+	--shadow: rgb(0 0 0 / 0.2);
+	--radius-card: 0.5rem;
+	--radius-pill: 999px;
+	--transition: 180ms ease;
 	--font-size-h1: clamp(2.25rem, 4vw, 2.618rem);
 	--font-size-h2: clamp(1.15rem, 2vw, 1.272rem);
 	--font-size-h3: 1.125rem;
@@ -64,143 +71,13 @@ a {
 	text-underline-offset: 0.18em;
 }
 
-button,
-input,
-textarea,
-select {
-	font: inherit;
-}
-
 ::selection {
 	background: var(--foreground);
 	color: var(--background);
 }
 
-.site-shell {
-	display: grid;
-	width: 100%;
-	max-width: 82rem;
-	min-height: 100vh;
-	margin-inline: auto;
-	grid-template-columns: 17rem 1fr;
-}
-
-.site-main {
-	position: relative;
-	min-width: 0;
-	padding: 4rem 1.5rem 8rem clamp(1.5rem, 4vw, 3rem);
-}
-
-.physics-icon {
-	display: inline-flex;
-	width: var(--physics-icon-size);
-	height: var(--physics-icon-size);
-	vertical-align: -0.12em;
-	cursor: pointer;
-}
-
-.physics-icon > *,
-.physics-icon :is(svg, img) {
-	display: block;
-	width: 100%;
-	height: 100%;
-}
-
-.physics-icon[data-activated='true'] > * {
-	visibility: hidden;
-}
-
-.physics-icon-layer {
-	position: absolute;
-	inset: 0;
-	overflow: hidden;
-	pointer-events: none;
-	z-index: 10;
-}
-
-.physics-icon-body {
-	position: absolute;
-	inset: 0 auto auto 0;
-	display: grid;
-	place-items: center;
-	pointer-events: auto;
-	touch-action: none;
-	cursor: grab;
-	will-change: transform;
-}
-
-.physics-icon-body:active {
-	cursor: grabbing;
-}
-
-.physics-icon-body > *,
-.physics-icon-body :is(svg, img) {
-	display: block;
-	width: 100%;
-	height: 100%;
-}
-
 .section--narrow {
-	width: 100%;
 	max-width: 80ch;
-}
-
-.section--wide {
-	width: 100%;
-}
-
-.home-section {
-	scroll-margin-top: 2rem;
-}
-
-.home-section + .home-section {
-	margin-top: 8rem;
-}
-
-.post-meta {
-	color: var(--muted);
-	font-size: 0.9rem;
-}
-
-.post-header {
-	margin-bottom: 4rem;
-}
-
-.prose :is(h2, h3, h4) {
-	margin-top: 2em;
-}
-
-.prose :is(p, ul, ol, blockquote, pre) {
-	margin: 0 0 1.2em;
-}
-
-.prose img {
-	max-width: 100%;
-	height: auto;
-}
-
-.prose pre {
-	overflow-x: auto;
-	padding: 1rem;
-	background: var(--surface);
-	font-family: monospace;
-	font-size: 0.8em;
-}
-
-.post-back {
-	display: inline-block;
-	margin-top: 4rem;
-}
-
-@media (max-width: 900px) {
-	.site-shell {
-		grid-template-columns: 1fr;
-	}
-
-	.site-main {
-		padding: 1.5rem 1.25rem 5rem;
-	}
-
 }
 
 @media (prefers-reduced-motion: reduce) {

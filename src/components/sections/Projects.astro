@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import ContentGrid from '../shared/ContentGrid.astro';
+
+const colors = ['var(--accent-blue)', 'var(--surface)', 'var(--accent-yellow)'];
+const projects = (await getCollection('projects'))
+	.filter((project) => !project.data.draft)
+	.sort((a, b) => a.data.order - b.data.order)
+	.map((project, index) => ({
+		label: String(index + 1).padStart(2, '0'),
+		title: project.data.title,
+		description: project.data.description,
+		href: `/projects/${project.id}`,
+		color: colors[index % colors.length],
+	}));
+---
+
+<ContentGrid
+	id="projects"
+	class="home-section"
+	title="Selected projects"
+	items={projects}
+	headingLevel={2}
+/>

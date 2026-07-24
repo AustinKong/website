@@ -17,10 +17,10 @@ const { photos } = Astro.props;
 const angles = ['-3deg', '3deg', '-2deg'];
 ---
 
-<div class="currently-strip" aria-label="What I am currently doing">
+<div class="photo-strip">
 	{
 		photos.map((photo, index) => (
-			<figure class="currently-item">
+			<figure>
 				<img
 					src={photo.src}
 					alt={photo.alt}
@@ -42,47 +42,70 @@ const angles = ['-3deg', '3deg', '-2deg'];
 </div>
 
 <style>
-	.currently-strip {
-		display: grid;
-		margin-top: 5rem;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		align-items: end;
+	.photo-strip {
+		display: flex;
+		margin-top: 2rem;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		justify-content: center;
 		gap: clamp(1rem, 4vw, 4rem);
 	}
 
-	.currently-item {
+	figure {
+		display: flex;
+		flex: 0 1 12rem;
+		flex-direction: column;
 		min-width: 0;
 		margin: 0;
 	}
 
-	.currently-item img {
+	img {
 		display: block;
 		width: 100%;
+		max-width: 12rem;
 		height: auto;
 		max-height: 22rem;
+		align-self: center;
 		object-fit: contain;
-		filter: drop-shadow(0 1rem 0.75rem rgb(0 0 0 / 0.2));
+		filter: drop-shadow(0 1rem 0.75rem var(--shadow));
 		transform: rotate(var(--angle));
-		transition: transform 180ms ease;
+		transition: transform var(--transition);
 	}
 
-	.currently-item:hover img {
+	figure:hover img,
+	figure:focus-within img {
 		transform: translateY(-0.25rem) rotate(calc(var(--angle) + 1.5deg));
 	}
 
-	.currently-item figcaption {
+	figcaption {
 		margin-top: 1rem;
+		color: var(--foreground);
+		line-height: 1;
 		text-align: center;
+		transition:
+			opacity var(--transition),
+			transform var(--transition);
+		white-space: pre-line;
 	}
 
-	@media (max-width: 600px) {
-		.currently-strip {
-			gap: 0.75rem;
+	@media (hover: hover) {
+		figcaption {
+			opacity: 0;
+			pointer-events: none;
+			transform: translateY(-0.5rem);
+		}
+
+		figure:hover figcaption,
+		figure:focus-within figcaption {
+			opacity: 1;
+			pointer-events: auto;
+			transform: translateY(0);
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.currently-item img {
+		img,
+		figcaption {
 			transition: none;
 		}
 	}

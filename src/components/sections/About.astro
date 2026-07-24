@@ -1,0 +1,45 @@
+---
+import ddia from '../../assets/currently/ddia.png';
+import notebook from '../../assets/currently/notebook.png';
+import thinkpad from '../../assets/currently/thinkpad.png';
+import PhotoStrip from '../shared/PhotoStrip.astro';
+
+const photos = [
+	{
+		src: ddia.src,
+		alt: 'Designing Data-Intensive Applications',
+		caption: 'Currently reading:\nDDIA',
+	},
+	{
+		src: thinkpad.src,
+		alt: 'ThinkPad laptop',
+		caption: 'Currently building:\n',
+		link: {
+			text: 'Logos',
+			href: '/#projects',
+		},
+	},
+	{
+		src: notebook.src,
+		alt: 'Open notebook',
+		caption: 'Currently exploring:\nagentic AI',
+	},
+];
+---
+
+<section id="about" class="home-section section--narrow">
+	<h1>
+		Hello there! My name is Austin Kong. I'm a full-stack software engineer and
+		final-year Information Systems student at NUS.
+	</h1>
+	<p>
+		I believe that software should solve problems, but the code behind it can be
+		beautiful. I strive to write systems that are both technically sound and
+		thoughtfully designed.
+	</p>
+	<p>
+		In my free time, I like building pet projects and exploring new
+		technologies.
+	</p>
+	<PhotoStrip photos={photos} />
+</section>

@@ -1,78 +1,40 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
-import PhysicsIcon from '../components/shared/PhysicsIcon.astro';
-import CurrentlyStrip from '../components/CurrentlyStrip.astro';
-import Contact from '../components/Contact.astro';
-import ExperienceTimeline from '../components/ExperienceTimeline.astro';
-import Projects from '../components/Projects.astro';
-import PillButton from '../components/PillButton.astro';
-import ddia from '../assets/currently/ddia.png';
-import notebook from '../assets/currently/notebook.png';
-import thinkpad from '../assets/currently/thinkpad.png';
-import arrowIcon from '../assets/arrow-top-right.svg?raw';
+import About from '../components/sections/About.astro';
+import Contact from '../components/sections/Contact.astro';
+import Experience from '../components/sections/Experience.astro';
+import Projects from '../components/sections/Projects.astro';
 
-const photos = [
-	{
-		src: ddia.src,
-		alt: 'Designing Data-Intensive Applications',
-		caption: 'Currently reading: Designing Data-Intensive Applications',
-	},
-	{
-		src: thinkpad.src,
-		alt: 'ThinkPad laptop',
-		caption: 'Currently building:',
-		link: {
-			text: 'Logos',
-			href: '/#projects',
-		},
-	},
-	{
-		src: notebook.src,
-		alt: 'Open notebook',
-		caption: 'Currently exploring: agentic AI',
-	},
+const navItems = [
+	{ label: 'About', href: '#about' },
+	{ label: 'Experience', href: '#experience' },
+	{ label: 'Projects', href: '#projects' },
+	{ label: 'Contact', href: '#contact' },
 ];
 ---
 
 <MainLayout
 	title="Austin Kong — Software Engineer"
 	description="Austin Kong is a full-stack software engineer based in Singapore."
+	{navItems}
 >
-	<section id="about" class="intro home-section section--narrow">
-		<h1>
-			Hello there! My name is Austin Kong.
-			<br /> I'm a full-stack software engineer and final-year Information Systems
-			student at NUS.
-		</h1>
-		<p>
-			I belive that software should solve problems, but the code behind it can
-			be beautiful. I strive to write systems that are both technically sound
-			and thoughtfully designed.
-		</p>
-		<p>
-			In my free time, I like building pet projects and exploring new
-			technologies.
-		</p>
-		<CurrentlyStrip photos={photos} />
-	</section>
-
-	<section id="experience" class="home-section section--narrow">
-		<div>
-			<!-- TODO: Align these horizontally left | right -->
-			<h1>Experience</h1>
-			<PillButton
-				text="View my resume"
-				href="/Kong_Hoi_Tec_Resume.pdf"
-				inverted
-				target="_blank"
-				rel="noopener"
-			>
-				<span slot="icon" set:html={arrowIcon} />
-			</PillButton>
-		</div>
-		<ExperienceTimeline />
-	</section>
-
+	<About />
+	<Experience />
 	<Projects />
 	<Contact />
 </MainLayout>
+
+<style is:global>
+	.home-section > h2 {
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: var(--font-size-h1);
+	}
+
+	.home-section {
+		scroll-margin-top: 2rem;
+	}
+
+	.home-section + .home-section {
+		margin-top: 4rem;
+	}
+</style>

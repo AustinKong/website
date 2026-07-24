@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
-import MainLayout from '../../layouts/MainLayout.astro';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
 export async function getStaticPaths() {
 	return (await getCollection('blog'))
@@ -12,28 +12,18 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
-const date = post.data.date.toLocaleDateString('en-US', {
-	year: 'numeric',
-	month: 'long',
-	day: 'numeric',
-});
+const { Content, headings } = await render(post);
+const navItems = headings
+	.filter(({ depth }) => depth === 2)
+	.map(({ slug, text }) => ({ label: text, href: `#${slug}` }));
 ---
 
-<MainLayout title={`${post.data.title} — Austin Kong`} description={post.data.description}>
-	<article class="post section--narrow">
-		<header class="post-header">
-			<h1>{post.data.title}</h1>
-			<p class="post-meta">
-				<time datetime={post.data.date.toISOString()}>{date}</time>
-				{post.data.readingTime && <> · {post.data.readingTime}</>}
-			</p>
-		</header>
-
-		<div class="prose">
-			<Content />
-		</div>
-
-		<a class="post-back" href="/blog">← All posts</a>
-	</article>
-</MainLayout>
+<ArticleLayout
+	title={post.data.title}
+	description={post.data.description}
+	{navItems}
+	backHref="/blog"
+	backLabel="All posts"
+>
+	<Content />
+</ArticleLayout>

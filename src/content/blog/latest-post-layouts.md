@@ -2,8 +2,6 @@
 title: Designing Cards That Breathe
 description: A small essay on spacing, hierarchy, and why card layouts feel better when the edges can relax a little.
 date: 2026-04-18
-author: Austin
-tags: [design, layout, astro]
 image: https://i.pinimg.com/1200x/08/4f/2b/084f2b8258b21e405e97c00c0ad9a6ec.jpg
 imageAlt: Editorial image with layered shapes and a warm palette
 draft: false
