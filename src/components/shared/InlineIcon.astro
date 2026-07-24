@@ -1,0 +1,22 @@
+---
+interface Props {
+	src: string;
+	alt?: string;
+}
+
+const { src, alt = '' } = Astro.props;
+---
+
+<img {src} {alt} width="16" height="16" draggable="false" />
+
+<style>
+	img {
+		display: inline-block;
+		width: 1em;
+		height: 1em;
+		flex: none;
+		object-fit: contain;
+		vertical-align: -0.13em;
+		-webkit-user-drag: none;
+	}
+</style>

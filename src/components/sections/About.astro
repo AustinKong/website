@@ -2,9 +2,9 @@
 import ddia from '../../assets/currently/ddia.png';
 import notebook from '../../assets/currently/notebook.png';
 import thinkpad from '../../assets/currently/thinkpad.png';
-import PhotoStrip from '../shared/PhotoStrip.astro';
+import ObjectGallery from '../shared/ObjectGallery.astro';
 
-const photos = [
+const objects = [
 	{
 		src: ddia.src,
 		alt: 'Designing Data-Intensive Applications',
@@ -38,8 +38,15 @@ const photos = [
 		thoughtfully designed.
 	</p>
 	<p>
-		In my free time, I like building pet projects and exploring new
-		technologies.
+		Over the past few years, I've worked on enterprise AI platforms, distributed
+		backend services, and interactive web applications. I enjoy working across
+		the entire stack: from designing intuitive user interfaces to architecting
+		reliable backend systems that power them.
 	</p>
-	<PhotoStrip photos={photos} />
+	<p>
+		Outside of work, I enjoy building personal projects, exploring new
+		technologies, and continually refining my craft as an engineer. Here's what
+		I'm up to these days:
+	</p>
+	<ObjectGallery objects={objects} />
 </section>

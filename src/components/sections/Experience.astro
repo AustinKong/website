@@ -8,11 +8,15 @@ import express from '../../assets/icons/express.svg';
 import fastapi from '../../assets/icons/fastapi.svg';
 import java from '../../assets/icons/java.svg';
 import kubernetes from '../../assets/icons/kubernetes.svg';
+import gic from '../../assets/experience/gic.png';
+import psa from '../../assets/experience/psa.png';
+import nus from '../../assets/experience/nus.png';
 import python from '../../assets/icons/python.svg';
 import react from '../../assets/icons/react.svg';
 import sql from '../../assets/icons/sql.svg';
 import typescript from '../../assets/icons/typescript.svg';
 import unity from '../../assets/icons/unity.svg';
+import InlineIcon from '../shared/InlineIcon.astro';
 import PillButton from '../shared/PillButton.astro';
 import TechTag from '../shared/TechTag.astro';
 ---
@@ -29,21 +33,51 @@ import TechTag from '../shared/TechTag.astro';
 		<span slot="icon" set:html={arrowIcon} />
 	</PillButton>
 
-	<div class="timeline" aria-label="Work experience">
-		<article>
-			<h3>GIC, Public Equities Technology</h3>
+	<ol class="timeline">
+		<li>
+			<h3>
+				National University of Singapore
+				<InlineIcon src={nus.src} />
+			</h3>
 			<p class="experience-meta">
-				<span>Full-Stack Software Engineer Intern</span>
-				<span>Jan 2026 – Jun 2026</span>
+				<span>Teaching Assistant</span>
+				<span>Aug 2025 - Present</span>
 			</p>
 			<p>
-				I built production features for a public-equities analytics platform,
-				designed fault-tolerant workflows that reduced manual effort by about
-				93%, built a portfolio-metadata system saving more than 900 staff-hours
-				each year, and automated compliance alerts for over 2,000 annual notices
-				across 11 teams.
+				I currently serve as a Teaching Assistant for CS2040 (Data Structures
+				and Algorithms), facilitating weekly lab sessions and mentoring students
+				through Java-based programming exercises, helping students approach
+				algorithmic thinking from different perspectives.
 			</p>
-			<div class="tech-tags" aria-label="Technologies used">
+			<div class="tech-tags" role="group" aria-label="Technologies used">
+				<TechTag src={java.src} label="Java" />
+			</div>
+		</li>
+
+		<li>
+			<h3>
+				GIC
+				<InlineIcon src={gic.src} />
+			</h3>
+			<p class="experience-meta">
+				<span>Full-Stack Software Engineer Intern</span>
+				<span>Jan 2026 - Jun 2026</span>
+			</p>
+			<p>
+				I joined Public Equities Technology at GIC, where I built production
+				software supporting investment teams across the firm. Over the
+				internship, I took on full-stack features, resilient backend workflows,
+				and internal platforms, gradually owning projects from requirements
+				gathering through to production deployment.
+			</p>
+			<p>
+				Some of the work I am most proud of includes a fault-tolerant caching
+				workflow that reduced manual effort by 93%, a self-service metadata
+				platform that turned a recurring 2-hour process into about 5 minutes and
+				saved 900+ staff-hours annually, and an automated compliance system
+				supporting 2,000+ annual notices across 11 teams.
+			</p>
+			<div class="tech-tags" role="group" aria-label="Technologies used">
 				<TechTag src={react.src} label="React" />
 				<TechTag src={typescript.src} label="TypeScript" />
 				<TechTag src={express.src} label="Express" />
@@ -54,90 +88,87 @@ import TechTag from '../shared/TechTag.astro';
 				<TechTag src={sql.src} label="SQL" />
 				<TechTag src={kubernetes.src} label="Kubernetes" />
 			</div>
-		</article>
+		</li>
 
-		<article>
-			<h3>NUS</h3>
+		<li>
+			<h3>
+				National University of Singapore
+				<InlineIcon src={nus.src} />
+			</h3>
 			<p class="experience-meta">
-				<span>Software Engineer</span>
-				<span>Aug 2024 – Dec 2025</span>
+				<span>Software Engineer (Contract)</span>
+				<span>Aug 2024 - Dec 2025</span>
 			</p>
 			<p>
-				I built a touch-friendly interactive simulation for NUS Open House 2026
-				and reduced its browser build from 150MB to 30MB.
+				I served as the lead developer for an educational Unity simulation
+				designed for NUS Open House 2026. Collaborating with researchers and
+				designers, I transformed complex scientific concepts into interactive
+				learning experiences while making key technical decisions around
+				architecture, gameplay, and deployment. One of my biggest challenges was
+				optimising the WebGL build, reducing its size from over 150 MB to 30 MB
+				without compromising the learning experience.
 			</p>
-			<div class="tech-tags" aria-label="Technologies used">
+			<div class="tech-tags" role="group" aria-label="Technologies used">
 				<TechTag src={unity.src} label="Unity" />
 				<TechTag src={csharp.src} label="C#" />
 			</div>
-		</article>
+		</li>
 
-		<article>
-			<h3>NUS, CS2040 Data Structures and Algorithms</h3>
-			<p class="experience-meta">
-				<span>Teaching Assistant</span>
-				<span>Aug 2025 – Nov 2025</span>
-			</p>
-			<p>
-				I led weekly programming labs for 26 students, graded assignments, and
-				coached algorithmic problem-solving.
-			</p>
-			<div class="tech-tags" aria-label="Technologies used">
-				<TechTag src={java.src} label="Java" />
-			</div>
-		</article>
-
-		<article>
-			<h3>PSA Singapore</h3>
+		<li>
+			<h3>
+				PSA Singapore
+				<InlineIcon src={psa.src} />
+			</h3>
 			<p class="experience-meta">
 				<span>Software Engineer Intern</span>
-				<span>May 2025 – Aug 2025</span>
+				<span>May 2025 - Aug 2025</span>
 			</p>
 			<p>
-				I built and deployed enterprise AI chatbot and RAG platforms, then
-				developed evaluation pipelines to benchmark more than five LLMs for
-				capability, quality, and safety.
+				I contributed to two of PSA Singapore's enterprise AI initiatives: an
+				internal AI assistant platform and Project Moonshot, an LLM evaluation
+				framework. The experience allowed me to work across the full software
+				lifecycle while gaining first-hand exposure to how enterprise AI systems
+				are built, evaluated, and prepared for production use.
 			</p>
-			<div class="tech-tags" aria-label="Technologies used">
+			<div class="tech-tags" role="group" aria-label="Technologies used">
 				<TechTag src={react.src} label="React" />
 				<TechTag src={express.src} label="Express" />
 				<TechTag src={docker.src} label="Docker" />
 				<TechTag src={azure.src} label="Azure" />
 				<TechTag src={python.src} label="Python" />
 			</div>
-		</article>
-	</div>
+		</li>
+	</ol>
 </section>
 
 <style>
 	.timeline {
 		position: relative;
 		display: grid;
-		gap: 3rem;
-		margin-top: 2.5rem;
+		gap: 2rem;
+		padding: 0;
+		margin-top: 2rem;
+		list-style: none;
 		counter-reset: experience;
 	}
 
 	.timeline::before {
 		position: absolute;
-		top: 1rem;
-		bottom: 1rem;
+		inset-block: 0;
 		left: 1.1rem;
 		border-left: 1px solid var(--muted);
 		content: '';
 	}
 
-	.timeline article {
+	.timeline li {
 		position: relative;
 		padding-left: 3.5rem;
 		counter-increment: experience;
 	}
 
-	.timeline article::before {
+	.timeline li::before {
 		position: absolute;
-		z-index: 1;
-		top: 0;
-		left: 0;
+		inset: 0 auto auto 0;
 		display: grid;
 		width: 2.25rem;
 		height: 2.25rem;
@@ -148,22 +179,17 @@ import TechTag from '../shared/TechTag.astro';
 		content: counter(experience);
 	}
 
-	.timeline h3 {
-		margin-bottom: 0.35rem;
-	}
-
 	.experience-meta {
 		display: flex;
-		margin-bottom: 0.75rem;
 		flex-wrap: wrap;
 		justify-content: space-between;
 		gap: 0.25rem 1rem;
+		margin-bottom: 0.5rem; /* Overrides default <p> margin */
 		color: var(--muted);
 	}
 
 	.tech-tags {
 		display: flex;
-		margin-top: 0.75rem;
 		flex-wrap: wrap;
 		gap: 0.5rem;
 	}

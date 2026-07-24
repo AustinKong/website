@@ -179,6 +179,8 @@ class PhysicsManager {
 
 		trigger.dataset.activated = 'true';
 		trigger.tabIndex = -1;
+		trigger.blur();
+		trigger.setAttribute('aria-hidden', 'true');
 	}
 }
 

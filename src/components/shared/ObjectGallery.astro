@@ -1,5 +1,5 @@
 ---
-interface Photo {
+interface GalleryObject {
 	src: string;
 	alt: string;
 	caption: string;
@@ -10,29 +10,23 @@ interface Photo {
 }
 
 interface Props {
-	photos: Photo[];
+	objects: GalleryObject[];
 }
 
-const { photos } = Astro.props;
-const angles = ['-3deg', '3deg', '-2deg'];
+const { objects } = Astro.props;
 ---
 
-<div class="photo-strip">
+<div>
 	{
-		photos.map((photo, index) => (
+		objects.map((object) => (
 			<figure>
-				<img
-					src={photo.src}
-					alt={photo.alt}
-					loading="lazy"
-					style={`--angle:${angles[index % angles.length]}`}
-				/>
+				<img src={object.src} alt={object.alt} loading="lazy" />
 				<figcaption>
-					{photo.caption}
-					{photo.link && (
+					{object.caption}
+					{object.link && (
 						<>
 							{' '}
-							<a href={photo.link.href}>{photo.link.text}</a>
+							<a href={object.link.href}>{object.link.text}</a>
 						</>
 					)}
 				</figcaption>
@@ -42,9 +36,9 @@ const angles = ['-3deg', '3deg', '-2deg'];
 </div>
 
 <style>
-	.photo-strip {
+	div {
 		display: flex;
-		margin-top: 2rem;
+		margin: 3rem 0;
 		flex-wrap: wrap;
 		align-items: flex-start;
 		justify-content: center;
@@ -52,35 +46,38 @@ const angles = ['-3deg', '3deg', '-2deg'];
 	}
 
 	figure {
-		display: flex;
+		--rotation: -3deg;
+
 		flex: 0 1 12rem;
-		flex-direction: column;
-		min-width: 0;
 		margin: 0;
 	}
 
 	img {
 		display: block;
 		width: 100%;
-		max-width: 12rem;
 		height: auto;
 		max-height: 22rem;
-		align-self: center;
 		object-fit: contain;
 		filter: drop-shadow(0 1rem 0.75rem var(--shadow));
-		transform: rotate(var(--angle));
+		transform: rotate(var(--rotation));
 		transition: transform var(--transition);
 	}
 
-	figure:hover img,
-	figure:focus-within img {
-		transform: translateY(-0.25rem) rotate(calc(var(--angle) + 1.5deg));
+	figure:nth-child(3n + 2) {
+		--rotation: 3deg;
+	}
+
+	figure:nth-child(3n) {
+		--rotation: -2deg;
+	}
+
+	figure:is(:hover, :focus-within) img {
+		transform: translateY(-0.25rem) rotate(calc(var(--rotation) + 1.5deg));
 	}
 
 	figcaption {
 		margin-top: 1rem;
 		color: var(--foreground);
-		line-height: 1;
 		text-align: center;
 		transition:
 			opacity var(--transition),
@@ -95,18 +92,10 @@ const angles = ['-3deg', '3deg', '-2deg'];
 			transform: translateY(-0.5rem);
 		}
 
-		figure:hover figcaption,
-		figure:focus-within figcaption {
+		figure:is(:hover, :focus-within) figcaption {
 			opacity: 1;
 			pointer-events: auto;
 			transform: translateY(0);
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		img,
-		figcaption {
-			transition: none;
 		}
 	}
 </style>

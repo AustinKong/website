@@ -1,4 +1,6 @@
 ---
+import InlineIcon from './InlineIcon.astro';
+
 interface Props {
 	src: string;
 	label: string;
@@ -12,10 +14,10 @@ const { src, label } = Astro.props;
 	data-physics-object
 	role="button"
 	tabindex="0"
-	aria-label={`Drop ${label} tag`}
+	aria-label={`Activate ${label} physics`}
 >
 	<span class="tech-tag__body" data-physics-template>
-		<img src={src} alt="" draggable="false" />
+		<InlineIcon {src} />
 		{label}
 	</span>
 </span>
@@ -89,14 +91,6 @@ const { src, label } = Astro.props;
 		background: var(--white);
 		line-height: 1;
 		white-space: nowrap;
-	}
-
-	.tech-tag img,
-	:global(.physics-object-body .tech-tag__body img) {
-		width: 1em;
-		height: 1em;
-		object-fit: contain;
-		-webkit-user-drag: none;
 	}
 
 	.tech-tag[data-activated='true'] > * {
