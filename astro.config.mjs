@@ -49,6 +49,9 @@ export default defineConfig({
 		mdx(),
 		mermaid({
 			mermaidConfig: {
+				// Use Mermaid's built-in Dagre layout by default; diagrams can still
+				// opt into ELK with a diagram-level `layout: elk` config.
+				layout: 'dagre',
 				flowchart: { useMaxWidth: false },
 				er: { useMaxWidth: false },
 				themeVariables: { fontSize: '14px' },

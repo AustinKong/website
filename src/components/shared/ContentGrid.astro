@@ -1,10 +1,13 @@
 ---
+import Laurel from './Laurel.astro';
+
 interface Item {
 	title: string;
 	href: string;
 	description: string;
 	image: string;
 	imageAlt: string;
+	stat?: string;
 }
 
 interface Props {
@@ -35,7 +38,10 @@ const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 						<img src={item.image} alt={item.imageAlt} loading="lazy" />
 					</div>
 
-					<CardHeading class="content-card__title">{item.title}</CardHeading>
+					<div class="content-card__heading">
+						<CardHeading class="content-card__title">{item.title}</CardHeading>
+						{item.stat && <Laurel text={item.stat} />}
+					</div>
 					<p>{item.description}</p>
 				</a>
 			</article>
@@ -71,11 +77,19 @@ const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 	}
 
 	.content-card__title {
+		min-width: 0;
 		margin-bottom: 0.25rem;
 		text-decoration: underline;
 		text-decoration-color: transparent;
 		text-underline-offset: 0.18em;
 		transition: text-decoration-color var(--transition);
+	}
+
+	.content-card__heading {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
 	}
 
 	.content-card__link:hover .content-card__title,

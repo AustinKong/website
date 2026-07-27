@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import ContentGrid from '../shared/ContentGrid.astro';
 
 const projects = (await getCollection('projects'))
-	.filter((project) => !project.data.draft && project.data.cover)
+	.filter((project) => project.data.cover)
 	.sort((a, b) => a.data.order - b.data.order)
 	.map((project) => ({
 		title: project.data.title,
@@ -11,6 +11,7 @@ const projects = (await getCollection('projects'))
 		image: project.data.cover!.src,
 		imageAlt: `${project.data.title} cover`,
 		href: `/projects/${project.id.replace(/\/index$/, '')}`,
+		stat: project.data.stat,
 	}));
 ---
 

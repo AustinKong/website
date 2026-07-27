@@ -18,9 +18,9 @@ technologies:
   - azure
   - python
   - docker
-draft: false
 ---
 
+import ScreenshotStack from '../../../components/shared/ScreenshotStack.astro';
 import StackedCarousel from '../../../components/shared/StackedCarousel.astro';
 import comparisonPage from './pages/comparison.png';
 import facadeDetectionPage from './pages/facade-detection.png';
@@ -68,26 +68,22 @@ The project therefore needs to support both change detection and historical trac
 
 ### The Product
 
-<StackedCarousel
+<ScreenshotStack
 	images={[
 		{
 			src: homePage,
-			alt: 'Map view of conserved buildings in the building repository',
 			caption: 'Building repository and map',
 		},
 		{
 			src: facadeDetectionPage,
-			alt: 'Facade crop interface with automatic facade detection',
 			caption: 'Facade detection and cropping',
 		},
 		{
 			src: comparisonPage,
-			alt: 'Historical and current facade images with detected elements',
 			caption: 'Side-by-side facade comparison',
 		},
 		{
 			src: reportPage,
-			alt: 'Generated report with an executive summary and change analysis',
 			caption: 'Editable conservation report',
 		},
 	]}
@@ -109,22 +105,18 @@ The system then generates an editable conservation report containing change desc
 	images={[
 		{
 			src: slide1,
-			alt: 'Generated conservation compliance report title slide',
 			caption: 'Generated presentation',
 		},
 		{
 			src: slide2,
-			alt: 'Generated slide showing visual change analysis',
 			caption: 'Generated presentation',
 		},
 		{
 			src: slide3,
-			alt: 'Generated slide explaining a non-compliant window removal',
 			caption: 'Generated presentation',
 		},
 		{
 			src: slide4,
-			alt: 'Generated slide listing recommended actions',
 			caption: 'Generated presentation',
 		},
 	]}
@@ -135,7 +127,11 @@ The system then generates an editable conservation report containing change desc
 The system follows a web-queue-worker design. The diagram below shows the intent of the architecture, while the proof-of-concept implementation is slightly different for simplicity and speed of delivery: 
 
 ```mermaid
-flowchart-elk TB
+---
+config:
+    layout: elk
+---
+flowchart TB
     officer[Conservation officer] --> web[React web app]
     web -->|REST requests and job status| api[Express API]
 

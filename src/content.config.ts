@@ -18,9 +18,10 @@ const projects = defineCollection({
 	loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
 	schema: ({ image }) =>
 		z.object({
-			title: z.string(),
-			description: z.string(),
-			order: z.number(),
+		title: z.string(),
+		description: z.string(),
+		stat: z.string().optional(),
+		order: z.number(),
 			cover: image().optional(),
 			technologies: z.array(z.enum(technologyKeys)),
 			links: z
@@ -33,7 +34,6 @@ const projects = defineCollection({
 				)
 				.optional()
 				.default([]),
-			draft: z.boolean().optional().default(false),
 		}),
 });
 

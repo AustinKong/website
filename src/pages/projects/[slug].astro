@@ -4,7 +4,6 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
 export async function getStaticPaths() {
 	return (await getCollection('projects'))
-		.filter((project) => !project.data.draft)
 		.map((project) => ({
 			params: { slug: project.id.replace(/\/index$/, '') },
 			props: { project },

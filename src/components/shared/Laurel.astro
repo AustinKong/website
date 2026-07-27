@@ -1,0 +1,26 @@
+---
+import laurelLeft from '../../assets/misc/laurel-left.svg';
+import laurelRight from '../../assets/misc/laurel-right.svg';
+import InlineIcon from './InlineIcon.astro';
+
+interface Props {
+	text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<div class="laurel">
+	<InlineIcon src={laurelLeft.src} />
+	{text}
+	<InlineIcon src={laurelRight.src} />
+</div>
+
+<style>
+	.laurel {
+		display: inline-flex;
+		align-items: center;
+		font-size: var(--font-size-small);
+		gap: 0.1rem;
+	}
+</style>

@@ -108,6 +108,18 @@ const linkIcons = {
 		margin: 0 0 1.2em;
 	}
 
+	.prose :global(blockquote) {
+		margin: 1.5rem 0;
+		padding: 0.75rem 1rem;
+		border-left: 0.25rem solid var(--foreground);
+		background: var(--surface);
+		font-style: italic;
+	}
+
+	.prose :global(blockquote p:last-child) {
+		margin-bottom: 0;
+	}
+
 	.prose :global(img) {
 		max-width: 100%;
 		height: auto;

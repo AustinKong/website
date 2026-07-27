@@ -3,7 +3,6 @@ import type { ImageMetadata } from 'astro';
 
 interface CarouselImage {
 	src: string | ImageMetadata;
-	alt: string;
 	caption: string;
 }
 
@@ -32,13 +31,13 @@ const aspectRatio =
 				disabled={images.length < 2}
 			>
 				<span class="stack">
-					{images.map(({ src, alt, caption }) => (
+					{images.map(({ src, caption }) => (
 						<span class="card" data-caption={caption}>
 							<img
 								src={typeof src === 'string' ? src : src.src}
 								width={typeof src === 'string' ? undefined : src.width}
 								height={typeof src === 'string' ? undefined : src.height}
-								alt={alt}
+								alt={caption}
 								loading="lazy"
 								draggable="false"
 							/>
