@@ -1,11 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
+import ArrowLeft from '../../assets/arrow-left.svg';
+import InlineIcon from '../../components/shared/InlineIcon.astro';
 import ContentGrid from '../../components/shared/ContentGrid.astro';
+import PillButton from '../../components/shared/PillButton.astro';
 import MainLayout from '../../layouts/MainLayout.astro';
 
-const posts = (await getCollection('blog'))
-	.filter((post) => !post.data.draft)
-	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
 
 const items = posts.map((post) => ({
 	title: post.data.title,
@@ -17,5 +20,20 @@ const items = posts.map((post) => ({
 ---
 
 <MainLayout title="Blog — Austin Kong" description="Notes from Austin Kong.">
-	<ContentGrid title="Blog" items={items} />
+	<nav aria-label="Back">
+		<PillButton href="/" inverted>
+			<InlineIcon src={ArrowLeft.src} />
+			Home
+		</PillButton>
+	</nav>
+	<section>
+		<h1>Blog</h1>
+		<ContentGrid items={items} />
+	</section>
 </MainLayout>
+
+<style>
+	nav {
+		margin-bottom: 2rem;
+	}
+</style>

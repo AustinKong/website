@@ -2,6 +2,9 @@
 title: Interactive Unity Simulation
 description: A touch-friendly browser simulation optimized for mobile and tablet delivery.
 order: 6
+technologies:
+  - unity
+  - csharp
 draft: false
 ---
 

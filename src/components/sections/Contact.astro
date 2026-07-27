@@ -1,20 +1,26 @@
 ---
-import ArrowTopRight from '../../assets/arrow-top-right.svg';
 import ArrowRight from '../../assets/arrow-right.svg';
+import GitHub from '../../assets/icons/github.svg';
+import LinkedIn from '../../assets/icons/linkedin.svg';
+import Telegram from '../../assets/icons/telegram.svg';
+import InlineIcon from '../shared/InlineIcon.astro';
 import PillButton from '../shared/PillButton.astro';
 
 const socials = [
 	{
 		label: 'LinkedIn',
 		href: 'https://www.linkedin.com/in/konghoitec',
+		icon: LinkedIn,
 	},
 	{
 		label: 'Telegram',
 		href: 'https://t.me/austinkong',
+		icon: Telegram,
 	},
 	{
 		label: 'GitHub',
 		href: 'https://github.com/austinkong',
+		icon: GitHub,
 	},
 ];
 ---
@@ -27,22 +33,19 @@ const socials = [
 			<h3>Socials</h3>
 			<ul class="contact__links">
 				{
-					socials.map((social) => (
+					socials.map(({ label, href, icon }) => (
 						<li>
-							<PillButton
-								text={social.label}
-								href={social.href}
-								target="_blank"
-								rel="noreferrer"
-							>
-								<ArrowTopRight slot="icon" />
+							<PillButton href={href} target="_blank" rel="noreferrer">
+								<InlineIcon src={icon.src} />
+								{label}
 							</PillButton>
 						</li>
 					))
 				}
 				<li>
-					<PillButton text="Blog" href="/blog">
-						<ArrowRight slot="icon" />
+					<PillButton href="/blog">
+						Blog
+						<InlineIcon src={ArrowRight.src} />
 					</PillButton>
 				</li>
 			</ul>
@@ -68,7 +71,6 @@ const socials = [
 
 	.contact__links {
 		display: flex;
-		margin: 0;
 		padding: 0;
 		flex-wrap: wrap;
 		gap: 0.75rem;
@@ -78,7 +80,7 @@ const socials = [
 	@media (max-width: 700px) {
 		.contact__grid {
 			grid-template-columns: 1fr;
-			gap: 4rem;
+			gap: 2rem;
 		}
 	}
 </style>

@@ -4,7 +4,6 @@ description: A small essay on spacing, hierarchy, and why card layouts feel bett
 date: 2026-04-18
 image: https://i.pinimg.com/1200x/08/4f/2b/084f2b8258b21e405e97c00c0ad9a6ec.jpg
 imageAlt: Editorial image with layered shapes and a warm palette
-draft: false
 ---
 
 Cards work best when they don’t feel like boxes trying to prove a point. The layout should do the hard work so the content can stay calm.

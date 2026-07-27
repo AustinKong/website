@@ -1,6 +1,5 @@
 ---
 interface Props {
-	text: string;
 	href: string;
 	active?: boolean;
 	inverted?: boolean;
@@ -8,15 +7,7 @@ interface Props {
 	rel?: string;
 }
 
-const {
-	text,
-	href,
-	active = false,
-	inverted = false,
-	target,
-	rel,
-} = Astro.props;
-const hasIcon = Astro.slots.has('icon');
+const { href, active = false, inverted = false, target, rel } = Astro.props;
 ---
 
 <a
@@ -26,14 +17,7 @@ const hasIcon = Astro.slots.has('icon');
 	rel={rel}
 	aria-current={active ? 'page' : undefined}
 >
-	<span>{text}</span>
-	{
-		hasIcon && (
-			<span class="pill-button__icon" aria-hidden="true">
-				<slot name="icon" />
-			</span>
-		)
-	}
+	<slot />
 </a>
 
 <style>
@@ -41,8 +25,8 @@ const hasIcon = Astro.slots.has('icon');
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
-		padding: 0.5rem 1rem;
-		border: 1px solid var(--muted);
+		padding: 0.25rem 1rem;
+		border: 1px solid var(--subtle);
 		border-radius: var(--radius-pill);
 		background: var(--white);
 		text-decoration: none;
@@ -56,18 +40,11 @@ const hasIcon = Astro.slots.has('icon');
 		color: var(--background);
 	}
 
+	.pill-button--inverted :global(img) {
+		filter: brightness(0) invert(1);
+	}
+
 	.pill-button:hover {
 		border-color: var(--foreground);
-	}
-
-	.pill-button__icon {
-		width: 0.8em;
-		height: 0.8em;
-	}
-
-	.pill-button__icon :global(svg) {
-		display: block;
-		width: 100%;
-		height: 100%;
 	}
 </style>

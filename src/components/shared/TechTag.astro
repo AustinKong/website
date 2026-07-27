@@ -1,23 +1,23 @@
 ---
+import { technologies, type Technology } from '../../data/technologies';
 import InlineIcon from './InlineIcon.astro';
 
 interface Props {
-	src: string;
-	label: string;
+	technology: Technology;
 }
 
-const { src, label } = Astro.props;
+const { technology } = Astro.props;
+const { icon, label } = technologies[technology];
 ---
 
 <span
-	class="tech-tag"
 	data-physics-object
 	role="button"
 	tabindex="0"
 	aria-label={`Activate ${label} physics`}
 >
-	<span class="tech-tag__body" data-physics-template>
-		<InlineIcon {src} />
+	<span data-physics-template>
+		<InlineIcon src={icon} />
 		{label}
 	</span>
 </span>
@@ -52,54 +52,38 @@ const { src, label } = Astro.props;
 		cursor: grabbing;
 	}
 
-	:global(.physics-object-body > *) {
-		display: block;
-		width: 100%;
-		height: 100%;
-	}
-
-	.tech-tag {
+	[data-physics-object] {
 		display: inline-flex;
 		cursor: pointer;
 		transition: transform var(--transition);
 	}
 
-	.tech-tag:nth-child(3n + 1):hover {
+	[data-physics-object]:nth-child(3n + 1):hover {
 		transform: translateY(-0.15rem) rotate(-2deg);
 	}
 
-	.tech-tag:nth-child(3n + 2):hover {
+	[data-physics-object]:nth-child(3n + 2):hover {
 		transform: translateY(-0.2rem) rotate(1.5deg);
 	}
 
-	.tech-tag:nth-child(3n):hover {
+	[data-physics-object]:nth-child(3n):hover {
 		transform: translateY(-0.1rem) rotate(-1deg);
 	}
 
-	.tech-tag,
-	.tech-tag__body {
-		user-select: none;
-	}
-
-	.tech-tag__body {
+	[data-physics-template] {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.4rem;
-		padding: 0.45rem 0.7rem;
-		border: 1px solid var(--muted);
+		padding: 0.2rem 0.5rem;
+		border: 1px solid var(--subtle);
 		border-radius: var(--radius-pill);
 		background: var(--white);
-		line-height: 1;
+		font-size: var(--font-size-small);
+		user-select: none;
 		white-space: nowrap;
 	}
 
-	.tech-tag[data-activated='true'] > * {
+	[data-physics-object][data-activated='true'] > * {
 		visibility: hidden;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.tech-tag {
-			transition: none;
-		}
 	}
 </style>

@@ -2,57 +2,46 @@
 interface Item {
 	title: string;
 	href: string;
-	description?: string;
-	image?: string;
-	imageAlt?: string;
-	label?: string;
-	color?: string;
+	description: string;
+	image: string;
+	imageAlt: string;
 }
 
 interface Props {
-	title: string;
 	items: Item[];
-	id?: string;
-	class?: string;
-	headingLevel?: 1 | 2;
+	cardHeadingLevel?: 2 | 3;
+	limitOnSingleColumn?: boolean;
 }
 
-const { title, items, id, class: className, headingLevel = 1 } = Astro.props;
-const Heading = headingLevel === 1 ? 'h1' : 'h2';
-const CardHeading = headingLevel === 1 ? 'h2' : 'h3';
+const {
+	items,
+	cardHeadingLevel = 2,
+	limitOnSingleColumn = false,
+} = Astro.props;
+const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 ---
 
-<section id={id} class={className}>
-	<Heading>{title}</Heading>
+<div
+	class:list={[
+		'content-grid',
+		{ 'content-grid--limited': limitOnSingleColumn },
+	]}
+>
+	{
+		items.map((item) => (
+			<article class="content-card">
+				<a class="content-card__link" href={item.href}>
+					<div class="content-card__media">
+						<img src={item.image} alt={item.imageAlt} loading="lazy" />
+					</div>
 
-	<div class="content-grid">
-		{
-			items.map((item) => (
-				<article class="content-card">
-					<a class="content-card__link" href={item.href}>
-						<div
-							class="content-card__media"
-							style={`--card-color:${item.color ?? 'var(--surface)'}`}
-						>
-							{item.image ? (
-								<img
-									src={item.image}
-									alt={item.imageAlt ?? ''}
-									loading="lazy"
-								/>
-							) : (
-								<span>{item.label}</span>
-							)}
-						</div>
-
-						<CardHeading>{item.title}</CardHeading>
-						{item.description && <p>{item.description}</p>}
-					</a>
-				</article>
-			))
-		}
-	</div>
-</section>
+					<CardHeading class="content-card__title">{item.title}</CardHeading>
+					<p>{item.description}</p>
+				</a>
+			</article>
+		))
+	}
+</div>
 
 <style>
 	.content-grid {
@@ -65,10 +54,9 @@ const CardHeading = headingLevel === 1 ? 'h2' : 'h3';
 		display: grid;
 		aspect-ratio: 9 / 10;
 		margin-bottom: 1rem;
-		place-items: center;
 		overflow: hidden;
 		border-radius: var(--radius-card);
-		background: var(--card-color);
+		background: var(--surface);
 	}
 
 	.content-card__link {
@@ -82,12 +70,7 @@ const CardHeading = headingLevel === 1 ? 'h2' : 'h3';
 		object-fit: cover;
 	}
 
-	.content-card__media span {
-		color: var(--placeholder);
-		font-size: var(--font-size-h1);
-	}
-
-	.content-card :is(h2, h3) {
+	.content-card__title {
 		margin-bottom: 0.25rem;
 		text-decoration: underline;
 		text-decoration-color: transparent;
@@ -95,12 +78,18 @@ const CardHeading = headingLevel === 1 ? 'h2' : 'h3';
 		transition: text-decoration-color var(--transition);
 	}
 
-	.content-card__link:hover :is(h2, h3),
-	.content-card__link:focus-visible :is(h2, h3) {
+	.content-card__link:hover .content-card__title,
+	.content-card__link:focus-visible .content-card__title {
 		text-decoration-color: currentColor;
 	}
 
 	.content-card p {
 		margin: 0;
+	}
+
+	@media (max-width: 36rem) {
+		.content-grid--limited .content-card:nth-child(n + 4) {
+			display: none;
+		}
 	}
 </style>

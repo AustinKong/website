@@ -1,0 +1,23 @@
+---
+import type { Technology } from '../../data/technologies';
+import TechTag from './TechTag.astro';
+
+interface Props {
+	technologies: Technology[];
+}
+
+const { technologies } = Astro.props;
+---
+
+<div role="group" aria-label="Technologies used">
+	{technologies.map((technology) => <TechTag {technology} />)}
+</div>
+
+<style>
+	div {
+		display: flex;
+		margin-top: 1rem;
+		flex-wrap: wrap;
+		gap: 0.3rem;
+	}
+</style>

@@ -1,4 +1,5 @@
 ---
+import { Font } from 'astro:assets';
 import Navbar from '../components/Navbar.astro';
 import '../styles/global.css';
 
@@ -8,6 +9,7 @@ interface Props {
 	navItems?: {
 		label: string;
 		href: string;
+		depth?: number;
 	}[];
 }
 
@@ -23,6 +25,8 @@ const {
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<Font cssVariable="--font-sans" />
+		<Font cssVariable="--font-serif" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
@@ -61,7 +65,7 @@ const {
 		}
 
 		main {
-			padding: 1.5rem 1.25rem 5rem;
+			padding: 1rem 1.25rem 5rem;
 		}
 	}
 </style>

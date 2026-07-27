@@ -1,13 +1,11 @@
 ---
-import { Image } from 'astro:assets';
-import blueCheck from '../assets/blue-check.svg?url';
-import profilePicture from '../assets/profile-picture.jpg';
-import InlineIcon from './shared/InlineIcon.astro';
+import Profile from './Profile.astro';
 
 interface Props {
 	items?: {
 		label: string;
 		href: string;
+		depth?: number;
 	}[];
 }
 
@@ -15,36 +13,24 @@ const { items = [] } = Astro.props;
 ---
 
 <aside class="sidebar">
-	<a class="profile" href="/">
-		<Image
-			class="profile__photo"
-			src={profilePicture}
-			alt=""
-			width={96}
-			height={96}
-		/>
-		<span class="profile__text">
-			<span class="profile__name-row">
-				<span class="profile__name">Austin Kong</span>
-				<InlineIcon src={blueCheck} alt="Verified" />
-			</span>
-			<span class="profile__role">Final Year Information Systems @ NUS</span>
-		</span>
-	</a>
+	<Profile />
 
 	{
 		items.length > 0 && (
 			<nav class="desktop-nav" aria-label="On this page">
-				{items.map((item, index) => (
-					<a
-						class="nav-link"
-						href={item.href}
-						aria-current={index === 0 ? 'page' : undefined}
-					>
-						<span class="nav-link__marker">{index + 1}</span>
-						<span>{item.label}</span>
-					</a>
-				))}
+				<h2>On this page</h2>
+				<div class="nav-links">
+					{items.map((item, index) => (
+						<a
+							class="nav-link"
+							href={item.href}
+							style={`--nav-indent: ${Math.max(0, (item.depth ?? 2) - 2)}rem`}
+							aria-current={index === 0 ? 'page' : undefined}
+						>
+							{item.label}
+						</a>
+					))}
+				</div>
 			</nav>
 		)
 	}
@@ -59,8 +45,10 @@ const { items = [] } = Astro.props;
 	const sections = sectionLinks
 		.map((link) => document.querySelector<HTMLElement>(link.hash))
 		.filter((section): section is HTMLElement => section !== null);
+	const nav = sectionLinks[0]?.closest<HTMLElement>('.nav-links');
+	let currentLink: HTMLAnchorElement | undefined;
 
-	if (sections.length) {
+	if (sections.length && nav) {
 		const updateActiveSection = () => {
 			const active =
 				scrollY + innerHeight >= document.documentElement.scrollHeight - 1
@@ -69,12 +57,30 @@ const { items = [] } = Astro.props;
 							(section) =>
 								section.getBoundingClientRect().top <= innerHeight * 0.4
 						) ?? sections[0]);
+			if (!active) return;
+
+			const activeLink = sectionLinks.find(
+				(link) => link.hash === `#${active.id}`
+			);
 
 			sectionLinks.forEach((link) => {
-				if (link.hash === `#${active.id}`)
-					link.setAttribute('aria-current', 'page');
+				if (link === activeLink) link.setAttribute('aria-current', 'page');
 				else link.removeAttribute('aria-current');
 			});
+
+			if (activeLink && activeLink !== currentLink) {
+				currentLink = activeLink;
+				const navRect = nav.getBoundingClientRect();
+				const linkRect = activeLink.getBoundingClientRect();
+
+				if (linkRect.top < navRect.top)
+					nav.scrollBy({ top: linkRect.top - navRect.top, behavior: 'smooth' });
+				else if (linkRect.bottom > navRect.bottom)
+					nav.scrollBy({
+						top: linkRect.bottom - navRect.bottom,
+						behavior: 'smooth',
+					});
+			}
 		};
 
 		updateActiveSection();
@@ -93,120 +99,48 @@ const { items = [] } = Astro.props;
 		padding: 3rem 2rem 1.25rem;
 	}
 
-	.profile {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 1rem;
-		text-decoration: none;
-	}
-
-	.profile__photo {
-		width: 4rem;
-		height: 4rem;
-		border-radius: 50%;
-		object-fit: cover;
-	}
-
-	.profile__text {
-		display: grid;
-		gap: 0.15rem;
-	}
-
-	.profile__name-row {
-		display: flex;
-		align-items: center;
-		gap: 0.4rem;
-	}
-
-	.profile__name {
-		font-size: var(--font-size-h2);
-		font-weight: 600;
-		letter-spacing: -0.025em;
-		line-height: 1.1;
-	}
-
-	.profile__role {
-		color: var(--muted);
-	}
-
 	.desktop-nav {
-		position: relative;
-		display: grid;
+		display: flex;
 		width: 100%;
+		min-height: 0;
 		margin-top: 3rem;
-		gap: 1rem;
-		line-height: 1.25;
+		flex-direction: column;
+		gap: 1.5rem;
 	}
 
-	.desktop-nav::before {
-		position: absolute;
-		inset-block: 1.1rem;
-		left: 1.1rem;
-		border-left: 1px solid var(--muted);
-		content: '';
+	.nav-links {
+		display: grid;
+		min-height: 0;
+		gap: 1rem;
+		overflow-y: auto;
+		scrollbar-width: none;
+	}
+
+	.nav-links::-webkit-scrollbar {
+		display: none;
+	}
+
+	.desktop-nav h2 {
+		margin: 0;
+		font-size: inherit;
 	}
 
 	.nav-link {
-		display: flex;
-		align-items: center;
-		gap: 0.8rem;
+		padding-left: var(--nav-indent);
+		color: var(--muted);
+		font-size: var(--font-size-small);
+		overflow-wrap: anywhere;
 		text-decoration: none;
+		transition: color var(--transition);
 	}
 
-	.nav-link__marker {
-		position: relative;
-		z-index: 1;
-		display: grid;
-		width: 2.25rem;
-		height: 2.25rem;
-		flex: none;
-		place-items: center;
-		border: 1px solid var(--muted);
-		border-radius: 50%;
-		background: var(--white);
-		transition:
-			background var(--transition),
-			color var(--transition),
-			border-color var(--transition);
-	}
-
-	.nav-link:hover .nav-link__marker {
-		border-color: var(--foreground);
-	}
-
-	.nav-link[aria-current='page'] .nav-link__marker {
-		border-color: var(--foreground);
-		background: var(--foreground);
-		color: var(--white);
+	.nav-link:hover,
+	.nav-link[aria-current='page'] {
+		color: var(--foreground);
 	}
 
 	@media (max-width: 900px) {
 		.sidebar {
-			position: static;
-			min-height: 4.5rem;
-			height: auto;
-			flex-direction: row;
-			align-items: center;
-			padding: 0.75rem 1.25rem;
-		}
-
-		.profile {
-			flex-direction: row;
-			align-items: center;
-			gap: 0.75rem;
-		}
-
-		.profile__photo {
-			width: 3rem;
-			height: 3rem;
-		}
-
-		.profile__role {
-			font-size: 0.8rem;
-		}
-
-		.desktop-nav {
 			display: none;
 		}
 	}

@@ -6,16 +6,18 @@ export async function getStaticPaths() {
 	return (await getCollection('projects'))
 		.filter((project) => !project.data.draft)
 		.map((project) => ({
-			params: { slug: project.id },
+			params: { slug: project.id.replace(/\/index$/, '') },
 			props: { project },
 		}));
 }
 
 const { project } = Astro.props;
 const { Content, headings } = await render(project);
-const navItems = headings
-	.filter(({ depth }) => depth === 2)
-	.map(({ slug, text }) => ({ label: text, href: `#${slug}` }));
+const navItems = headings.map(({ depth, slug, text }) => ({
+	label: text,
+	href: `#${slug}`,
+	depth,
+}));
 ---
 
 <ArticleLayout
@@ -23,7 +25,9 @@ const navItems = headings
 	description={project.data.description}
 	{navItems}
 	backHref="/#projects"
-	backLabel="All projects"
+	backLabel="Projects"
+	technologies={project.data.technologies}
+	links={project.data.links}
 >
 	<Content />
 </ArticleLayout>

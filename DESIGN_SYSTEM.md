@@ -5,10 +5,10 @@ over adding a class.
 
 ## Typography
 
-- Body copy, interface text, and article `h2`–`h4` use the sans-serif stack
-  defined on `body`.
-- Page titles and homepage section titles use the serif stack.
+- Body copy, interface text, and article `h2`–`h4` use Inter.
+- Page titles and homepage section titles use Liberation Serif.
 - Shared heading sizes live in `--font-size-h1` through `--font-size-h4`.
+- Supporting text uses `--font-size-small` (`0.875rem`).
 - The hierarchy uses the Fibonacci/golden-ratio steps where they matter most:
   - `h1`: `2.618rem`
   - `h2`: `1.272rem`
@@ -33,7 +33,7 @@ over adding a class.
 - `ul` or `ol`: lists where order is meaningful or useful.
 - `a`: navigation and inline links.
 - `time`: machine-readable dates.
-- `small`: supporting metadata.
+- `small`: supporting metadata using the standard small-text size.
 - `blockquote`: quoted material.
 - `pre` and `code`: code.
 
@@ -61,6 +61,7 @@ with the inherited sans-serif font.
 
 - Use the colour variables in `global.css`; do not add component-local colour
   literals.
+- Use `--muted` for secondary text and `--subtle` for quiet borders.
 - Text must retain readable contrast against the light background.
 - Links stay recognizable through underlines or their navigation context.
 - Keyboard focus must remain visible; do not remove browser focus outlines.
@@ -78,7 +79,7 @@ with the inherited sans-serif font.
 
 - Homepage sections live in `components/sections` and own their content.
 - Reusable presentation lives in `components/shared`.
-- `PhotoStrip` accepts any number of captioned photos; it is not tied to the
+- `ObjectGallery` accepts any number of captioned objects; it is not tied to the
   About section's “currently” content.
 
 ## Physics tags

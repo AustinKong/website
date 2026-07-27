@@ -2,6 +2,9 @@
 title: FetchIT
 description: A shelter operations platform for medical records, adoptions, and dog profiles.
 order: 4
+technologies:
+  - react
+  - supabase
 draft: false
 ---
 

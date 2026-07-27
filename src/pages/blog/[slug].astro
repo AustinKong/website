@@ -3,19 +3,19 @@ import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
 export async function getStaticPaths() {
-	return (await getCollection('blog'))
-		.filter((post) => !post.data.draft)
-		.map((post) => ({
-			params: { slug: post.id },
-			props: { post },
-		}));
+	return (await getCollection('blog')).map((post) => ({
+		params: { slug: post.id },
+		props: { post },
+	}));
 }
 
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
-const navItems = headings
-	.filter(({ depth }) => depth === 2)
-	.map(({ slug, text }) => ({ label: text, href: `#${slug}` }));
+const navItems = headings.map(({ depth, slug, text }) => ({
+	label: text,
+	href: `#${slug}`,
+	depth,
+}));
 ---
 
 <ArticleLayout
@@ -23,7 +23,7 @@ const navItems = headings
 	description={post.data.description}
 	{navItems}
 	backHref="/blog"
-	backLabel="All posts"
+	backLabel="Posts"
 >
 	<Content />
 </ArticleLayout>

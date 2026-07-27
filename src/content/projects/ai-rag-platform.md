@@ -2,6 +2,13 @@
 title: AI & RAG Platform
 description: Enterprise chatbot and evaluation tooling for reliable AI workflows.
 order: 5
+technologies:
+  - react
+  - express
+  - nodejs
+  - docker
+  - azure
+  - python
 draft: false
 ---
 

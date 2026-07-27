@@ -1,36 +1,23 @@
 ---
-import arrowIcon from '../../assets/arrow-top-right.svg?raw';
-import azure from '../../assets/icons/azure.svg';
-import csharp from '../../assets/icons/csharp.svg';
-import docker from '../../assets/icons/docker.svg';
-import dotnet from '../../assets/icons/dotnet.svg';
-import express from '../../assets/icons/express.svg';
-import fastapi from '../../assets/icons/fastapi.svg';
-import java from '../../assets/icons/java.svg';
-import kubernetes from '../../assets/icons/kubernetes.svg';
+import arrowIcon from '../../assets/arrow-top-right.svg';
 import gic from '../../assets/experience/gic.png';
-import psa from '../../assets/experience/psa.png';
 import nus from '../../assets/experience/nus.png';
-import python from '../../assets/icons/python.svg';
-import react from '../../assets/icons/react.svg';
-import sql from '../../assets/icons/sql.svg';
-import typescript from '../../assets/icons/typescript.svg';
-import unity from '../../assets/icons/unity.svg';
+import psa from '../../assets/experience/psa.png';
 import InlineIcon from '../shared/InlineIcon.astro';
 import PillButton from '../shared/PillButton.astro';
-import TechTag from '../shared/TechTag.astro';
+import TechnologyList from '../shared/TechnologyList.astro';
 ---
 
 <section id="experience" class="home-section section--narrow">
 	<h2>Experience</h2>
 	<PillButton
-		text="View my resume"
 		href="/Kong_Hoi_Tec_Resume.pdf"
 		inverted
 		target="_blank"
 		rel="noopener"
 	>
-		<span slot="icon" set:html={arrowIcon} />
+		View my resume
+		<InlineIcon src={arrowIcon.src} />
 	</PillButton>
 
 	<ol class="timeline">
@@ -49,9 +36,7 @@ import TechTag from '../shared/TechTag.astro';
 				through Java-based programming exercises, helping students approach
 				algorithmic thinking from different perspectives.
 			</p>
-			<div class="tech-tags" role="group" aria-label="Technologies used">
-				<TechTag src={java.src} label="Java" />
-			</div>
+			<TechnologyList technologies={['java']} />
 		</li>
 
 		<li>
@@ -77,17 +62,20 @@ import TechTag from '../shared/TechTag.astro';
 				saved 900+ staff-hours annually, and an automated compliance system
 				supporting 2,000+ annual notices across 11 teams.
 			</p>
-			<div class="tech-tags" role="group" aria-label="Technologies used">
-				<TechTag src={react.src} label="React" />
-				<TechTag src={typescript.src} label="TypeScript" />
-				<TechTag src={express.src} label="Express" />
-				<TechTag src={python.src} label="Python" />
-				<TechTag src={fastapi.src} label="FastAPI" />
-				<TechTag src={dotnet.src} label=".NET" />
-				<TechTag src={csharp.src} label="C#" />
-				<TechTag src={sql.src} label="SQL" />
-				<TechTag src={kubernetes.src} label="Kubernetes" />
-			</div>
+			<TechnologyList
+				technologies={[
+					'react',
+					'typescript',
+					'express',
+					'nodejs',
+					'python',
+					'fastapi',
+					'dotnet',
+					'csharp',
+					'postgresql',
+					'kubernetes',
+				]}
+			/>
 		</li>
 
 		<li>
@@ -108,10 +96,7 @@ import TechTag from '../shared/TechTag.astro';
 				optimising the WebGL build, reducing its size from over 150 MB to 30 MB
 				without compromising the learning experience.
 			</p>
-			<div class="tech-tags" role="group" aria-label="Technologies used">
-				<TechTag src={unity.src} label="Unity" />
-				<TechTag src={csharp.src} label="C#" />
-			</div>
+			<TechnologyList technologies={['unity', 'csharp']} />
 		</li>
 
 		<li>
@@ -130,13 +115,17 @@ import TechTag from '../shared/TechTag.astro';
 				lifecycle while gaining first-hand exposure to how enterprise AI systems
 				are built, evaluated, and prepared for production use.
 			</p>
-			<div class="tech-tags" role="group" aria-label="Technologies used">
-				<TechTag src={react.src} label="React" />
-				<TechTag src={express.src} label="Express" />
-				<TechTag src={docker.src} label="Docker" />
-				<TechTag src={azure.src} label="Azure" />
-				<TechTag src={python.src} label="Python" />
-			</div>
+			<TechnologyList
+				technologies={[
+					'react',
+					'express',
+					'nodejs',
+					'sql-server',
+					'docker',
+					'azure',
+					'python',
+				]}
+			/>
 		</li>
 	</ol>
 </section>
@@ -156,7 +145,7 @@ import TechTag from '../shared/TechTag.astro';
 		position: absolute;
 		inset-block: 0;
 		left: 1.1rem;
-		border-left: 1px solid var(--muted);
+		border-left: 1px solid var(--subtle);
 		content: '';
 	}
 
@@ -173,7 +162,7 @@ import TechTag from '../shared/TechTag.astro';
 		width: 2.25rem;
 		height: 2.25rem;
 		place-items: center;
-		border: 1px solid var(--muted);
+		border: 1px solid var(--subtle);
 		border-radius: 50%;
 		background: var(--white);
 		content: counter(experience);
@@ -186,11 +175,5 @@ import TechTag from '../shared/TechTag.astro';
 		gap: 0.25rem 1rem;
 		margin-bottom: 0.5rem; /* Overrides default <p> margin */
 		color: var(--muted);
-	}
-
-	.tech-tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
 	}
 </style>

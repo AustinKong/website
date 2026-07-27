@@ -2,6 +2,12 @@
 title: Atto
 description: A local-first, open-source AI assistant for managing job applications.
 order: 2
+technologies:
+  - react
+  - typescript
+  - fastapi
+  - python
+  - sqlite
 draft: false
 ---
 

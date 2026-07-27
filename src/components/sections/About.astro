@@ -2,6 +2,7 @@
 import ddia from '../../assets/currently/ddia.png';
 import notebook from '../../assets/currently/notebook.png';
 import thinkpad from '../../assets/currently/thinkpad.png';
+import Profile from '../Profile.astro';
 import ObjectGallery from '../shared/ObjectGallery.astro';
 
 const objects = [
@@ -28,6 +29,9 @@ const objects = [
 ---
 
 <section id="about" class="home-section section--narrow">
+	<div class="mobile-profile">
+		<Profile />
+	</div>
 	<h1>
 		Hello there! My name is Austin Kong. I'm a full-stack software engineer and
 		final-year Information Systems student at NUS.
@@ -50,3 +54,16 @@ const objects = [
 	</p>
 	<ObjectGallery objects={objects} />
 </section>
+
+<style>
+	.mobile-profile {
+		display: none;
+	}
+
+	@media (max-width: 900px) {
+		.mobile-profile {
+			display: block;
+			margin-bottom: 1rem;
+		}
+	}
+</style>

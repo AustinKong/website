@@ -1,6 +1,11 @@
 ---
-import ArrowRight from '../assets/arrow-right.svg';
+import ArrowLeft from '../assets/arrow-left.svg';
+import ArrowTopRight from '../assets/arrow-top-right.svg';
+import GitHub from '../assets/icons/github.svg';
+import InlineIcon from '../components/shared/InlineIcon.astro';
 import PillButton from '../components/shared/PillButton.astro';
+import TechnologyList from '../components/shared/TechnologyList.astro';
+import type { Technology } from '../data/technologies';
 import MainLayout from './MainLayout.astro';
 
 interface Props {
@@ -9,21 +14,60 @@ interface Props {
 	navItems: {
 		label: string;
 		href: string;
+		depth?: number;
 	}[];
 	backHref: string;
 	backLabel: string;
+	technologies?: Technology[];
+	links?: {
+		label: string;
+		href: string;
+		kind: 'github' | 'external';
+	}[];
 }
 
-const { title, description, navItems, backHref, backLabel } = Astro.props;
+const {
+	title,
+	description,
+	navItems,
+	backHref,
+	backLabel,
+	technologies = [],
+	links = [],
+} = Astro.props;
+
+const linkIcons = {
+	github: GitHub.src,
+	external: ArrowTopRight.src,
+};
 ---
 
 <MainLayout title={`${title} — Austin Kong`} {description} {navItems}>
 	<article class="section--narrow">
 		<header>
+			<div class="article-actions">
+				<nav aria-label="Back">
+					<PillButton href={backHref} inverted>
+						<InlineIcon src={ArrowLeft.src} />
+						{backLabel}
+					</PillButton>
+				</nav>
+				{
+					links.length > 0 && (
+						<nav class="project-links" aria-label="Project links">
+							{links.map(({ label, href, kind }) => (
+								<PillButton {href} target="_blank" rel="noreferrer">
+									<InlineIcon src={linkIcons[kind]} />
+									{label}
+								</PillButton>
+							))}
+						</nav>
+					)
+				}
+			</div>
 			<h1>{title}</h1>
-			<PillButton text={backLabel} href={backHref} inverted>
-				<ArrowRight slot="icon" />
-			</PillButton>
+			{description && <p>{description}</p>}
+			{technologies.length > 0 && <TechnologyList {technologies} />}
 		</header>
 
 		<div class="prose">
@@ -33,8 +77,27 @@ const { title, description, navItems, backHref, backLabel } = Astro.props;
 </MainLayout>
 
 <style>
+	:global(body) {
+		overflow-x: clip;
+	}
+
 	article > header {
 		margin-bottom: 4rem;
+	}
+
+	.article-actions {
+		display: flex;
+		margin-bottom: 2rem;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.project-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
 	}
 
 	.prose :global(:is(h2, h3, h4)) {
@@ -55,6 +118,16 @@ const { title, description, navItems, backHref, backLabel } = Astro.props;
 		padding: 1rem;
 		background: var(--surface);
 		font-family: monospace;
-		font-size: 0.8em;
+		font-size: var(--font-size-small);
+	}
+
+	.prose :global(pre.mermaid) {
+		justify-content: flex-start;
+	}
+
+	.prose :global(pre.mermaid > svg) {
+		flex: 0 0 auto;
+		width: auto !important;
+		max-width: none !important;
 	}
 </style>

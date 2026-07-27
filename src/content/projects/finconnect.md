@@ -2,6 +2,9 @@
 title: Finconnect
 description: A first-place hackathon prototype connecting stablecoin deposits with global card spending.
 order: 3
+technologies:
+  - express
+  - nodejs
 draft: false
 ---
 

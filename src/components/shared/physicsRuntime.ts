@@ -28,14 +28,27 @@ class PhysicsManager {
 
 	private preservePageInput(mouse: Mouse, physicsLayer: HTMLElement): void {
 		const handlers = mouse as MatterMouse;
+		const move = (event: Event) => {
+			handlers.mousemove(event);
+			mouse.position.x = Math.max(
+				0,
+				Math.min(mouse.position.x, physicsLayer.clientWidth)
+			);
+			mouse.position.y = Math.max(
+				0,
+				Math.min(mouse.position.y, physicsLayer.clientHeight)
+			);
+		};
 
 		mouse.element.removeEventListener('wheel', handlers.mousewheel);
 		mouse.element.removeEventListener('DOMMouseScroll', handlers.mousewheel);
 		mouse.element.removeEventListener('touchmove', handlers.mousemove);
 		mouse.element.removeEventListener('touchstart', handlers.mousedown);
 		mouse.element.removeEventListener('touchend', handlers.mouseup);
+		mouse.element.removeEventListener('mousemove', handlers.mousemove);
+		mouse.element.removeEventListener('mouseup', handlers.mouseup);
 
-		physicsLayer.addEventListener('touchmove', handlers.mousemove, {
+		physicsLayer.addEventListener('touchmove', move, {
 			passive: false,
 		});
 		physicsLayer.addEventListener('touchstart', handlers.mousedown, {
@@ -43,6 +56,14 @@ class PhysicsManager {
 		});
 		physicsLayer.addEventListener('touchend', handlers.mouseup, {
 			passive: false,
+		});
+		physicsLayer.addEventListener('touchcancel', handlers.mouseup, {
+			passive: false,
+		});
+		window.addEventListener('mousemove', move, { passive: true });
+		window.addEventListener('mouseup', handlers.mouseup, { passive: true });
+		window.addEventListener('blur', () => {
+			mouse.button = -1;
 		});
 	}
 
