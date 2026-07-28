@@ -23,12 +23,7 @@ const { objects } = Astro.props;
 	{
 		objects.map((object) => (
 			<figure>
-				<Image
-					src={object.src}
-					alt={object.alt}
-					layout="fixed"
-					width={192}
-				/>
+				<Image src={object.src} alt={object.alt} layout="fixed" width={192} />
 				<figcaption>
 					{object.caption}
 					{object.link && (
