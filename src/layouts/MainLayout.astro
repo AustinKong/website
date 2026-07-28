@@ -18,6 +18,7 @@ const {
 	description = 'Austin Kong — software engineer in Singapore.',
 	navItems = [],
 } = Astro.props;
+const documentTitle = title === 'Austin Kong' ? title : `Austin Kong | ${title}`;
 ---
 
 <!doctype html>
@@ -30,7 +31,7 @@ const {
 		<link rel="icon" href="/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
-		<title>{title}</title>
+		<title>{documentTitle}</title>
 	</head>
 	<body>
 		<div class="site-shell">
