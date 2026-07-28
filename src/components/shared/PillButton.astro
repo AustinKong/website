@@ -1,13 +1,12 @@
 ---
 interface Props {
 	href: string;
-	active?: boolean;
 	inverted?: boolean;
 	target?: '_blank';
 	rel?: string;
 }
 
-const { href, active = false, inverted = false, target, rel } = Astro.props;
+const { href, inverted = false, target, rel } = Astro.props;
 ---
 
 <a
@@ -15,7 +14,6 @@ const { href, active = false, inverted = false, target, rel } = Astro.props;
 	href={href}
 	target={target}
 	rel={rel}
-	aria-current={active ? 'page' : undefined}
 >
 	<slot />
 </a>
@@ -34,7 +32,6 @@ const { href, active = false, inverted = false, target, rel } = Astro.props;
 		white-space: nowrap;
 	}
 
-	.pill-button[aria-current='page'],
 	.pill-button--inverted {
 		background: var(--foreground);
 		color: var(--background);
