@@ -8,7 +8,7 @@ const projects = (await getCollection('projects'))
 	.map((project) => ({
 		title: project.data.title,
 		description: project.data.description,
-		image: project.data.cover!.src,
+		image: project.data.cover!,
 		imageAlt: `${project.data.title} cover`,
 		href: `/projects/${project.id.replace(/\/index$/, '')}`,
 		stat: project.data.stat,

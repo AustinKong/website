@@ -1,11 +1,13 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import Laurel from './Laurel.astro';
 
 interface Item {
 	title: string;
 	href: string;
 	description: string;
-	image: string;
+	image: ImageMetadata;
 	imageAlt: string;
 	stat?: string;
 }
@@ -35,7 +37,7 @@ const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 			<article class="content-card">
 				<a class="content-card__link" href={item.href}>
 					<div class="content-card__media">
-						<img src={item.image} alt={item.imageAlt} loading="lazy" />
+						<Image src={item.image} alt={item.imageAlt} width={480} />
 					</div>
 
 					<div class="content-card__heading">

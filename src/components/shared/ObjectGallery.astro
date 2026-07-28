@@ -1,6 +1,9 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
 interface GalleryObject {
-	src: string;
+	src: ImageMetadata;
 	alt: string;
 	caption: string;
 	link?: {
@@ -20,7 +23,12 @@ const { objects } = Astro.props;
 	{
 		objects.map((object) => (
 			<figure>
-				<img src={object.src} alt={object.alt} loading="lazy" />
+				<Image
+					src={object.src}
+					alt={object.alt}
+					layout="fixed"
+					width={192}
+				/>
 				<figcaption>
 					{object.caption}
 					{object.link && (

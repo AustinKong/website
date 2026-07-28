@@ -5,13 +5,14 @@ import { technologyKeys } from './data/technologies';
 
 const blog = defineCollection({
 	loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
-	schema: z.object({
-		title: z.string(),
-		description: z.string(),
-		date: z.date(),
-		image: z.string().url(),
-		imageAlt: z.string(),
-	}),
+	schema: ({ image }) =>
+		z.object({
+			title: z.string(),
+			description: z.string(),
+			date: z.date(),
+			image: image(),
+			imageAlt: z.string(),
+		}),
 });
 
 const projects = defineCollection({

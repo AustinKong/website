@@ -1,8 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
 interface ImageItem {
-	src: string | ImageMetadata;
+	src: ImageMetadata;
 	caption: string;
 }
 
@@ -17,12 +18,10 @@ const { images } = Astro.props;
 	{
 		images.map(({ src, caption }) => (
 			<figure>
-				<img
-					src={typeof src === 'string' ? src : src.src}
-					width={typeof src === 'string' ? undefined : src.width}
-					height={typeof src === 'string' ? undefined : src.height}
+				<Image
+					{src}
 					alt={caption}
-					loading="lazy"
+					width={960}
 					draggable="false"
 				/>
 				<figcaption>{caption}</figcaption>

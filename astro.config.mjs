@@ -3,6 +3,10 @@ import mdx from '@astrojs/mdx';
 import mermaid from 'astro-mermaid';
 
 export default defineConfig({
+	image: {
+		layout: 'constrained',
+		responsiveStyles: true,
+	},
 	fonts: [
 		{
 			provider: fontProviders.google(),
