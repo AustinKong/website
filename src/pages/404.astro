@@ -1,0 +1,80 @@
+---
+import { Image } from 'astro:assets';
+import ArrowLeft from '../assets/arrow-left.svg';
+import howDidWeGetHere from '../assets/misc/how-did-we-get-here.png';
+import minecraftSpace from '../assets/misc/minecraft-space.jpg';
+import InlineIcon from '../components/shared/InlineIcon.astro';
+import PillButton from '../components/shared/PillButton.astro';
+import Polaroid from '../components/shared/Polaroid.astro';
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout title="404 — Austin Kong">
+	<Image
+		class="how-did-we-get-here"
+		src={howDidWeGetHere}
+		alt="How did we get here?"
+	/>
+
+	<section class="not-found">
+		<Polaroid
+			src={minecraftSpace}
+			alt="A Minecraft character floating in space"
+			caption="404"
+		/>
+		<PillButton href="/" inverted>
+			<InlineIcon src={ArrowLeft.src} />
+			Back to Home
+		</PillButton>
+	</section>
+</MainLayout>
+
+<style>
+	:global(.site-shell > .sidebar) {
+		display: none;
+	}
+
+	:global(.site-shell) {
+		display: block;
+	}
+
+	.how-did-we-get-here {
+		position: fixed;
+		top: 0;
+		right: 0;
+		width: min(20rem, 100vw);
+		height: auto;
+		animation: banner 5.4s ease-in-out forwards;
+		pointer-events: none;
+		z-index: 2;
+	}
+
+	.not-found {
+		position: fixed;
+		inset: 0;
+		display: grid;
+		place-content: center;
+		justify-items: center;
+		gap: 2rem;
+	}
+
+	@keyframes banner {
+		0% {
+			transform: translateY(-100%);
+		}
+		22%,
+		78% {
+			transform: translateY(0);
+		}
+		100% {
+			transform: translateY(-100%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.how-did-we-get-here {
+			animation: none;
+		}
+
+	}
+</style>

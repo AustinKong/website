@@ -1,11 +1,9 @@
 ---
 title: Atto
 description: Local-first job-search workspace combining application tracking, AI-assisted listing ingestion, and tailored resume workflows.
-stat: |-
-  700+
-  installs
-order: 2
-cover: ../ura-conservation-compliance-platform/cover.png
+stat: 700+ installs
+order: 1
+cover: ./cover.jpg
 links:
   - label: GitHub
     href: https://github.com/AustinKong/atto
@@ -39,7 +37,7 @@ The central product choice is simple: the job-search data stays on the user's de
 
 A job search produces a surprising amount of sensitive and interconnected data: saved roles, application history, resumes, interview notes, and records of past outcomes. I wanted a way to manage that information without handing it to an untrusted third party just to manage a job search.
 
-I tried existing local tools first, a promising one was [Resume Matcher](https://github.com/srbhr/resume-matcher); but I could not get it, and other options to work reliably for the workflow I wanted. Most alternatives also solved only one part of the problem: trackers focused on application status, resume tools focused on document generation, and browser extensions focused on saving listings.
+I tried existing local tools first. One promising option was [Resume Matcher](https://github.com/srbhr/resume-matcher), but I could not get it or the other options to work reliably for the workflow I wanted. Most alternatives also solved only one part of the problem: trackers focused on application status, resume tools focused on document generation, and browser extensions focused on saving listings.
 
 That fragmentation made even simple questions harder to answer. Which resume did I use for a particular role? Why did I prioritize one application over another? What changed between resume versions? Which companies still needed a follow-up?
 
@@ -51,15 +49,15 @@ Thus, Atto was built to solve my own pain points. The goal was to keep the core 
 	images={[
 		{
 			src: newListing,
-			caption: 'Listing scraping and review page',
+			caption: 'Reviewing job details extracted from a listing',
 		},
 		{
 			src: listings,
-			caption: 'Saved listings and applications',
+			caption: 'Tracking saved listings and active applications',
 		},
 		{
 			src: resumeEditor,
-			caption: 'Resume editor with dual-pane preview',
+			caption: 'Editing a resume beside its rendered PDF preview',
 		},
 	]}
 />
@@ -77,12 +75,12 @@ Resumes are built from structured sections and local HTML templates. Atto compar
 Atto runs entirely on the user's machine. The React interface, FastAPI backend, SQLite database, Chroma vector store, templates, generated PDFs, and provider configuration all live locally. Listings, applications, resumes, and analysis results do not require a hosted account or database.
 
 <ScreenshotStack
-    images={[
-        {
-            src: tui,
-            caption: 'Launcher TUI',
-        },
-    ]}
+	images={[
+		{
+			src: tui,
+			caption: 'Local launcher showing the application server status',
+		},
+	]}
 />
 
 The packaged app starts with a Textual launcher rather than a raw terminal window. The launcher runs FastAPI as a child process, waits for its health check to pass, and opens the React interface in the user's default browser. This gives the local server a small product-facing TUI for startup progress, runtime status, and errors instead of exposing scrolling Uvicorn logs.
@@ -169,7 +167,7 @@ This lets Atto retain the listing behind an application, the resume submitted fo
 
 ### Engineering Deep Dives
 
-This case study stays at the product level, read the linked posts for implementation decisions and the problems behind them in more detail.
+This case study stays at the product level. The linked posts cover implementation decisions and the problems behind them in more detail.
 
 #### Listing Ingestion
 
@@ -193,7 +191,7 @@ The resume editor previews the actual HTML-to-PDF output. Playwright Chromium re
 
 AI output and web pages are not stable enough for one end-to-end suite to be the source of truth. I split testing across deterministic unit tests, integration tests with fake providers, and opt-in evaluations against real models. LLM judges assess qualities such as groundedness and usefulness without requiring one exact response.
 
-I also added a "Paper Mode" to Atto for reproducible demos and exploration, the idea came from paper trading accounts in finance. It produces a local workspace with versioned fixture data that look like real job-search records, but without using personal data or live model calls.
+I also added a "Paper Mode" to Atto for reproducible demos and exploration. The idea came from paper trading accounts in finance. It produces a local workspace with versioned fixture data that look like real job-search records, but without using personal data or live model calls.
 
 ### Packaging and Releases
 
@@ -215,8 +213,7 @@ Local-first does not mean fully offline or fully private. Listings, applications
 
 ### Browser UI vs Electron
 
-Using the system browser let me reuse the React application without maintaining an Electron or Tauri shell. Atto's Windows and Linux bundles are already about 190 MB; bundling another browser runtime for the interface would make them materially larger (probably double or triple the current size if using Electron.)
-
+Using the system browser let me reuse the React application without maintaining an Electron or Tauri shell. Atto's Windows and Linux bundles are already about 190 MB; bundling another browser runtime for the interface would make them materially larger (probably double or triple the current size with Electron).
 
 As discussed earlier, native desktop packaging would not remove signing and notarization requirements. The tradeoff is that Atto feels more like a local web application, and the launcher must manage a background server process. Playwright still requires Chromium, but downloads it separately only when crawling or PDF rendering is first used.
 

@@ -8,13 +8,12 @@ interface ImageItem {
 
 interface Props {
 	images: ImageItem[];
-	background?: string;
 }
 
-const { images, background = 'var(--surface)' } = Astro.props;
+const { images } = Astro.props;
 ---
 
-<div class="screenshot-stack" style={`--screenshot-background: ${background}`}>
+<div class="screenshot-stack">
 	{
 		images.map(({ src, caption }) => (
 			<figure>
@@ -38,7 +37,7 @@ const { images, background = 'var(--surface)' } = Astro.props;
 		gap: clamp(1.5rem, 4vw, 3rem);
 		margin: 3rem 0;
 		padding: clamp(1rem, 4vw, 3rem);
-		background: var(--screenshot-background);
+		background: var(--surface);
 		border-radius: var(--radius-card);
 	}
 

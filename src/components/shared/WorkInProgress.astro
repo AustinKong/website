@@ -1,0 +1,19 @@
+---
+import catFix from '../../assets/misc/cat-fix.jpg';
+import Polaroid from './Polaroid.astro';
+---
+
+<div>
+	<Polaroid
+		src={catFix}
+		alt="A cat fixing a computer"
+		caption="Work in progress"
+	/>
+</div>
+
+<style>
+	div {
+		display: grid;
+		justify-items: center;
+	}
+</style>

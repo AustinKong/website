@@ -1,8 +1,8 @@
 ---
 title: URA Conservation Compliance Platform
 description: Cloud-based conservation compliance platform using computer vision and queue-worker architecture for scalable report generation.
-order: 1
-cover: ./cover.png
+order: 2
+cover: ./cover.jpg
 links:
   - label: GitHub
     href: https://github.com/tallkoh/URA-Cons-App
@@ -20,16 +20,13 @@ technologies:
   - docker
 ---
 
+import CaptionedImage from '../../../components/shared/CaptionedImage.astro';
 import ScreenshotStack from '../../../components/shared/ScreenshotStack.astro';
-import StackedCarousel from '../../../components/shared/StackedCarousel.astro';
 import comparisonPage from './pages/comparison.png';
 import facadeDetectionPage from './pages/facade-detection.png';
 import homePage from './pages/home-page.png';
 import reportPage from './pages/report.png';
-import slide1 from './slides/slide-1.png';
-import slide2 from './slides/slide-2.png';
-import slide3 from './slides/slide-3.png';
-import slide4 from './slides/slide-4.png';
+import slides from './slides.jpg';
 
 ## Overview
 
@@ -72,19 +69,19 @@ The project therefore needs to support both change detection and historical trac
 	images={[
 		{
 			src: homePage,
-			caption: 'Building repository and map',
+			caption: 'Searching the conserved-building registry from an interactive map',
 		},
 		{
 			src: facadeDetectionPage,
-			caption: 'Facade detection and cropping',
+			caption: 'Reviewing an automatically detected facade before processing',
 		},
 		{
 			src: comparisonPage,
-			caption: 'Side-by-side facade comparison',
+			caption: 'Comparing historical and current facade images side by side',
 		},
 		{
 			src: reportPage,
-			caption: 'Editable conservation report',
+			caption: 'Editing an AI-generated conservation compliance report',
 		},
 	]}
 />
@@ -101,25 +98,10 @@ The automated output is treated as a draft. Officers can adjust bounding boxes, 
 
 The system then generates an editable conservation report containing change descriptions, guideline references, compliance assessments, architectural observations, and recommended actions. Users can also generate presentation slides and a draft enforcement letter.
 
-<StackedCarousel
-	images={[
-		{
-			src: slide1,
-			caption: 'Generated presentation',
-		},
-		{
-			src: slide2,
-			caption: 'Generated presentation',
-		},
-		{
-			src: slide3,
-			caption: 'Generated presentation',
-		},
-		{
-			src: slide4,
-			caption: 'Generated presentation',
-		},
-	]}
+<CaptionedImage
+	src={slides}
+	caption="Generated presentation summarizing facade changes, compliance findings, and recommendations"
+	size="large"
 />
 
 ## Technical Architecture and Infrastructure

@@ -1,0 +1,53 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+	src: ImageMetadata;
+	alt: string;
+	caption: string;
+}
+
+const { src, alt, caption } = Astro.props;
+---
+
+<figure>
+	<Image {src} {alt} />
+	<figcaption>{caption}</figcaption>
+</figure>
+
+<style>
+	figure {
+		width: min(18rem, calc(100vw - 3rem));
+		margin: 0;
+		padding: 0.75rem 0.75rem 1rem;
+		background: var(--surface);
+		box-shadow: 0 0.5rem 1.5rem var(--shadow);
+		text-align: center;
+		transform: rotate(-3deg);
+		transition:
+			box-shadow var(--transition),
+			transform var(--transition);
+	}
+
+	figure:hover {
+		box-shadow: 0 1rem 2rem var(--shadow);
+		transform: translateY(-0.5rem) rotate(2deg);
+	}
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	figcaption {
+		padding-top: 0.75rem;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		figure {
+			transition: none;
+		}
+	}
+</style>

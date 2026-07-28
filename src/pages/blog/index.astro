@@ -5,6 +5,7 @@ import InlineIcon from '../../components/shared/InlineIcon.astro';
 import ContentGrid from '../../components/shared/ContentGrid.astro';
 import PillButton from '../../components/shared/PillButton.astro';
 import MainLayout from '../../layouts/MainLayout.astro';
+import WorkInProgress from '../../components/shared/WorkInProgress.astro';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.date.getTime() - a.data.date.getTime()
@@ -28,7 +29,8 @@ const items = posts.map((post) => ({
 	</nav>
 	<section>
 		<h1>Blog</h1>
-		<ContentGrid items={items} />
+		<WorkInProgress />
+		<!-- <ContentGrid items={items} /> -->
 	</section>
 </MainLayout>
 

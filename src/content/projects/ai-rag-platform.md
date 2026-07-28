@@ -9,7 +9,6 @@ technologies:
   - docker
   - azure
   - python
-draft: false
 ---
 
 ## Overview

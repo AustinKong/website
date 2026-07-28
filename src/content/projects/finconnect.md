@@ -5,7 +5,6 @@ order: 3
 technologies:
   - express
   - nodejs
-draft: false
 ---
 
 ## Overview
