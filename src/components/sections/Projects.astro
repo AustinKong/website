@@ -17,9 +17,5 @@ const projects = (await getCollection('projects'))
 
 <section id="projects" class="home-section">
 	<h2>Selected projects</h2>
-	<ContentGrid
-		items={projects}
-		cardHeadingLevel={3}
-		limitOnSingleColumn
-	/>
+	<ContentGrid items={projects} cardHeadingLevel={3} />
 </section>

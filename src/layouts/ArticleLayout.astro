@@ -1,6 +1,7 @@
 ---
 import ArrowLeft from '../assets/arrow-left.svg';
 import ArrowTopRight from '../assets/arrow-top-right.svg';
+import ArrowUp from '../assets/arrow-up.svg';
 import GitHub from '../assets/icons/github.svg';
 import InlineIcon from '../components/shared/InlineIcon.astro';
 import PillButton from '../components/shared/PillButton.astro';
@@ -43,7 +44,7 @@ const linkIcons = {
 ---
 
 <MainLayout {title} {description} {navItems}>
-	<article class="section--narrow">
+	<article id="top" class="section--narrow">
 		<header>
 			<div class="article-actions">
 				<nav aria-label="Back">
@@ -73,6 +74,13 @@ const linkIcons = {
 		<div class="prose">
 			<slot />
 		</div>
+
+		<footer>
+			<PillButton href="#top" inverted>
+				<InlineIcon src={ArrowUp.src} />
+				Back to Top
+			</PillButton>
+		</footer>
 	</article>
 </MainLayout>
 
@@ -141,5 +149,9 @@ const linkIcons = {
 		flex: 0 0 auto;
 		width: auto !important;
 		max-width: none !important;
+	}
+
+	article > footer {
+		margin-top: 2rem;
 	}
 </style>

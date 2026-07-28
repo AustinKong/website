@@ -15,23 +15,13 @@ interface Item {
 interface Props {
 	items: Item[];
 	cardHeadingLevel?: 2 | 3;
-	limitOnSingleColumn?: boolean;
 }
 
-const {
-	items,
-	cardHeadingLevel = 2,
-	limitOnSingleColumn = false,
-} = Astro.props;
+const { items, cardHeadingLevel = 2 } = Astro.props;
 const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 ---
 
-<div
-	class:list={[
-		'content-grid',
-		{ 'content-grid--limited': limitOnSingleColumn },
-	]}
->
+<div class="content-grid">
 	{
 		items.map((item) => (
 			<article class="content-card">
@@ -103,9 +93,4 @@ const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 		margin: 0;
 	}
 
-	@media (max-width: 36rem) {
-		.content-grid--limited .content-card:nth-child(n + 4) {
-			display: none;
-		}
-	}
 </style>
