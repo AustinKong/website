@@ -8,6 +8,7 @@
 	"scripts": {
 		"dev": "astro dev",
 		"build": "astro build",
+		"deploy": "npm run build && wrangler deploy",
 		"preview": "astro preview",
 		"astro": "astro"
 	},
@@ -22,6 +23,7 @@
 	"devDependencies": {
 		"@types/matter-js": "^0.20.2",
 		"prettier": "^3.8.3",
-		"prettier-plugin-astro": "^0.14.1"
+		"prettier-plugin-astro": "^0.14.1",
+		"wrangler": "^4.114.0"
 	}
 }

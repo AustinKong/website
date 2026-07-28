@@ -43,29 +43,36 @@ Project case studies live in `src/content/projects`. Larger MDX case studies
 keep their images beside the content in a project-specific directory. Shared
 presentation components live in `src/components/shared`.
 
-## Hosting
+## Cloudflare deployment
 
-The site uses Astro's default static output, so it does not need a Node.js
-server in production.
+The site deploys to Cloudflare Workers as static assets. It does not need a
+Node.js server, the Astro Cloudflare adapter, or a Worker entrypoint.
 
-For Netlify, Vercel, Cloudflare Pages, or another Git-based static host, use:
-
-```text
-Build command: npm run build
-Publish directory: dist
-Node.js version: 22.12 or newer
-```
-
-To host it manually, build the site and upload the contents of `dist/` to any
-static web server:
+Install dependencies and log in to Cloudflare once:
 
 ```sh
 npm ci
-npm run build
+npx wrangler login
 ```
 
-Serve `dist/index.html` at the domain root and preserve the generated directory
-structure. No SPA fallback or server-side runtime is required.
+Then build and deploy:
 
-If deploying to a subdirectory instead of a domain root, set Astro's `base`
-option in `astro.config.mjs` before building.
+```sh
+npm run deploy
+```
+
+Wrangler creates or updates the Worker named `website` using `wrangler.jsonc`.
+The first deployment prints its `workers.dev` URL. To use a custom domain, open
+the Worker in the Cloudflare dashboard, then add it under **Settings → Domains &
+Routes**.
+
+For Cloudflare Git integration, import this repository as a Worker and use:
+
+```text
+Build command: npm run build
+Deploy command: npx wrangler deploy
+Node.js version: 22.12 or newer
+```
+
+Static output is written to `dist/`; Cloudflare serves the generated
+`404.html` for missing routes.
