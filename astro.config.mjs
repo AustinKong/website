@@ -1,8 +1,13 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import { unified } from '@astrojs/markdown-remark';
 import mermaid from 'astro-mermaid';
 
 export default defineConfig({
+	// Supposedly, mermaid library should support Astro 7 (https://github.com/joesaby/astro-mermaid/issues/71),
+	// but it doesn't work for me. This is a temporary workaround until it gets fixed.
+	// TODO: Remove @astrojs/markdown-remark library and prefer satteri engine once issue is fixed.
+	markdown: { processor: unified() },
 	image: {
 		layout: 'constrained',
 		responsiveStyles: true,
@@ -24,17 +29,23 @@ export default defineConfig({
 			options: {
 				variants: [
 					{
-						src: ['./src/assets/fonts/liberation-serif/LiberationSerif-Regular.ttf'],
+						src: [
+							'./src/assets/fonts/liberation-serif/LiberationSerif-Regular.ttf',
+						],
 						weight: 400,
 						style: 'normal',
 					},
 					{
-						src: ['./src/assets/fonts/liberation-serif/LiberationSerif-Italic.ttf'],
+						src: [
+							'./src/assets/fonts/liberation-serif/LiberationSerif-Italic.ttf',
+						],
 						weight: 400,
 						style: 'italic',
 					},
 					{
-						src: ['./src/assets/fonts/liberation-serif/LiberationSerif-Bold.ttf'],
+						src: [
+							'./src/assets/fonts/liberation-serif/LiberationSerif-Bold.ttf',
+						],
 						weight: 700,
 						style: 'normal',
 					},
@@ -62,4 +73,5 @@ export default defineConfig({
 			},
 		}),
 	],
+	compressHTML: true,
 });
