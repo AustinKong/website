@@ -1,3 +1,4 @@
+import airflow from '../assets/icons/airflow.svg';
 import azure from '../assets/icons/azure.svg';
 import csharp from '../assets/icons/csharp.svg';
 import docker from '../assets/icons/docker.svg';
@@ -7,9 +8,11 @@ import fastapi from '../assets/icons/fastapi.svg';
 import java from '../assets/icons/java.svg';
 import kubernetes from '../assets/icons/kubernetes.svg';
 import nodejs from '../assets/icons/nodejs.svg';
+import playwright from '../assets/icons/playwright.svg';
 import postgresql from '../assets/icons/postgresql.svg';
 import python from '../assets/icons/python.svg';
 import react from '../assets/icons/react.svg';
+import selenium from '../assets/icons/selenium.svg';
 import sql from '../assets/icons/sql.svg';
 import sqlServer from '../assets/icons/sql-server.svg';
 import sqlite from '../assets/icons/sqlite.svg';
@@ -18,6 +21,7 @@ import typescript from '../assets/icons/typescript.svg';
 import unity from '../assets/icons/unity.svg';
 
 export const technologies = {
+	airflow: { label: 'Apache Airflow', icon: airflow.src },
 	azure: { label: 'Azure', icon: azure.src },
 	csharp: { label: 'C#', icon: csharp.src },
 	docker: { label: 'Docker', icon: docker.src },
@@ -27,9 +31,11 @@ export const technologies = {
 	java: { label: 'Java', icon: java.src },
 	kubernetes: { label: 'Kubernetes', icon: kubernetes.src },
 	nodejs: { label: 'Node.js', icon: nodejs.src },
+	playwright: { label: 'Playwright', icon: playwright.src },
 	postgresql: { label: 'PostgreSQL', icon: postgresql.src },
 	python: { label: 'Python', icon: python.src },
 	react: { label: 'React', icon: react.src },
+	selenium: { label: 'Selenium', icon: selenium.src },
 	sql: { label: 'SQL', icon: sql.src },
 	'sql-server': { label: 'SQL Server', icon: sqlServer.src },
 	sqlite: { label: 'SQLite', icon: sqlite.src },
