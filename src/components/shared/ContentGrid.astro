@@ -10,6 +10,7 @@ interface Item {
 	image: ImageMetadata;
 	imageAlt: string;
 	stat?: string;
+	target?: '_blank';
 }
 
 interface Props {
@@ -25,7 +26,12 @@ const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 	{
 		items.map((item) => (
 			<article class="content-card">
-				<a class="content-card__link" href={item.href}>
+				<a
+					class="content-card__link"
+					href={item.href}
+					target={item.target}
+					rel={item.target && 'noreferrer'}
+				>
 					<div class="content-card__media">
 						<Image src={item.image} alt={item.imageAlt} width={480} />
 					</div>
@@ -70,7 +76,7 @@ const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 
 	.content-card__title {
 		min-width: 0;
-		margin-bottom: 0.25rem;
+		margin: 0;
 		text-decoration: underline;
 		text-decoration-color: transparent;
 		text-underline-offset: 0.18em;
@@ -82,6 +88,7 @@ const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
+		margin-bottom: 0.25rem;
 	}
 
 	.content-card__link:hover .content-card__title,
@@ -92,5 +99,4 @@ const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 	.content-card p {
 		margin: 0;
 	}
-
 </style>

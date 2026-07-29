@@ -1,18 +1,30 @@
 ---
 import { getCollection } from 'astro:content';
+import githubCard from '../../assets/github-card.png';
 import ContentGrid from '../shared/ContentGrid.astro';
 
-const projects = (await getCollection('projects'))
-	.filter((project) => project.data.cover)
-	.sort((a, b) => a.data.order - b.data.order)
-	.map((project) => ({
-		title: project.data.title,
-		description: project.data.description,
-		image: project.data.cover!,
-		imageAlt: `${project.data.title} cover`,
-		href: `/projects/${project.id.replace(/\/index$/, '')}`,
-		stat: project.data.stat,
-	}));
+const projects = [
+	...(await getCollection('projects'))
+		.filter((project) => project.data.cover)
+		.sort((a, b) => a.data.order - b.data.order)
+		.map((project) => ({
+			title: project.data.title,
+			description: project.data.description,
+			image: project.data.cover!,
+			imageAlt: `${project.data.title} cover`,
+			href: `/projects/${project.id.replace(/\/index$/, '')}`,
+			stat: project.data.stat,
+		})),
+	{
+		title: 'Other Projects',
+		description:
+			'Browse 30+ smaller builds, experiments, and tools beyond the selected projects featured here.',
+		image: githubCard,
+		imageAlt: 'GitHub logo displayed on a vintage computer',
+		href: 'https://github.com/AustinKong?tab=repositories',
+		target: '_blank' as const,
+	},
+];
 ---
 
 <section id="projects" class="home-section">
