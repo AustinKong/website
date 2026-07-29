@@ -1,0 +1,78 @@
+---
+import psaCodeSprint from '../../assets/recognition/psa-codesprint.jpeg';
+import sbsTransit from '../../assets/recognition/sbs-transit.jpeg';
+import visaSfyc from '../../assets/recognition/visa-sfyc.jpeg';
+import Laurel from '../shared/Laurel.astro';
+import Polaroid from '../shared/Polaroid.astro';
+---
+
+<section id="recognition" class="home-section">
+	<h2>Recognition</h2>
+	<ul>
+		<li>
+			<Polaroid
+				src={visaSfyc}
+				alt="The GlobeTrotter+ team at the Visa Innovation Centre Singapore"
+			>
+				<div class="caption">
+					<Laurel text="1st Place" />
+					Visa x SFYC Hackathon
+				</div>
+			</Polaroid>
+		</li>
+		<li>
+			<Polaroid
+				src={sbsTransit}
+				alt="The SBS Spotless team receiving the third-place prize"
+			>
+				<div class="caption">
+					<Laurel text="3rd Place" />
+					SBS Transit Hackathon
+				</div>
+			</Polaroid>
+		</li>
+		<li>
+			<Polaroid
+				src={psaCodeSprint}
+				alt="The PortWell team receiving the commendation prize"
+			>
+				<div class="caption">
+					<Laurel text="Commendation" />
+					PSA Code Sprint
+				</div>
+			</Polaroid>
+		</li>
+	</ul>
+</section>
+
+<style>
+	ul {
+		display: flex;
+		margin: 0;
+		padding: 0;
+		margin-top: 2rem;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 1.75rem;
+		list-style: none;
+	}
+
+	li:nth-child(3n + 1) {
+		--polaroid-rotation: -3deg;
+	}
+
+	li:nth-child(3n + 2) {
+		--polaroid-rotation: 2deg;
+	}
+
+	li:nth-child(3n) {
+		--polaroid-rotation: -1deg;
+	}
+
+	.caption {
+		display: grid;
+		justify-items: center;
+		gap: 0.25rem;
+		white-space: nowrap;
+	}
+</style>

@@ -4,11 +4,13 @@ import About from '../components/sections/About.astro';
 import Contact from '../components/sections/Contact.astro';
 import Experience from '../components/sections/Experience.astro';
 import Projects from '../components/sections/Projects.astro';
+import Recognition from '../components/sections/Recognition.astro';
 
 const navItems = [
 	{ label: 'About', href: '#about' },
 	{ label: 'Experience', href: '#experience' },
 	{ label: 'Projects', href: '#projects' },
+	{ label: 'Recognition', href: '#recognition' },
 	{ label: 'Contact', href: '#contact' },
 ];
 ---
@@ -21,6 +23,7 @@ const navItems = [
 	<About />
 	<Experience />
 	<Projects />
+	<Recognition />
 	<Contact />
 </MainLayout>
 

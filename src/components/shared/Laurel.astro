@@ -12,15 +12,23 @@ const { text } = Astro.props;
 
 <div class="laurel">
 	<InlineIcon src={laurelLeft.src} />
-	{text}
+	<span>{text}</span>
 	<InlineIcon src={laurelRight.src} />
 </div>
 
 <style>
 	.laurel {
 		display: inline-flex;
+		min-width: 0;
+		max-width: 100%;
 		align-items: center;
-		font-size: var(--font-size-small);
+		font-size: inherit;
 		gap: 0.1rem;
+	}
+
+	span {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 </style>

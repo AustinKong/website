@@ -38,7 +38,13 @@ const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 
 					<div class="content-card__heading">
 						<CardHeading class="content-card__title">{item.title}</CardHeading>
-						{item.stat && <Laurel text={item.stat} />}
+						{
+							item.stat && (
+								<div class="content-card__stat">
+									<Laurel text={item.stat} />
+								</div>
+							)
+						}
 					</div>
 					<p>{item.description}</p>
 				</a>
@@ -75,12 +81,16 @@ const CardHeading = cardHeadingLevel === 2 ? 'h2' : 'h3';
 	}
 
 	.content-card__title {
-		min-width: 0;
+		flex-shrink: 0;
 		margin: 0;
 		text-decoration: underline;
 		text-decoration-color: transparent;
 		text-underline-offset: 0.18em;
 		transition: text-decoration-color var(--transition);
+	}
+
+	.content-card__stat {
+		min-width: 0;
 	}
 
 	.content-card__heading {
