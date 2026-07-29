@@ -10,6 +10,50 @@ interface Sprite {
 }
 
 const WALL_SIZE = 100;
+const TRASH_WALL_SIZE = 8;
+
+interface TrashRect {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+}
+
+interface TrashPart extends TrashRect {
+	x: number;
+	y: number;
+}
+
+export function getTrashGeometry(rect: TrashRect, wall = TRASH_WALL_SIZE) {
+	const sensorHeight = (rect.height - wall) / 1.2;
+
+	return {
+		left: {
+			x: rect.x + wall / 2,
+			y: rect.y + rect.height / 2,
+			width: wall,
+			height: rect.height,
+		},
+		right: {
+			x: rect.x + rect.width - wall / 2,
+			y: rect.y + rect.height / 2,
+			width: wall,
+			height: rect.height,
+		},
+		bottom: {
+			x: rect.x + rect.width / 2,
+			y: rect.y + rect.height - wall / 2,
+			width: rect.width,
+			height: wall,
+		},
+		sensor: {
+			x: rect.x + rect.width / 2,
+			y: rect.y + rect.height - wall - sensorHeight / 2,
+			width: rect.width - wall * 2,
+			height: sensorHeight,
+		},
+	} satisfies Record<'left' | 'right' | 'bottom' | 'sensor', TrashPart>;
+}
 
 type MatterMouse = Mouse & {
 	mousedown: EventListener;
@@ -25,6 +69,9 @@ class PhysicsManager {
 	private layer: HTMLDivElement | null = null;
 	private boundaries: Body[] = [];
 	private sprites: Sprite[] = [];
+	private trashElement: HTMLElement | null = null;
+	private trashColliders: Body[] = [];
+	private trashSensor: Body | null = null;
 
 	private preservePageInput(mouse: Mouse, physicsLayer: HTMLElement): void {
 		const handlers = mouse as MatterMouse;
@@ -117,6 +164,79 @@ class PhysicsManager {
 		}
 	};
 
+	private syncTrash = (): void => {
+		if (!this.matter || !this.engine || !this.main || !this.trashElement)
+			return;
+
+		const mainRect = this.main.getBoundingClientRect();
+		const trashRect = this.trashElement.getBoundingClientRect();
+		const geometry = getTrashGeometry({
+			x: trashRect.left - mainRect.left,
+			y: trashRect.top - mainRect.top,
+			width: trashRect.width,
+			height: trashRect.height,
+		});
+		const colliderOptions = {
+			isStatic: true,
+			render: { visible: false },
+		};
+
+		this.matter.Composite.remove(this.engine.world, this.trashColliders);
+		if (this.trashSensor) {
+			this.matter.Composite.remove(this.engine.world, this.trashSensor);
+		}
+
+		this.trashColliders = [geometry.left, geometry.right, geometry.bottom].map(
+			({ x, y, width, height }) =>
+				this.matter!.Bodies.rectangle(x, y, width, height, colliderOptions)
+		);
+		this.trashSensor = this.matter.Bodies.rectangle(
+			geometry.sensor.x,
+			geometry.sensor.y,
+			geometry.sensor.width,
+			geometry.sensor.height,
+			{
+				isStatic: true,
+				isSensor: true,
+				render: { visible: false },
+			}
+		);
+		this.matter.Composite.add(this.engine.world, [
+			...this.trashColliders,
+			this.trashSensor,
+		]);
+	};
+
+	private collectTrash = (event: {
+		pairs: { bodyA: Body; bodyB: Body }[];
+	}): void => {
+		if (!this.matter || !this.engine || !this.trashSensor) return;
+
+		for (const { bodyA, bodyB } of event.pairs) {
+			const body =
+				bodyA === this.trashSensor
+					? bodyB
+					: bodyB === this.trashSensor
+						? bodyA
+						: null;
+			if (
+				!body ||
+				!this.matter.Bounds.contains(this.trashSensor.bounds, body.position)
+			)
+				continue;
+			const index = this.sprites.findIndex((sprite) => sprite.body === body);
+			if (index < 0) continue;
+
+			const [sprite] = this.sprites.splice(index, 1);
+			this.matter.Composite.remove(this.engine.world, sprite.body);
+			sprite.element.remove();
+		}
+
+		if (this.sprites.length === 0) {
+			this.trashElement?.removeAttribute('data-active');
+		}
+	};
+
 	private async ensureReady(main: HTMLElement): Promise<void> {
 		if (this.engine) return;
 
@@ -132,6 +252,7 @@ class PhysicsManager {
 		this.engine = engine;
 		this.main = main;
 		this.layer = layer;
+		this.trashElement = main.querySelector('[data-physics-trash]');
 
 		const mouse = Matter.Mouse.create(main);
 		this.preservePageInput(mouse, layer);
@@ -146,9 +267,12 @@ class PhysicsManager {
 
 		Matter.Composite.add(engine.world, mouseConstraint);
 		Matter.Events.on(engine, 'afterUpdate', this.syncSprites);
+		Matter.Events.on(engine, 'collisionActive', this.collectTrash);
 		Matter.Runner.run(runner, engine);
 		new ResizeObserver(this.syncBounds).observe(main);
+		window.addEventListener('scroll', this.syncTrash, { passive: true });
 		this.syncBounds();
+		this.syncTrash();
 	}
 
 	public async activate(trigger: HTMLElement): Promise<void> {
@@ -196,6 +320,7 @@ class PhysicsManager {
 		this.sprites.push(sprite);
 		this.matter.Composite.add(this.engine.world, body);
 		this.matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.08);
+		this.trashElement?.setAttribute('data-active', 'true');
 		this.syncSprites();
 
 		trigger.dataset.activated = 'true';

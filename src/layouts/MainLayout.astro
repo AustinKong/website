@@ -1,6 +1,7 @@
 ---
 import { Font } from 'astro:assets';
 import Navbar from '../components/Navbar.astro';
+import TrashCan from '../components/shared/TrashCan.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -34,12 +35,13 @@ const documentTitle = title === 'Austin Kong' ? title : `Austin Kong | ${title}`
 		<title>{documentTitle}</title>
 	</head>
 	<body>
-		<div class="site-shell">
-			<Navbar items={navItems} />
-			<main>
-				<slot />
-			</main>
-		</div>
+			<div class="site-shell">
+				<Navbar items={navItems} />
+				<main>
+					<slot />
+					<TrashCan />
+				</main>
+			</div>
 	</body>
 </html>
 

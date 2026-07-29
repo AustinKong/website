@@ -1,4 +1,5 @@
 ---
+import ArrowLeft from '../../assets/arrow-left.svg';
 import arrowIcon from '../../assets/arrow-top-right.svg';
 import gic from '../../assets/experience/gic.png';
 import nus from '../../assets/experience/nus.png';
@@ -6,6 +7,7 @@ import psa from '../../assets/experience/psa.png';
 import InlineIcon from '../shared/InlineIcon.astro';
 import PillButton from '../shared/PillButton.astro';
 import TechnologyList from '../shared/TechnologyList.astro';
+import WaveText from '../shared/WaveText.astro';
 ---
 
 <section id="experience" class="home-section section--narrow">
@@ -36,7 +38,11 @@ import TechnologyList from '../shared/TechnologyList.astro';
 				through Java-based programming exercises and developing algorithmic
 				thinking.
 			</p>
-			<TechnologyList technologies={['java']} />
+			<TechnologyList technologies={['java']}>
+				<WaveText text=" Psst, click me!">
+					<InlineIcon slot="start" src={ArrowLeft.src} inheritColor />
+				</WaveText>
+			</TechnologyList>
 		</li>
 
 		<li>

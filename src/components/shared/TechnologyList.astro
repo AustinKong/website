@@ -11,6 +11,7 @@ const { technologies } = Astro.props;
 
 <div role="group" aria-label="Technologies used">
 	{technologies.map((technology) => <TechTag {technology} />)}
+	<slot />
 </div>
 
 <style>

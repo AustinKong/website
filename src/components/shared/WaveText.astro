@@ -1,0 +1,83 @@
+---
+interface Props {
+	text: string;
+}
+
+const { text } = Astro.props;
+const hasStart = Astro.slots.has('start');
+const offset = Number(hasStart);
+const letters = [...text];
+---
+
+<span class="wave-text" aria-label={text}>
+	{
+		hasStart && (
+			<span
+				class="wave-text__letter"
+				style="--letter-index: 0"
+				aria-hidden="true"
+			>
+				<slot name="start" />
+			</span>
+		)
+	}
+	{
+		letters.map((letter, index) => (
+			<span
+				class="wave-text__letter"
+				style={`--letter-index: ${index + offset}`}
+				aria-hidden="true"
+			>
+				{letter === ' ' ? '\u00a0' : letter}
+			</span>
+		))
+	}
+	{
+		Astro.slots.has('end') && (
+			<span
+				class="wave-text__letter"
+				style={`--letter-index: ${letters.length + offset}`}
+				aria-hidden="true"
+			>
+				<slot name="end" />
+			</span>
+		)
+	}
+</span>
+
+<style>
+	.wave-text,
+	.wave-text__letter {
+		display: inline-block;
+		selection: none;
+	}
+
+	.wave-text {
+		align-self: center;
+		color: var(--muted);
+		font-size: var(--font-size-small);
+	}
+
+	.wave-text__letter {
+		animation: wave 2.4s ease-in-out infinite;
+		animation-delay: calc(var(--letter-index) * 60ms);
+	}
+
+	@keyframes wave {
+		0%,
+		20%,
+		100% {
+			transform: translateY(0);
+		}
+
+		10% {
+			transform: translateY(-0.12em);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.wave-text__letter {
+			animation: none;
+		}
+	}
+</style>

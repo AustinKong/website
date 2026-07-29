@@ -2,15 +2,29 @@
 interface Props {
 	src: string;
 	alt?: string;
+	inheritColor?: boolean;
 }
 
-const { src, alt = '' } = Astro.props;
+const { src, alt = '', inheritColor = false } = Astro.props;
 ---
 
-<img {src} {alt} width="16" height="16" draggable="false" />
+{
+	inheritColor ? (
+		<span
+			class="inherit-color"
+			style={`--icon: url("${src}")`}
+			role={alt ? 'img' : undefined}
+			aria-label={alt || undefined}
+			aria-hidden={!alt}
+		/>
+	) : (
+		<img {src} {alt} width="16" height="16" draggable="false" />
+	)
+}
 
 <style>
-	img {
+	img,
+	.inherit-color {
 		display: inline-block;
 		width: 1em;
 		height: 1em;
@@ -18,5 +32,10 @@ const { src, alt = '' } = Astro.props;
 		object-fit: contain;
 		vertical-align: -0.13em;
 		-webkit-user-drag: none;
+	}
+
+	.inherit-color {
+		background: currentColor;
+		mask: var(--icon) center / contain no-repeat;
 	}
 </style>

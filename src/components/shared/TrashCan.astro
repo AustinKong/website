@@ -1,0 +1,55 @@
+---
+import { Image } from 'astro:assets';
+import ArrowRight from '../../assets/arrow-right.svg';
+import trashCan from '../../assets/trash-can.png';
+import InlineIcon from './InlineIcon.astro';
+import WaveText from './WaveText.astro';
+---
+
+<div class="trash-can" data-physics-trash aria-hidden="true">
+	<div class="trash-can__hint">
+		<WaveText text="Clean up after yourself! ">
+			<InlineIcon slot="end" src={ArrowRight.src} inheritColor />
+		</WaveText>
+	</div>
+	<Image class="trash-can__image" src={trashCan} alt="" width={80} />
+</div>
+
+<style>
+	.trash-can {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		width: 5rem;
+		pointer-events: none;
+	}
+
+	.trash-can__hint,
+	.trash-can :global(.trash-can__image) {
+		opacity: 0;
+		transition: opacity var(--transition);
+	}
+
+	.trash-can[data-active='true'] .trash-can__hint,
+	.trash-can[data-active='true'] :global(.trash-can__image) {
+		opacity: 1;
+	}
+
+	.trash-can__hint {
+		position: absolute;
+		z-index: 0;
+		top: 50%;
+		right: calc(100% + 0.5rem);
+		width: max-content;
+		transform: translateY(-50%);
+		white-space: nowrap;
+	}
+
+	.trash-can :global(.trash-can__image) {
+		position: relative;
+		z-index: 20;
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+</style>
