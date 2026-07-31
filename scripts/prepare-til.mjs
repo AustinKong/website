@@ -2,7 +2,7 @@ import { access, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
-import { createExcalidrawRenderer } from './lib/excalidraw-renderer.mjs';
+import { createExcalidrawRenderer } from './excalidraw/renderer.mjs';
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.join(scriptDirectory, '..');

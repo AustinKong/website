@@ -4,7 +4,7 @@ import process from 'node:process';
 import {
 	createExcalidrawRenderer,
 	defaultExportOptions,
-} from './lib/excalidraw-renderer.mjs';
+} from './excalidraw/renderer.mjs';
 
 function printUsage() {
 	console.error(

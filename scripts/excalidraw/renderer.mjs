@@ -4,10 +4,9 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { createServer } from 'vite';
 
-const libraryDirectory = path.dirname(fileURLToPath(import.meta.url));
-const scriptsDirectory = path.join(libraryDirectory, '..');
+const rendererRoot = path.dirname(fileURLToPath(import.meta.url));
+const scriptsDirectory = path.join(rendererRoot, '..');
 const projectRoot = path.join(scriptsDirectory, '..');
-const rendererRoot = path.join(scriptsDirectory, 'excalidraw-renderer');
 const excalidrawAssets = path.join(
 	projectRoot,
 	'node_modules',

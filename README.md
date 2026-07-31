@@ -61,6 +61,12 @@ npm run export:excalidraw -- input.excalidraw output.svg
 Run `npx playwright install chromium` once after installing dependencies if
 Chromium is not already available.
 
+The Excalidraw implementation is grouped under `scripts/excalidraw/`:
+`renderer.mjs` owns the Node, Vite, and Playwright lifecycle, while
+`browser.js` and `index.html` form the browser context that calls Excalidraw's
+official export API. The top-level `export-excalidraw.mjs` and
+`prepare-til.mjs` files are the user-facing single-file and batch commands.
+
 ## Project structure
 
 ```text
