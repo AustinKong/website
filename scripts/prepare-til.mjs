@@ -1,4 +1,11 @@
-import { access, readdir, rename, rm, writeFile } from 'node:fs/promises';
+import {
+	access,
+	mkdir,
+	readdir,
+	rename,
+	rm,
+	writeFile,
+} from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -10,7 +17,7 @@ const sourceRoot = path.resolve(
 	process.env.TIL_CONTENT_DIR ??
 		path.join(projectRoot, '..', 'today-i-learned', 'notes')
 );
-const generatedSuffix = '.generated.svg';
+const outputRoot = path.join(projectRoot, '.generated', 'til-assets');
 
 async function pathExists(candidate) {
 	try {
@@ -46,18 +53,8 @@ async function prepareTilAssets() {
 	const sources = files
 		.filter((file) => file.toLowerCase().endsWith('.excalidraw'))
 		.sort();
-	const generated = files.filter((file) =>
-		file.toLowerCase().endsWith(generatedSuffix)
-	);
-	const expectedOutputs = new Set(
-		sources.map((file) => file.replace(/\.excalidraw$/i, generatedSuffix))
-	);
 
-	for (const generatedFile of generated) {
-		if (!expectedOutputs.has(generatedFile)) {
-			await rm(generatedFile);
-		}
-	}
+	await rm(outputRoot, { recursive: true, force: true });
 
 	if (sources.length === 0) {
 		console.log('No Excalidraw sources found.');
@@ -68,10 +65,13 @@ async function prepareTilAssets() {
 
 	try {
 		for (const [index, input] of sources.entries()) {
-			const output = input.replace(/\.excalidraw$/i, generatedSuffix);
+			const output = path
+				.join(outputRoot, path.relative(sourceRoot, input))
+				.replace(/\.excalidraw$/i, '.svg');
 			const temporaryOutput = `${output}.tmp`;
 			const svg = await renderer.renderFile(input);
 
+			await mkdir(path.dirname(output), { recursive: true });
 			await writeFile(temporaryOutput, svg, 'utf8');
 			await rename(temporaryOutput, output);
 			console.log(

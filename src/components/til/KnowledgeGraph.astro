@@ -105,15 +105,22 @@ const clientGraph = {
 				layout: {
 					name: 'cose',
 					animate: false,
-					componentSpacing: 30,
-					idealEdgeLength: 30,
-					nodeRepulsion: 300,
-					nodeOverlap: 24,
+					componentSpacing: 60,
+					idealEdgeLength: 90,
+					nodeRepulsion: 6000,
+					nodeOverlap: 12,
 					nodeDimensionsIncludeLabels: true,
-					gravity: 0.55,
-					padding: 24,
+					gravity: 0.8,
+					numIter: 1500,
+					padding: 40,
 				},
 				style: [
+					{
+						selector: 'core',
+						style: {
+							'active-bg-opacity': 0,
+						},
+					},
 					{
 						selector: 'node',
 						style: {
@@ -128,7 +135,9 @@ const clientGraph = {
 							'text-background-color': background,
 							'text-background-padding': '3',
 							'text-margin-y': 8,
+							'text-max-width': 100,
 							'text-valign': 'bottom',
+							'text-wrap': 'wrap',
 							width: 16,
 						},
 					},
@@ -147,6 +156,12 @@ const clientGraph = {
 						},
 					},
 					{
+						selector: ':active',
+						style: {
+							'overlay-opacity': 0,
+						},
+					},
+					{
 						selector: 'node.focused',
 						style: {
 							'border-width': 3,
@@ -155,7 +170,7 @@ const clientGraph = {
 						},
 					},
 				],
-				minZoom: 0.5,
+				minZoom: 0.65,
 				maxZoom: 2,
 			});
 

@@ -6,16 +6,11 @@
 		"node": ">=22.12.0"
 	},
 	"scripts": {
-		"predev": "npm run prepare:til",
-		"dev": "astro dev",
-		"prebuild": "npm run prepare:til",
-		"build": "astro build",
+		"dev": "node scripts/prepare-til.mjs && node scripts/build-til-graph.mjs && astro dev",
+		"build": "node scripts/prepare-til.mjs && node scripts/build-til-graph.mjs && astro build",
 		"deploy": "npm run build && wrangler deploy",
-		"build:til-graph": "node scripts/build-til-graph.mjs",
 		"export:excalidraw": "node scripts/export-excalidraw.mjs",
-		"prepare:til": "node scripts/prepare-til.mjs && node scripts/build-til-graph.mjs",
-		"preview": "astro preview",
-		"astro": "astro"
+		"preview": "astro preview"
 	},
 	"dependencies": {
 		"@astrojs/markdown-remark": "^7.2.2",

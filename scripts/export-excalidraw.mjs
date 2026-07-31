@@ -12,7 +12,7 @@ function printUsage() {
 			'Usage: npm run export:excalidraw -- <input.excalidraw> [output.svg]',
 			'',
 			'Options:',
-			'  --background       Use the website surface background (default)',
+			'  --background       Use a white background (default)',
 			'  --no-background    Export with a transparent background',
 			'  --theme <theme>    Export theme: light or dark (default: light)',
 			'  --padding <pixels> Export padding in pixels (default: 40)',

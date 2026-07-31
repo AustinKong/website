@@ -23,7 +23,6 @@ Other useful commands:
 ```sh
 npm run build    # Generate the production site in dist/
 npm run preview  # Preview the production build locally
-npm run astro    # Run the Astro CLI
 ```
 
 The TIL repository is expected at `../today-i-learned` for local development.
@@ -35,15 +34,11 @@ TIL Markdown is loaded directly from the separate `today-i-learned` repository.
 Nothing is copied into this repository. Only `notes/**/index.md` files are
 published; other Markdown files are ignored. Notes provide `title` and
 `category` frontmatter, and `.excalidraw` image references are rewritten to
-temporary `.generated.svg` files during Markdown rendering.
+SVGs under `website/.generated/til-assets` during Markdown rendering. The TIL
+repository remains read-only during this process.
 
-`npm run dev` and `npm run build` automatically generate those ignored SVG
-files through the official Excalidraw renderer in headless Chromium. Run the
-preparation step directly with:
-
-```sh
-npm run prepare:til
-```
+`npm run dev` and `npm run build` automatically generate those ignored SVGs
+through the official Excalidraw renderer in headless Chromium.
 
 Export any individual Excalidraw source with:
 
@@ -65,25 +60,19 @@ The Excalidraw implementation is grouped under `scripts/excalidraw/`:
 `renderer.mjs` owns the Node, Vite, and Playwright lifecycle, while
 `browser.js` and `index.html` form the browser context that calls Excalidraw's
 official export API. The top-level `export-excalidraw.mjs` and
-`prepare-til.mjs` files are the user-facing single-file and batch commands.
+`prepare-til.mjs` files handle single-file and build-time batch exports.
 
 ### TIL knowledge graph
 
-The `/til` page renders an interactive Cytoscape graph. Generate its data from
-TIL notes with:
-
-```sh
-npm run build:til-graph
-```
-
-The command treats every `notes/**/index.md` as a node and every
+The `/til` page renders an interactive Cytoscape graph. Graph data is generated
+automatically by `npm run dev` and `npm run build`. The generator treats every
+`notes/**/index.md` as a node and every
 `[[Note Title]]` wiki-link as a directed edge. It writes the deterministic
 result to `.generated/til-graph.json`. Duplicate note titles and links to
 unknown notes fail the command. The graph builder treats every
 `[[Note Title]]` occurrence as an edge, including occurrences inside code
-blocks or comments. `prepare:til` runs this automatically before local
-development and production builds. In article prose, wiki-links render as
-underlined links to the corresponding TIL page. Use
+blocks or comments. In article prose, wiki-links render as underlined links to
+the corresponding TIL page. Use
 `[[Note Title|natural link text]]` when the surrounding sentence needs a
 different label.
 
