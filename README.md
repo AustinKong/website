@@ -26,6 +26,41 @@ npm run preview  # Preview the production build locally
 npm run astro    # Run the Astro CLI
 ```
 
+The TIL repository is expected at `../today-i-learned` for local development.
+Set `TIL_CONTENT_DIR` to its `notes` directory if it lives elsewhere.
+
+### TIL and Excalidraw
+
+TIL Markdown is loaded directly from the separate `today-i-learned` repository.
+Nothing is copied into this repository. Only `notes/**/index.md` files are
+published; other Markdown files are ignored. Notes provide `title` and
+`category` frontmatter, and `.excalidraw` image references are rewritten to
+temporary `.generated.svg` files during Markdown rendering.
+
+`npm run dev` and `npm run build` automatically generate those ignored SVG
+files through the official Excalidraw renderer in headless Chromium. Run the
+preparation step directly with:
+
+```sh
+npm run prepare:til
+```
+
+Export any individual Excalidraw source with:
+
+```sh
+npm run export:excalidraw -- path/to/diagram.excalidraw
+```
+
+The SVG is written beside the source file by default. Pass a second path to
+choose another destination:
+
+```sh
+npm run export:excalidraw -- input.excalidraw output.svg
+```
+
+Run `npx playwright install chromium` once after installing dependencies if
+Chromium is not already available.
+
 ## Project structure
 
 ```text
@@ -66,13 +101,16 @@ The first deployment prints its `workers.dev` URL. To use a custom domain, open
 the Worker in the Cloudflare dashboard, then add it under **Settings → Domains &
 Routes**.
 
-For Cloudflare Git integration, import this repository as a Worker and use:
+Production deployment runs through `.github/workflows/deploy.yml` instead of
+Cloudflare Git integration. The workflow checks out both repositories, builds
+inside the version-matched Playwright container, and deploys with Wrangler.
+Configure `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as secrets in the
+website repository.
 
-```text
-Build command: npm run build
-Deploy command: npx wrangler deploy
-Node.js version: 22.12 or newer
-```
+TIL pushes request a deployment through a `repository_dispatch` event.
+Configure a fine-grained token limited to the website repository with
+`Contents: write` permission as `WEBSITE_DISPATCH_TOKEN` in the TIL repository.
+Website pushes and manual workflow runs also deploy production.
 
 Static output is written to `dist/`; Cloudflare serves the generated
 `404.html` for missing routes.

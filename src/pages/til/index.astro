@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import ArrowLeft from '../../assets/arrow-left.svg';
+import InlineIcon from '../../components/shared/InlineIcon.astro';
+import PillButton from '../../components/shared/PillButton.astro';
+import MainLayout from '../../layouts/MainLayout.astro';
+
+const notes = (await getCollection('til')).sort((a, b) =>
+	a.data.title.localeCompare(b.data.title)
+);
+
+const categories = [...Map.groupBy(notes, (note) => note.data.category)].sort(
+	([left], [right]) => left.localeCompare(right)
+);
+---
+
+<MainLayout
+	title="Today I Learned"
+	description="Short technical notes and explanations by Austin Kong."
+>
+	<div class="section--narrow">
+		<nav aria-label="Back">
+			<PillButton href="/" inverted>
+				<InlineIcon src={ArrowLeft.src} />
+				Home
+			</PillButton>
+		</nav>
+
+		<header>
+			<h1>Today I Learned</h1>
+			<p>Short technical notes and explanations.</p>
+		</header>
+
+		<div class="categories">
+			{categories.map(([category, categoryNotes]) => (
+				<section>
+					<h2>{category}</h2>
+					<ul>
+						{categoryNotes.map((note) => (
+							<li>
+								<a href={`/til/${note.id}`}>
+									<span>{note.data.title}</span>
+								</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			))}
+		</div>
+	</div>
+</MainLayout>
+
+<style>
+	nav,
+	header {
+		margin-bottom: 2rem;
+	}
+
+	header p,
+	.empty-state {
+		color: var(--muted);
+	}
+
+	.categories {
+		display: grid;
+		gap: 3rem;
+	}
+
+	ul {
+		display: grid;
+		margin: 0;
+		padding: 0;
+		gap: 1rem;
+		list-style: none;
+	}
+
+	li a {
+		display: grid;
+		gap: 0.25rem;
+		text-decoration: none;
+	}
+
+	li a span {
+		text-decoration: underline;
+		text-decoration-color: transparent;
+		text-underline-offset: 0.18em;
+		transition: text-decoration-color var(--transition);
+	}
+
+	li a:hover span,
+	li a:focus-visible span {
+		text-decoration-color: currentColor;
+	}
+</style>

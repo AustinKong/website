@@ -3,6 +3,9 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import { technologyKeys } from './data/technologies';
 
+const tilContentDirectory =
+	process.env.TIL_CONTENT_DIR ?? '../today-i-learned/notes';
+
 const blog = defineCollection({
 	loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
 	schema: ({ image }) =>
@@ -15,14 +18,27 @@ const blog = defineCollection({
 		}),
 });
 
+const til = defineCollection({
+	loader: glob({
+		pattern: '**/index.md',
+		base: tilContentDirectory,
+		generateId: ({ entry }) =>
+			entry.replace(/[/\\]index\.md$/i, '').replaceAll('\\', '/'),
+	}),
+	schema: z.object({
+		title: z.string(),
+		category: z.string(),
+	}),
+});
+
 const projects = defineCollection({
 	loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
 	schema: ({ image }) =>
 		z.object({
-		title: z.string(),
-		description: z.string(),
-		stat: z.string().optional(),
-		order: z.number(),
+			title: z.string(),
+			description: z.string(),
+			stat: z.string().optional(),
+			order: z.number(),
 			cover: image().optional(),
 			technologies: z.array(z.enum(technologyKeys)),
 			links: z
@@ -40,5 +56,6 @@ const projects = defineCollection({
 
 export const collections = {
 	blog,
+	til,
 	projects,
 };

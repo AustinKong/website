@@ -1,0 +1,59 @@
+name: Deploy website
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [til-updated]
+  workflow_dispatch:
+    inputs:
+      til_ref:
+        description: TIL branch, tag, or commit to deploy
+        required: false
+        default: main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: website-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.0-noble
+      options: --user 1001
+    env:
+      TIL_CONTENT_DIR: ./vendor/today-i-learned/notes
+
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v6
+
+      - name: Check out TIL content
+        uses: actions/checkout@v6
+        with:
+          repository: AustinKong/today-i-learned
+          ref: ${{ github.event.client_payload.sha || inputs.til_ref || 'main' }}
+          path: vendor/today-i-learned
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build website
+        run: npm run build
+
+      - name: Deploy to Cloudflare
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
