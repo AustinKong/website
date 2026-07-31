@@ -137,6 +137,25 @@ const linkIcons = {
 		height: auto;
 	}
 
+	.prose :global(table) {
+		display: block;
+		width: 100%;
+		margin: 1.5rem 0;
+		overflow-x: auto;
+		border-collapse: collapse;
+	}
+
+	.prose :global(:is(th, td)) {
+		padding: 0.65rem 0.75rem;
+		border: 1px solid var(--subtle);
+		vertical-align: top;
+	}
+
+	.prose :global(th) {
+		background: var(--surface);
+		text-align: left;
+	}
+
 	.prose :global(pre) {
 		overflow-x: auto;
 		padding: 1rem;
