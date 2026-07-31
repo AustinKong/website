@@ -3,13 +3,16 @@ import mdx from '@astrojs/mdx';
 import { unified } from '@astrojs/markdown-remark';
 import mermaid from 'astro-mermaid';
 import remarkExcalidraw from './src/markdown/remark-excalidraw.mjs';
+import remarkWikiLinks from './src/markdown/remark-wiki-links.mjs';
 
 export default defineConfig({
 	// Supposedly, mermaid library should support Astro 7 (https://github.com/joesaby/astro-mermaid/issues/71),
 	// but it doesn't work for me. This is a temporary workaround until it gets fixed.
 	// TODO: Remove @astrojs/markdown-remark library and prefer satteri engine once issue is fixed.
 	markdown: {
-		processor: unified({ remarkPlugins: [remarkExcalidraw] }),
+		processor: unified({
+			remarkPlugins: [remarkExcalidraw, remarkWikiLinks],
+		}),
 	},
 	image: {
 		layout: 'constrained',

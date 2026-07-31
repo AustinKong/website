@@ -1,0 +1,225 @@
+---
+interface GraphNode {
+	id: string;
+	title: string;
+	category: string;
+	href: string;
+}
+
+interface GraphEdge {
+	source: string;
+	target: string;
+}
+
+interface Props {
+	graph: {
+		version: number;
+		nodes: GraphNode[];
+		edges: GraphEdge[];
+	};
+}
+
+const { graph } = Astro.props;
+const colors = ['#b8d4ee', '#f3d374', '#b8dfc2', '#e4b8d8', '#efb99f'];
+const categories = [
+	...new Set(graph.nodes.map(({ category }) => category)),
+].sort();
+const categoryColors = new Map(
+	categories.map((category, index) => [category, colors[index % colors.length]])
+);
+const clientGraph = {
+	nodes: graph.nodes.map((node) => ({
+		...node,
+		color: categoryColors.get(node.category),
+	})),
+	edges: graph.edges,
+};
+---
+
+<section class="knowledge-graph" aria-label="Knowledge graph">
+	<div
+		class="knowledge-graph__canvas"
+		data-knowledge-graph={JSON.stringify(clientGraph)}
+		aria-hidden="true"
+	>
+	</div>
+
+	<ul class="knowledge-graph__legend" aria-label="Categories">
+		{
+			categories.map((category) => (
+				<li>
+					<span
+						class="knowledge-graph__swatch"
+						style={`--category-color: ${categoryColors.get(category)}`}
+					/>
+					{category}
+				</li>
+			))
+		}
+	</ul>
+</section>
+
+<script>
+	import cytoscape, { type EventObjectNode } from 'cytoscape';
+
+	interface ClientNode {
+		id: string;
+		title: string;
+		href: string;
+		color: string;
+	}
+
+	interface ClientEdge {
+		source: string;
+		target: string;
+	}
+
+	interface ClientGraph {
+		nodes: ClientNode[];
+		edges: ClientEdge[];
+	}
+
+	document
+		.querySelectorAll<HTMLElement>('[data-knowledge-graph]')
+		.forEach((container) => {
+			const graph = JSON.parse(
+				container.dataset.knowledgeGraph ?? ''
+			) as ClientGraph;
+			const elements = [
+				...graph.nodes.map((node) => ({ data: node })),
+				...graph.edges.map((edge, index) => ({
+					data: {
+						id: `${edge.source}:${edge.target}:${index}`,
+						...edge,
+					},
+				})),
+			];
+			const styles = getComputedStyle(document.documentElement);
+			const foreground = styles.getPropertyValue('--foreground').trim();
+			const muted = styles.getPropertyValue('--muted').trim();
+			const background = styles.getPropertyValue('--surface').trim();
+
+			const cy = cytoscape({
+				container,
+				elements,
+				layout: {
+					name: 'cose',
+					animate: false,
+					componentSpacing: 30,
+					idealEdgeLength: 30,
+					nodeRepulsion: 300,
+					nodeOverlap: 24,
+					nodeDimensionsIncludeLabels: true,
+					gravity: 0.55,
+					padding: 24,
+				},
+				style: [
+					{
+						selector: 'node',
+						style: {
+							'background-color': 'data(color)',
+							'border-color': foreground,
+							'border-width': 1,
+							color: foreground,
+							'font-family': 'var(--font-sans)',
+							'font-size': 11,
+							height: 16,
+							label: 'data(title)',
+							'text-background-color': background,
+							'text-background-padding': '3',
+							'text-margin-y': 8,
+							'text-valign': 'bottom',
+							width: 16,
+						},
+					},
+					{
+						selector: 'edge',
+						style: {
+							'curve-style': 'straight',
+							'line-color': muted,
+							width: 1,
+						},
+					},
+					{
+						selector: '.dimmed',
+						style: {
+							opacity: 0.3,
+						},
+					},
+					{
+						selector: 'node.focused',
+						style: {
+							'border-width': 3,
+							height: 20,
+							width: 20,
+						},
+					},
+				],
+				minZoom: 0.5,
+				maxZoom: 2,
+			});
+
+			cy.on('mouseover', 'node', ({ target }: EventObjectNode) => {
+				cy.elements().addClass('dimmed');
+				target.closedNeighborhood().removeClass('dimmed');
+				target.addClass('focused');
+				container.style.cursor = 'pointer';
+			});
+
+			cy.on('mouseout', 'node', () => {
+				cy.elements().removeClass('dimmed focused');
+				container.style.cursor = '';
+			});
+
+			cy.on('tap', 'node', ({ target }: EventObjectNode) => {
+				window.location.assign(target.data('href'));
+			});
+		});
+</script>
+
+<style>
+	.knowledge-graph {
+		width: 100%;
+		min-width: 0;
+		max-width: 100%;
+		margin-bottom: 4rem;
+	}
+
+	.knowledge-graph__legend {
+		display: flex;
+		margin: 1rem 0 0;
+		padding: 0;
+		flex-wrap: wrap;
+		gap: 0.3rem 1rem;
+		list-style: none;
+		font-size: var(--font-size-small);
+	}
+
+	.knowledge-graph__legend li {
+		display: flex;
+		align-items: center;
+		gap: 0.3rem;
+	}
+
+	.knowledge-graph__swatch {
+		width: 0.7rem;
+		height: 0.7rem;
+		border: 1px solid var(--foreground);
+		border-radius: 50%;
+		background: var(--category-color);
+	}
+
+	.knowledge-graph__canvas {
+		width: 100%;
+		max-width: 100%;
+		height: min(34rem, 70vh);
+		min-height: 24rem;
+		overflow: hidden;
+		box-sizing: border-box;
+		border: 1px solid var(--subtle);
+		background: var(--surface);
+		-webkit-tap-highlight-color: transparent;
+		outline: none;
+		user-select: none;
+	}
+</style>

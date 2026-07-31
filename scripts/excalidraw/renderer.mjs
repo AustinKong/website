@@ -18,6 +18,7 @@ const excalidrawAssets = path.join(
 
 export const defaultExportOptions = {
 	background: true,
+	backgroundColor: '#ececea',
 	padding: 40,
 	theme: 'light',
 };

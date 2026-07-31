@@ -16,6 +16,7 @@ window.renderExcalidrawSvg = async (scene, options) => {
 			exportEmbedScene: false,
 			exportScale: 1,
 			exportWithDarkMode: options.theme === 'dark',
+			viewBackgroundColor: options.backgroundColor,
 		},
 		files: restored.files,
 		exportPadding: options.padding,

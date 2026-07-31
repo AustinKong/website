@@ -67,6 +67,26 @@ The Excalidraw implementation is grouped under `scripts/excalidraw/`:
 official export API. The top-level `export-excalidraw.mjs` and
 `prepare-til.mjs` files are the user-facing single-file and batch commands.
 
+### TIL knowledge graph
+
+The `/til` page renders an interactive Cytoscape graph. Generate its data from
+TIL notes with:
+
+```sh
+npm run build:til-graph
+```
+
+The command treats every `notes/**/index.md` as a node and every
+`[[Note Title]]` wiki-link as a directed edge. It writes the deterministic
+result to `.generated/til-graph.json`. Duplicate note titles and links to
+unknown notes fail the command. The graph builder treats every
+`[[Note Title]]` occurrence as an edge, including occurrences inside code
+blocks or comments. `prepare:til` runs this automatically before local
+development and production builds. In article prose, wiki-links render as
+underlined links to the corresponding TIL page. Use
+`[[Note Title|natural link text]]` when the surrounding sentence needs a
+different label.
+
 ## Project structure
 
 ```text

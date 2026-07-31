@@ -3,7 +3,9 @@ import { getCollection } from 'astro:content';
 import ArrowLeft from '../../assets/arrow-left.svg';
 import InlineIcon from '../../components/shared/InlineIcon.astro';
 import PillButton from '../../components/shared/PillButton.astro';
+import KnowledgeGraph from '../../components/til/KnowledgeGraph.astro';
 import MainLayout from '../../layouts/MainLayout.astro';
+import graph from '../../../.generated/til-graph.json';
 
 const notes = (await getCollection('til')).sort((a, b) =>
 	a.data.title.localeCompare(b.data.title)
@@ -16,7 +18,7 @@ const categories = [...Map.groupBy(notes, (note) => note.data.category)].sort(
 
 <MainLayout
 	title="Today I Learned"
-	description="Short technical notes and explanations by Austin Kong."
+	description="A collection of things I've learned, organized by category."
 >
 	<div class="section--narrow">
 		<nav aria-label="Back">
@@ -28,24 +30,28 @@ const categories = [...Map.groupBy(notes, (note) => note.data.category)].sort(
 
 		<header>
 			<h1>Today I Learned</h1>
-			<p>Short technical notes and explanations.</p>
+			<p>A collection of notes on CS related concepts I've learned outside of the classroom.</p>
 		</header>
 
+		<KnowledgeGraph {graph} />
+
 		<div class="categories">
-			{categories.map(([category, categoryNotes]) => (
-				<section>
-					<h2>{category}</h2>
-					<ul>
-						{categoryNotes.map((note) => (
-							<li>
-								<a href={`/til/${note.id}`}>
-									<span>{note.data.title}</span>
-								</a>
-							</li>
-						))}
-					</ul>
-				</section>
-			))}
+			{
+				categories.map(([category, categoryNotes]) => (
+					<section>
+						<h2>{category}</h2>
+						<ul>
+							{categoryNotes.map((note) => (
+								<li>
+									<a href={`/til/${note.id}`}>
+										<span>{note.data.title}</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				))
+			}
 		</div>
 	</div>
 </MainLayout>
@@ -56,21 +62,17 @@ const categories = [...Map.groupBy(notes, (note) => note.data.category)].sort(
 		margin-bottom: 2rem;
 	}
 
-	header p,
-	.empty-state {
-		color: var(--muted);
-	}
-
 	.categories {
 		display: grid;
-		gap: 3rem;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 2rem 1.5rem;
 	}
 
 	ul {
 		display: grid;
 		margin: 0;
 		padding: 0;
-		gap: 1rem;
+		gap: 0.5rem;
 		list-style: none;
 	}
 
@@ -90,5 +92,17 @@ const categories = [...Map.groupBy(notes, (note) => note.data.category)].sort(
 	li a:hover span,
 	li a:focus-visible span {
 		text-decoration-color: currentColor;
+	}
+
+	@media (max-width: 600px) {
+		.categories {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 400px) {
+		.categories {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

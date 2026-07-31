@@ -133,8 +133,15 @@ const linkIcons = {
 	}
 
 	.prose :global(img) {
+		display: block;
 		max-width: 100%;
 		height: auto;
+		margin-inline: auto;
+	}
+
+	.prose :global(a) {
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
 	}
 
 	.prose :global(table) {

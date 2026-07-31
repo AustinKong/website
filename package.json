@@ -11,8 +11,9 @@
 		"prebuild": "npm run prepare:til",
 		"build": "astro build",
 		"deploy": "npm run build && wrangler deploy",
+		"build:til-graph": "node scripts/build-til-graph.mjs",
 		"export:excalidraw": "node scripts/export-excalidraw.mjs",
-		"prepare:til": "node scripts/prepare-til.mjs",
+		"prepare:til": "node scripts/prepare-til.mjs && node scripts/build-til-graph.mjs",
 		"preview": "astro preview",
 		"astro": "astro"
 	},
@@ -22,6 +23,7 @@
 		"@mermaid-js/layout-elk": "^0.2.2",
 		"astro": "^7.1.5",
 		"astro-mermaid": "^2.1.0",
+		"cytoscape": "^3.34.0",
 		"matter-js": "^0.20.0",
 		"mermaid": "^11.16.0"
 	},
