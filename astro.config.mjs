@@ -3,6 +3,7 @@ import mdx from '@astrojs/mdx';
 import { unified } from '@astrojs/markdown-remark';
 import mermaid from 'astro-mermaid';
 import remarkExcalidraw from './src/markdown/remark-excalidraw.mjs';
+import remarkMermaidCaption from './src/markdown/remark-mermaid-caption.mjs';
 import remarkWikiLinks from './src/markdown/remark-wiki-links.mjs';
 
 export default defineConfig({
@@ -11,7 +12,11 @@ export default defineConfig({
 	// TODO: Remove @astrojs/markdown-remark library and prefer satteri engine once issue is fixed.
 	markdown: {
 		processor: unified({
-			remarkPlugins: [remarkExcalidraw, remarkWikiLinks],
+			remarkPlugins: [
+				remarkMermaidCaption,
+				remarkExcalidraw,
+				remarkWikiLinks,
+			],
 		}),
 	},
 	image: {
@@ -70,6 +75,9 @@ export default defineConfig({
 		mdx(),
 		mermaid({
 			mermaidConfig: {
+				// No support for hand-drawn sequence diagrams yet https://github.com/mermaid-js/mermaid/issues/1886
+				look: 'handDrawn',
+				handDrawnSeed: 42,
 				// Use Mermaid's built-in Dagre layout by default; diagrams can still
 				// opt into ELK with a diagram-level `layout: elk` config.
 				layout: 'dagre',

@@ -182,6 +182,20 @@ const linkIcons = {
 		max-width: none !important;
 	}
 
+	.prose :global(figure.mermaid-figure) {
+		margin: 2rem auto;
+	}
+
+	.prose :global(figure.mermaid-figure > pre.mermaid) {
+		margin: 0;
+	}
+
+	.prose :global(figure.mermaid-figure > figcaption) {
+		margin-top: 0.75rem;
+		text-align: center;
+		font-size: var(--font-size-small);
+	}
+
 	article > footer {
 		margin-top: 2rem;
 	}
