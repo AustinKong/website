@@ -144,6 +144,28 @@ const linkIcons = {
 		text-underline-offset: 0.15em;
 	}
 
+	/* Keep inline equations from changing the paragraph's line box. Tall parts
+	 * intentionally paint outside it; use display math for complex equations. */
+	.prose :global(.katex) {
+		display: inline-block;
+		height: 1em;
+		overflow: visible;
+		font-size: 1em;
+	}
+
+	/* Display math gets its natural height and its own vertical space. */
+	.prose :global(.katex-display .katex) {
+		display: inline;
+		height: auto;
+		vertical-align: baseline;
+	}
+
+	.prose :global(.katex-display) {
+		margin: 1.25em 0;
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+
 	.prose :global(table) {
 		display: block;
 		width: 100%;
