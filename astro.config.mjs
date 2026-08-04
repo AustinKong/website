@@ -2,6 +2,8 @@ import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import { unified } from '@astrojs/markdown-remark';
 import mermaid from 'astro-mermaid';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
 import remarkExcalidraw from './src/markdown/remark-excalidraw.mjs';
 import remarkMermaidCaption from './src/markdown/remark-mermaid-caption.mjs';
 import remarkWikiLinks from './src/markdown/remark-wiki-links.mjs';
@@ -13,10 +15,12 @@ export default defineConfig({
 	markdown: {
 		processor: unified({
 			remarkPlugins: [
+				remarkMath,
 				remarkMermaidCaption,
 				remarkExcalidraw,
 				remarkWikiLinks,
 			],
+			rehypePlugins: [rehypeKatex],
 		}),
 	},
 	image: {
