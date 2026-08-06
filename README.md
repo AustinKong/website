@@ -32,8 +32,9 @@ Set `TIL_CONTENT_DIR` to its `notes` directory if it lives elsewhere.
 
 TIL Markdown is loaded directly from the separate `today-i-learned` repository.
 Nothing is copied into this repository. Only `notes/**/index.md` files are
-published; other Markdown files are ignored. Notes provide `title` and
-`category` frontmatter, and `.excalidraw` image references are rewritten to
+published. Notes provide `title` and `category` frontmatter; an optional
+`draft: true` shows a note only in the local development site. `.excalidraw`
+image references are rewritten to
 SVGs under `website/.generated/til-assets` during Markdown rendering. The TIL
 repository remains read-only during this process.
 

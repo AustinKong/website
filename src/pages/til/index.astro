@@ -7,13 +7,27 @@ import KnowledgeGraph from '../../components/til/KnowledgeGraph.astro';
 import MainLayout from '../../layouts/MainLayout.astro';
 import graph from '../../../.generated/til-graph.json';
 
-const notes = (await getCollection('til')).sort((a, b) =>
-	a.data.title.localeCompare(b.data.title)
-);
+const includeDrafts = import.meta.env.DEV;
+const notes = (await getCollection('til'))
+	.filter((note) => includeDrafts || !note.data.draft)
+	.sort((a, b) => a.data.title.localeCompare(b.data.title));
 
 const categories = [...Map.groupBy(notes, (note) => note.data.category)].sort(
 	([left], [right]) => left.localeCompare(right)
 );
+const visibleNodeIds = new Set(
+	graph.nodes
+		.filter((node) => includeDrafts || !node.draft)
+		.map((node) => node.id)
+);
+const publishedGraph = {
+	...graph,
+	nodes: graph.nodes.filter((node) => visibleNodeIds.has(node.id)),
+	edges: graph.edges.filter(
+		(edge) =>
+			visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target)
+	),
+};
 ---
 
 <MainLayout
@@ -33,7 +47,7 @@ const categories = [...Map.groupBy(notes, (note) => note.data.category)].sort(
 			<p>A collection of notes on CS related concepts I've learned outside of the classroom.</p>
 		</header>
 
-		<KnowledgeGraph {graph} />
+		<KnowledgeGraph graph={publishedGraph} />
 
 		<div class="categories">
 			{

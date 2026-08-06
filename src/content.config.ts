@@ -28,6 +28,7 @@ const til = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		category: z.string(),
+		draft: z.boolean().default(false),
 	}),
 });
 

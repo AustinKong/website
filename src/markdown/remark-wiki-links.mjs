@@ -13,7 +13,7 @@ function loadNotesByTitle() {
 	return new Map(graph.nodes.map((note) => [normalizeTitle(note.title), note]));
 }
 
-function rewriteWikiLinks(node, notesByTitle) {
+function rewriteWikiLinks(node, notesByTitle, includeDrafts) {
 	if (!Array.isArray(node?.children) || node.type === 'link') {
 		return;
 	}
@@ -22,7 +22,7 @@ function rewriteWikiLinks(node, notesByTitle) {
 
 	for (const child of node.children) {
 		if (child.type !== 'text') {
-			rewriteWikiLinks(child, notesByTitle);
+			rewriteWikiLinks(child, notesByTitle, includeDrafts);
 			children.push(child);
 			continue;
 		}
@@ -40,11 +40,17 @@ function rewriteWikiLinks(node, notesByTitle) {
 			const [title, label] = match[1].split('|', 2).map((part) => part.trim());
 			const note = notesByTitle.get(normalizeTitle(title));
 
-			children.push({
-				type: 'link',
-				url: note.href,
-				children: [{ type: 'text', value: label || note.title }],
-			});
+			const linkText = label || note.title;
+
+			children.push(
+				note.draft && !includeDrafts
+					? { type: 'text', value: linkText }
+					: {
+							type: 'link',
+							url: note.href,
+							children: [{ type: 'text', value: linkText }],
+						}
+			);
 
 			cursor = match.index + match[0].length;
 		}
@@ -59,8 +65,10 @@ function rewriteWikiLinks(node, notesByTitle) {
 	node.children = children;
 }
 
-export default function remarkWikiLinks() {
+export default function remarkWikiLinks({
+	includeDrafts = process.env.NODE_ENV === 'development',
+} = {}) {
 	const notesByTitle = loadNotesByTitle();
 
-	return (tree) => rewriteWikiLinks(tree, notesByTitle);
+	return (tree) => rewriteWikiLinks(tree, notesByTitle, includeDrafts);
 }

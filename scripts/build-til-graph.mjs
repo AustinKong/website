@@ -49,6 +49,17 @@ function requireString(value, field, entry) {
 	return value.trim();
 }
 
+function requireDraft(value, entry) {
+	if (value === undefined) {
+		return false;
+	}
+	if (typeof value !== 'boolean') {
+		throw new Error(`${entry}: frontmatter "draft" must be a boolean.`);
+	}
+
+	return value;
+}
+
 async function buildTilGraph() {
 	const entryFiles = (await collectEntries(sourceRoot)).sort();
 	const notes = [];
@@ -63,6 +74,7 @@ async function buildTilGraph() {
 		const id = entry.replace(/\/index\.md$/i, '');
 		const title = requireString(frontmatter.title, 'title', entry);
 		const category = requireString(frontmatter.category, 'category', entry);
+		const draft = requireDraft(frontmatter.draft, entry);
 		const normalizedTitle = normalizeTitle(title);
 		const duplicate = notesByTitle.get(normalizedTitle);
 
@@ -75,11 +87,13 @@ async function buildTilGraph() {
 		const note = {
 			entry,
 			content,
+			draft,
 			node: {
 				id,
 				title,
 				category,
 				href: `/til/${id}`,
+				draft,
 			},
 		};
 		notes.push(note);

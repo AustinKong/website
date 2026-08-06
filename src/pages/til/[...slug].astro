@@ -3,10 +3,12 @@ import { getCollection, render } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
 export async function getStaticPaths() {
-	return (await getCollection('til')).map((note) => ({
+	return (await getCollection('til'))
+		.filter((note) => import.meta.env.DEV || !note.data.draft)
+		.map((note) => ({
 		params: { slug: note.id },
 		props: { note },
-	}));
+		}));
 }
 
 const { note } = Astro.props;
