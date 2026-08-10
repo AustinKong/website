@@ -112,7 +112,7 @@ const linkIcons = {
 		overflow-wrap: anywhere;
 	}
 
-	.prose :global(:is(h2, h3, h4)) {
+	.prose :global(:is(h2, h3, h4, h5)) {
 		margin-top: 2em;
 	}
 
@@ -155,9 +155,9 @@ const linkIcons = {
 
 	/* Display math gets its natural height and its own vertical space. */
 	.prose :global(.katex-display .katex) {
-		display: inline;
+		display: block;
 		height: auto;
-		vertical-align: baseline;
+		text-align: center;
 	}
 
 	.prose :global(.katex-display) {

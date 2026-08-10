@@ -87,7 +87,14 @@ export default defineConfig({
 				layout: 'dagre',
 				flowchart: { useMaxWidth: false },
 				er: { useMaxWidth: false },
-				themeVariables: { fontSize: '14px' },
+				// Keep the tree's SVG at its natural dimensions so its text does not
+				// scale with the container width.
+				treeView: { useMaxWidth: false },
+				themeVariables: {
+					fontSize: '14px',
+					// treeView has its own label size, which otherwise defaults to 16px.
+					treeView: { labelFontSize: '14px' },
+				},
 			},
 		}),
 	],
