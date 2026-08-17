@@ -90,6 +90,19 @@ export default defineConfig({
 				// Keep the tree's SVG at its natural dimensions so its text does not
 				// scale with the container width.
 				treeView: { useMaxWidth: false },
+				// Sequence diagrams have independent text defaults; keep them aligned
+				// with the small text used by the other Mermaid diagrams.
+				sequence: {
+					// Keep the SVG at its natural dimensions so it never scales its text
+					// to the available article width.
+					useMaxWidth: false,
+					// The article provides surrounding whitespace, so keep Mermaid's
+					// internal horizontal padding deliberately minimal.
+					diagramMarginX: 5,
+					actorFontSize: 14,
+					noteFontSize: 14,
+					messageFontSize: 14,
+				},
 				themeVariables: {
 					fontSize: '14px',
 					// treeView has its own label size, which otherwise defaults to 16px.

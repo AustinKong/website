@@ -195,7 +195,10 @@ const linkIcons = {
 	}
 
 	.prose :global(pre.mermaid) {
-		justify-content: flex-start;
+		/* Center diagrams that fit while preserving a reachable left edge and
+		 * horizontal scrolling for diagrams wider than the article. */
+		justify-content: safe center;
+		overflow-y: hidden;
 	}
 
 	.prose :global(pre.mermaid > svg) {
