@@ -101,15 +101,22 @@ async function buildTilGraph() {
 	}
 
 	const edgesById = new Map();
+	const missingLinks = new Set();
 
 	for (const note of notes) {
 		for (const linkedTitle of extractWikiLinks(note.content)) {
 			const target = notesByTitle.get(normalizeTitle(linkedTitle));
 
 			if (!target) {
-				throw new Error(
-					`${note.entry}: wiki-link target "${linkedTitle}" was not found.`
-				);
+				const missingLinkId = `${note.entry}\0${normalizeTitle(linkedTitle)}`;
+
+				if (!missingLinks.has(missingLinkId)) {
+					console.warn(
+						`TIL graph warning: ${note.entry}: wiki-link target "${linkedTitle}" was not found; rendering it as plain text.`
+					);
+					missingLinks.add(missingLinkId);
+				}
+				continue;
 			}
 			if (target.node.id === note.node.id) {
 				continue;

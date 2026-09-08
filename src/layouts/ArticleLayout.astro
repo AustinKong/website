@@ -84,6 +84,10 @@ const linkIcons = {
 	</article>
 </MainLayout>
 
+<script>
+	import '../components/mermaid-pan-zoom';
+</script>
+
 <style>
 	:global(body) {
 		overflow-x: clip;
@@ -195,16 +199,41 @@ const linkIcons = {
 	}
 
 	.prose :global(pre.mermaid) {
-		/* Center diagrams that fit while preserving a reachable left edge and
-		 * horizontal scrolling for diagrams wider than the article. */
+		/* Preserve native scrolling until the interactive viewport initializes. */
 		justify-content: safe center;
 		overflow-y: hidden;
+	}
+
+	.prose :global(pre.mermaid[data-pan-zoom]) {
+		display: block;
+		min-height: 16rem;
+		padding: 0;
+		overflow: hidden;
+		box-sizing: border-box;
+		border: 1px solid var(--subtle);
+		border-radius: 0;
+		background: var(--surface);
+		cursor: grab;
+		outline: none;
+		touch-action: none;
+		user-select: none;
+	}
+
+	.prose :global(pre.mermaid[data-pan-zoom][data-panning]) {
+		cursor: grabbing;
 	}
 
 	.prose :global(pre.mermaid > svg) {
 		flex: 0 0 auto;
 		width: auto !important;
 		max-width: none !important;
+	}
+
+	.prose :global(pre.mermaid[data-pan-zoom] > svg) {
+		display: block;
+		margin-inline: auto;
+		transform-origin: 0 0;
+		will-change: transform;
 	}
 
 	.prose :global(figure.mermaid-figure) {

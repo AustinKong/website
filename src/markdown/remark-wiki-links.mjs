@@ -39,11 +39,10 @@ function rewriteWikiLinks(node, notesByTitle, includeDrafts) {
 
 			const [title, label] = match[1].split('|', 2).map((part) => part.trim());
 			const note = notesByTitle.get(normalizeTitle(title));
-
-			const linkText = label || note.title;
+			const linkText = label || note?.title || title;
 
 			children.push(
-				note.draft && !includeDrafts
+				!note || (note.draft && !includeDrafts)
 					? { type: 'text', value: linkText }
 					: {
 							type: 'link',
