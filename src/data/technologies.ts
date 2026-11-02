@@ -1,10 +1,12 @@
 import airflow from '../assets/icons/airflow.svg';
+import astro from '../assets/icons/astro.svg';
 import azure from '../assets/icons/azure.svg';
 import csharp from '../assets/icons/csharp.svg';
 import docker from '../assets/icons/docker.svg';
 import dotnet from '../assets/icons/dotnet.svg';
 import express from '../assets/icons/express.svg';
 import fastapi from '../assets/icons/fastapi.svg';
+import godot from '../assets/icons/godot.svg';
 import java from '../assets/icons/java.svg';
 import kubernetes from '../assets/icons/kubernetes.svg';
 import nodejs from '../assets/icons/nodejs.svg';
@@ -19,15 +21,18 @@ import sqlite from '../assets/icons/sqlite.svg';
 import supabase from '../assets/icons/supabase.svg';
 import typescript from '../assets/icons/typescript.svg';
 import unity from '../assets/icons/unity.svg';
+import webassembly from '../assets/icons/webassembly.svg';
 
 export const technologies = {
 	airflow: { label: 'Apache Airflow', icon: airflow.src },
+	astro: { label: 'Astro', icon: astro.src },
 	azure: { label: 'Azure', icon: azure.src },
 	csharp: { label: 'C#', icon: csharp.src },
 	docker: { label: 'Docker', icon: docker.src },
 	dotnet: { label: '.NET', icon: dotnet.src },
 	express: { label: 'Express', icon: express.src },
 	fastapi: { label: 'FastAPI', icon: fastapi.src },
+	godot: { label: 'Godot', icon: godot.src },
 	java: { label: 'Java', icon: java.src },
 	kubernetes: { label: 'Kubernetes', icon: kubernetes.src },
 	nodejs: { label: 'Node.js', icon: nodejs.src },
@@ -42,6 +47,7 @@ export const technologies = {
 	supabase: { label: 'Supabase', icon: supabase.src },
 	typescript: { label: 'TypeScript', icon: typescript.src },
 	unity: { label: 'Unity', icon: unity.src },
+	webassembly: { label: 'WebAssembly', icon: webassembly.src },
 } as const;
 
 export type Technology = keyof typeof technologies;

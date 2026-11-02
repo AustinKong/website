@@ -5,7 +5,7 @@ import ContentGrid from '../shared/ContentGrid.astro';
 
 const projects = [
 	...(await getCollection('projects'))
-		.filter((project) => project.data.cover)
+		.filter((project) => !project.data.draft && project.data.cover)
 		.sort((a, b) => a.data.order - b.data.order)
 		.map((project) => ({
 			title: project.data.title,

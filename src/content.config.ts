@@ -38,6 +38,7 @@ const projects = defineCollection({
 		z.object({
 			title: z.string(),
 			description: z.string(),
+			draft: z.boolean().default(false),
 			stat: z.string().optional(),
 			order: z.number(),
 			cover: image().optional(),

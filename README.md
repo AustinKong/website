@@ -94,6 +94,10 @@ Project case studies live in `src/content/projects`. Larger MDX case studies
 keep their images beside the content in a project-specific directory. Shared
 presentation components live in `src/components/shared`.
 
+Technology icons are sourced from
+[Devicon](https://github.com/devicons/devicon), which publishes its icon set
+under the MIT licence.
+
 ## Cloudflare deployment
 
 The site deploys to Cloudflare Workers as static assets. It does not need a
